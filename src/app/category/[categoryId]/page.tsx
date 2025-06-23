@@ -157,7 +157,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         setSelectedBrands((prev) =>
             prev.includes(brand)
                 ? prev.filter((b) => b !== brand)
-                : [...prev, brand],
+                : [...prev, brand]
         );
     };
 
@@ -165,7 +165,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         setSelectedColors((prev) =>
             prev.includes(color)
                 ? prev.filter((c) => c !== color)
-                : [...prev, color],
+                : [...prev, color]
         );
     };
 
@@ -173,7 +173,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         setSelectedSizes((prev) =>
             prev.includes(size)
                 ? prev.filter((s) => s !== size)
-                : [...prev, size],
+                : [...prev, size]
         );
     };
 

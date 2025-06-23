@@ -77,7 +77,7 @@ export default function ShopPage() {
                     product.description.toLowerCase().includes(query) ||
                     product.brand.toLowerCase().includes(query) ||
                     product.tags.some((tag) =>
-                        tag.toLowerCase().includes(query),
+                        tag.toLowerCase().includes(query)
                     );
 
                 if (!matchesSearch) return false;
@@ -182,7 +182,7 @@ export default function ShopPage() {
         setSelectedCategories((prev) =>
             prev.includes(categoryId)
                 ? prev.filter((c) => c !== categoryId)
-                : [...prev, categoryId],
+                : [...prev, categoryId]
         );
     };
 
@@ -190,7 +190,7 @@ export default function ShopPage() {
         setSelectedBrands((prev) =>
             prev.includes(brand)
                 ? prev.filter((b) => b !== brand)
-                : [...prev, brand],
+                : [...prev, brand]
         );
     };
 
@@ -198,7 +198,7 @@ export default function ShopPage() {
         setSelectedColors((prev) =>
             prev.includes(color)
                 ? prev.filter((c) => c !== color)
-                : [...prev, color],
+                : [...prev, color]
         );
     };
 
@@ -206,7 +206,7 @@ export default function ShopPage() {
         setSelectedSizes((prev) =>
             prev.includes(size)
                 ? prev.filter((s) => s !== size)
-                : [...prev, size],
+                : [...prev, size]
         );
     };
 
@@ -433,7 +433,7 @@ export default function ShopPage() {
                                     )}
                                     {selectedCategories.map((categoryId) => {
                                         const category = categories.find(
-                                            (c) => c.id === categoryId,
+                                            (c) => c.id === categoryId
                                         );
                                         return (
                                             <Badge

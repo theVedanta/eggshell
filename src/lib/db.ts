@@ -472,15 +472,15 @@ export const searchProducts = (query: string): Product[] => {
             product.name.toLowerCase().includes(lowercaseQuery) ||
             product.description.toLowerCase().includes(lowercaseQuery) ||
             product.tags.some((tag) =>
-                tag.toLowerCase().includes(lowercaseQuery),
+                tag.toLowerCase().includes(lowercaseQuery)
             ) ||
-            product.brand.toLowerCase().includes(lowercaseQuery),
+            product.brand.toLowerCase().includes(lowercaseQuery)
     );
 };
 
 export const getRelatedProducts = (
     productId: string,
-    limit: number = 4,
+    limit: number = 4
 ): Product[] => {
     const product = getProductById(productId);
     if (!product) return [];
@@ -488,7 +488,7 @@ export const getRelatedProducts = (
     const related = products.filter(
         (p) =>
             p.id !== productId &&
-            (p.category === product.category || p.brand === product.brand),
+            (p.category === product.category || p.brand === product.brand)
     );
 
     return related.slice(0, limit);

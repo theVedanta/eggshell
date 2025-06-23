@@ -51,7 +51,7 @@ export function ProductCard({
         ? Math.round(
               ((product.originalPrice - product.price) /
                   product.originalPrice) *
-                  100,
+                  100
           )
         : null;
 
@@ -74,7 +74,7 @@ export function ProductCard({
                 className={cn(
                     "product-card ecommerce-card overflow-hidden transition-all duration-300 hover:shadow-xl py-0",
                     cardVariants[variant],
-                    className,
+                    className
                 )}
             >
                 <CardContent className="p-0">
@@ -82,7 +82,7 @@ export function ProductCard({
                     <div
                         className={cn(
                             "product-image-container relative overflow-hidden",
-                            imageVariants[variant],
+                            imageVariants[variant]
                         )}
                     >
                         {/* Product Image */}
@@ -113,7 +113,7 @@ export function ProductCard({
                                         "h-4 w-4 transition-colors",
                                         isWishlisted
                                             ? "fill-red-500 text-red-500"
-                                            : "text-gray-600",
+                                            : "text-gray-600"
                                     )}
                                 />
                             </Button>
@@ -291,7 +291,7 @@ export function ProductCard({
                                     "text-xs font-medium",
                                     product.inStock
                                         ? "text-green-600"
-                                        : "text-red-600",
+                                        : "text-red-600"
                                 )}
                             >
                                 {product.inStock ? "In Stock" : "Out of Stock"}

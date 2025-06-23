@@ -174,7 +174,7 @@ export default function CartPage() {
                                                             handleQuantityChange(
                                                                 item.id,
                                                                 item.quantity -
-                                                                    1,
+                                                                    1
                                                             )
                                                         }
                                                     >
@@ -191,7 +191,7 @@ export default function CartPage() {
                                                             handleQuantityChange(
                                                                 item.id,
                                                                 item.quantity +
-                                                                    1,
+                                                                    1
                                                             )
                                                         }
                                                     >
@@ -215,7 +215,7 @@ export default function CartPage() {
                                                         className="text-destructive hover:text-destructive"
                                                         onClick={() =>
                                                             removeFromCart(
-                                                                item.id,
+                                                                item.id
                                                             )
                                                         }
                                                     >
