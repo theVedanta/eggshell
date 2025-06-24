@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {
     ArrowRight,
-    Star,
+    Mail,
     Truck,
     Shield,
     Headphones,
@@ -13,7 +13,6 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { ProductCard } from "@/components/product-card";
 import { getFeaturedProducts, categories, brands } from "@/lib/db";
 import {
@@ -23,6 +22,7 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel";
+import Newsletter from "@/components/Newsletter";
 
 const featuredProducts = getFeaturedProducts();
 
@@ -212,35 +212,7 @@ export default function HomePage() {
             </section>
 
             {/* Newsletter */}
-            <section className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground rounded-xl p-8 md:p-12">
-                <div className="mx-auto max-w-2xl text-center">
-                    <h2 className="text-3xl font-bold mb-4">
-                        Stay in the Loop
-                    </h2>
-                    <p className="text-primary-foreground/90 mb-6">
-                        Get the latest updates on new products, exclusive
-                        offers, and fashion trends.
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                        <input
-                            type="email"
-                            placeholder="Enter your email"
-                            className="flex-1 px-4 py-3 rounded-lg border-0 text-foreground focus:ring-2 focus:ring-white/20 focus:outline-none"
-                        />
-                        <Button
-                            variant="secondary"
-                            className="bg-white text-primary hover:bg-gray-100"
-                        >
-                            Subscribe
-                        </Button>
-                    </div>
-
-                    <p className="text-sm text-primary-foreground/70 mt-4">
-                        No spam, unsubscribe at any time.
-                    </p>
-                </div>
-            </section>
+            <Newsletter />
         </div>
     );
 }

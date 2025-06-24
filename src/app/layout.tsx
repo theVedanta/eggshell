@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { CartProvider } from "@/contexts/cart-context";
 import { Layout } from "@/components/layout";
 import { Toaster } from "@/components/ui/sonner";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -27,15 +27,15 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body
-                className={`${geistSans.variable} ${geistMono.variable} dark antialiased`}
-            >
-                <CartProvider>
+        <ClerkProvider>
+            <html lang="en">
+                <body
+                    className={`${geistSans.variable} ${geistMono.variable} dark antialiased`}
+                >
                     <Layout>{children}</Layout>
                     <Toaster />
-                </CartProvider>
-            </body>
-        </html>
+                </body>
+            </html>
+        </ClerkProvider>
     );
 }

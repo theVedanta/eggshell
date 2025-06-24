@@ -17,22 +17,29 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
-import { useCart } from "@/contexts/cart-context";
+import { useCart } from "@/state/useCart";
 import { getFeaturedProducts } from "@/lib/db";
 import { ProductCard } from "@/components/product-card";
 
 export default function CartPage() {
-    const { state, updateQuantity, removeFromCart, clearCart } = useCart();
+    const {
+        items,
+        total,
+        itemCount,
+        updateQuantity,
+        removeFromCart,
+        clearCart,
+    } = useCart();
     const [promoCode, setPromoCode] = useState("");
     const [promoApplied, setPromoApplied] = useState(false);
 
     const suggestedProducts = getFeaturedProducts().slice(0, 4);
 
-    const subtotal = state.total;
+    const subtotal = total;
     const shipping = subtotal > 50 ? 0 : 9.99;
     const discount = promoApplied ? subtotal * 0.1 : 0;
     const tax = (subtotal - discount + shipping) * 0.08;
-    const total = subtotal - discount + shipping + tax;
+    const grandTotal = subtotal - discount + shipping + tax;
 
     const handleQuantityChange = (itemId: string, newQuantity: number) => {
         if (newQuantity < 1) {
@@ -48,7 +55,7 @@ export default function CartPage() {
         }
     };
 
-    if (state.items.length === 0) {
+    if (items.length === 0) {
         return (
             <div className="space-y-8">
                 {/* Empty Cart */}
@@ -111,8 +118,8 @@ export default function CartPage() {
                         Shopping Cart
                     </h1>
                     <p className="text-muted-foreground mt-2">
-                        {state.itemCount}{" "}
-                        {state.itemCount === 1 ? "item" : "items"} in your cart
+                        {itemCount} {itemCount === 1 ? "item" : "items"} in your
+                        cart
                     </p>
                 </div>
                 <Button variant="outline" onClick={clearCart}>
@@ -124,13 +131,10 @@ export default function CartPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Cart Items */}
                 <div className="lg:col-span-2 space-y-4">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Items in Cart</CardTitle>
-                        </CardHeader>
+                    <Card className="py-0">
                         <CardContent className="p-0">
                             <div className="divide-y">
-                                {state.items.map((item) => (
+                                {items.map((item) => (
                                     <div
                                         key={item.id}
                                         className="cart-item p-6"
@@ -229,13 +233,13 @@ export default function CartPage() {
                                         {/* Price */}
                                         <div className="text-right">
                                             <div className="font-semibold text-lg">
-                                                $
+                                                ₹
                                                 {(
                                                     item.price * item.quantity
                                                 ).toFixed(2)}
                                             </div>
                                             <div className="text-sm text-muted-foreground">
-                                                ${item.price.toFixed(2)} each
+                                                ₹{item.price.toFixed(2)} each
                                             </div>
                                         </div>
                                     </div>
@@ -293,16 +297,14 @@ export default function CartPage() {
                         <CardContent className="space-y-4">
                             <div className="space-y-3">
                                 <div className="flex justify-between">
-                                    <span>
-                                        Subtotal ({state.itemCount} items)
-                                    </span>
-                                    <span>${subtotal.toFixed(2)}</span>
+                                    <span>Subtotal ({itemCount} items)</span>
+                                    <span>₹{subtotal.toFixed(2)}</span>
                                 </div>
 
                                 {promoApplied && (
                                     <div className="flex justify-between text-green-600">
                                         <span>Discount (SAVE10)</span>
-                                        <span>-${discount.toFixed(2)}</span>
+                                        <span>-₹{discount.toFixed(2)}</span>
                                     </div>
                                 )}
 
@@ -317,28 +319,28 @@ export default function CartPage() {
                                                 Free
                                             </Badge>
                                         ) : (
-                                            `$${shipping.toFixed(2)}`
+                                            `₹${shipping.toFixed(2)}`
                                         )}
                                     </span>
                                 </div>
 
                                 <div className="flex justify-between">
                                     <span>Tax</span>
-                                    <span>${tax.toFixed(2)}</span>
+                                    <span>₹{tax.toFixed(2)}</span>
                                 </div>
 
                                 <Separator />
 
                                 <div className="flex justify-between text-lg font-semibold">
                                     <span>Total</span>
-                                    <span>${total.toFixed(2)}</span>
+                                    <span>₹{grandTotal.toFixed(2)}</span>
                                 </div>
                             </div>
 
                             {shipping > 0 && (
                                 <div className="bg-muted/50 p-3 rounded-lg">
                                     <p className="text-sm text-muted-foreground">
-                                        💡 Add ${(50 - subtotal).toFixed(2)}{" "}
+                                        💡 Add ₹{(50 - subtotal).toFixed(2)}{" "}
                                         more for free shipping!
                                     </p>
                                 </div>

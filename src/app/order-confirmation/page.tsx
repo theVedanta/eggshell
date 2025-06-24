@@ -62,31 +62,34 @@ export default function OrderConfirmationPage() {
     return (
         <div className="space-y-8 max-w-4xl mx-auto">
             {/* Success Header */}
-            <Card className="text-center bg-background border border-emerald-700">
+            <Card className="text-center bg-emerald-950">
                 <CardContent className="p-8">
                     <div className="mb-6">
-                        <CheckCircle className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
-                        <h1 className="text-3xl font-bold text-emerald-400 mb-2">
+                        <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
+                        <h1 className="text-3xl font-bold text-emerald-100 mb-2">
                             Order Confirmed!
                         </h1>
-                        <p className="text-lg text-muted-foreground">
+                        <p className="text-lg text-emerald-200">
                             Thank you for your purchase. Your order has been
                             successfully placed.
                         </p>
                     </div>
 
-                    <div className="bg-muted rounded-lg p-4 mb-6 border border-emerald-800">
+                    <div className="p-4 mb-6">
                         <div className="flex items-center justify-center gap-4 text-sm">
                             <div className="flex items-center gap-1">
-                                <Package className="w-4 h-4 text-emerald-500" />
-                                <span className="font-medium text-foreground">
+                                <Package className="w-4 h-4 text-emerald-300" />
+                                <span className="font-medium text-emerald-100">
                                     Order #{orderData.id}
                                 </span>
                             </div>
-                            <Separator orientation="vertical" className="h-4" />
+                            <Separator
+                                orientation="vertical"
+                                className="h-4 bg-emerald-800"
+                            />
                             <div className="flex items-center gap-1">
-                                <Clock className="w-4 h-4 text-emerald-500" />
-                                <span className="text-foreground">
+                                <Clock className="w-4 h-4 text-emerald-300" />
+                                <span className="text-emerald-100">
                                     {orderData.date}
                                 </span>
                             </div>
@@ -96,15 +99,21 @@ export default function OrderConfirmationPage() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Button
                             asChild
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                            className="bg-emerald-700 hover:bg-emerald-800 text-white"
                         >
                             <Link href="/orders">View Order Details</Link>
                         </Button>
-                        <Button variant="outline">
+                        <Button
+                            variant="outline"
+                            className="border-emerald-700 text-emerald-100 hover:bg-emerald-900"
+                        >
                             <Download className="w-4 h-4 mr-2" />
                             Download Receipt
                         </Button>
-                        <Button variant="outline">
+                        <Button
+                            variant="outline"
+                            className="border-emerald-700 text-emerald-100 hover:bg-emerald-900"
+                        >
                             <Share2 className="w-4 h-4 mr-2" />
                             Share Order
                         </Button>
@@ -211,7 +220,7 @@ export default function OrderConfirmationPage() {
                                             </div>
                                         </div>
                                         <div className="font-semibold">
-                                            $
+                                            ₹$
                                             {(
                                                 item.price * item.quantity
                                             ).toFixed(2)}
@@ -252,21 +261,21 @@ export default function OrderConfirmationPage() {
                                 <div className="flex justify-between">
                                     <span>Subtotal</span>
                                     <span>
-                                        ${(orderData.total - 16).toFixed(2)}
+                                        ₹{(orderData.total - 16).toFixed(2)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Shipping</span>
-                                    <span>$9.99</span>
+                                    <span>₹9.99</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Tax</span>
-                                    <span>$6.01</span>
+                                    <span>₹6.01</span>
                                 </div>
                                 <Separator />
                                 <div className="flex justify-between font-semibold text-base">
                                     <span>Total</span>
-                                    <span>${orderData.total.toFixed(2)}</span>
+                                    <span>₹{orderData.total.toFixed(2)}</span>
                                 </div>
                             </div>
                         </CardContent>

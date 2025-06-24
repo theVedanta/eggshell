@@ -33,7 +33,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useCart } from "@/contexts/cart-context";
+import { useCart } from "@/state/useCart";
 import { toast } from "sonner";
 
 interface CheckoutForm {
@@ -104,14 +104,14 @@ const initialForm: CheckoutForm = {
 };
 
 export default function CheckoutPage() {
-    const { state, clearCart } = useCart();
+    const { items, total: cartTotal, itemCount, clearCart } = useCart();
     const router = useRouter();
     const [form, setForm] = useState<CheckoutForm>(initialForm);
     const [currentStep, setCurrentStep] = useState(1);
     const [isProcessing, setIsProcessing] = useState(false);
 
     // Redirect if cart is empty
-    if (state.items.length === 0) {
+    if (items.length === 0) {
         return (
             <div className="space-y-8">
                 <Card>
@@ -136,7 +136,7 @@ export default function CheckoutPage() {
         );
     }
 
-    const subtotal = state.total;
+    const subtotal = cartTotal;
     const shipping = subtotal > 50 ? 0 : 9.99;
     const tax = (subtotal + shipping) * 0.08;
     const total = subtotal + shipping + tax;
@@ -227,8 +227,7 @@ export default function CheckoutPage() {
             <div className="flex items-center gap-4">
                 <Button variant="ghost" asChild>
                     <Link href="/cart">
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to Cart
+                        <ArrowLeft className="h-4 w-4" />
                     </Link>
                 </Button>
                 <div>
@@ -758,10 +757,10 @@ export default function CheckoutPage() {
                                 {/* Order Items */}
                                 <div>
                                     <h3 className="font-semibold mb-4">
-                                        Items ({state.itemCount})
+                                        Items ({itemCount})
                                     </h3>
                                     <div className="space-y-4">
-                                        {state.items.map((item) => (
+                                        {items.map((item) => (
                                             <div
                                                 key={item.id}
                                                 className="flex items-center gap-4"
@@ -789,7 +788,7 @@ export default function CheckoutPage() {
                                                     </div>
                                                 </div>
                                                 <div className="font-semibold">
-                                                    $
+                                                    ₹
                                                     {(
                                                         item.price *
                                                         item.quantity
@@ -887,9 +886,7 @@ export default function CheckoutPage() {
                         <CardContent className="space-y-4">
                             <div className="space-y-3">
                                 <div className="flex justify-between">
-                                    <span>
-                                        Subtotal ({state.itemCount} items)
-                                    </span>
+                                    <span>Subtotal ({itemCount} items)</span>
                                     <span>${subtotal.toFixed(2)}</span>
                                 </div>
 

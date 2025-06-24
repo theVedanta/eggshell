@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import {
     SidebarProvider,
     SidebarInset,
@@ -16,12 +17,14 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { Search, ShoppingCart, User } from "lucide-react";
-import { useCart } from "@/contexts/cart-context";
+import { Home, Search, ShoppingCart, User } from "lucide-react";
+import { useCart } from "@/state/useCart";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
+import { SignedIn, SignUpButton, UserButton } from "@clerk/nextjs";
+import { SignedOut } from "@clerk/nextjs";
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -32,7 +35,7 @@ function generateBreadcrumbs(pathname: string) {
     const breadcrumbs = [];
 
     // Always include home
-    breadcrumbs.push({ label: "Home", href: "/" });
+    breadcrumbs.push({ label: <Home className="h-4 w-4" />, href: "/" });
 
     // Generate breadcrumbs based on path segments
     let currentPath = "";
@@ -69,7 +72,7 @@ function generateBreadcrumbs(pathname: string) {
 }
 
 export function Layout({ children }: LayoutProps) {
-    const { state } = useCart();
+    const { itemCount } = useCart();
     const pathname = usePathname();
     const breadcrumbs = useMemo(
         () => generateBreadcrumbs(pathname),
@@ -89,29 +92,25 @@ export function Layout({ children }: LayoutProps) {
                     <div className="flex-1">
                         <Breadcrumb>
                             <BreadcrumbList>
-                                {breadcrumbs.map((breadcrumb, index) => (
-                                    <div
-                                        key={breadcrumb.href}
-                                        className="flex items-center"
-                                    >
-                                        {index > 0 && <BreadcrumbSeparator />}
+                                {breadcrumbs.map((crumb, idx) => (
+                                    <React.Fragment key={crumb.href}>
                                         <BreadcrumbItem>
-                                            {breadcrumb.isLast ? (
-                                                <BreadcrumbPage className="font-medium">
-                                                    {breadcrumb.label}
+                                            {crumb.isLast ? (
+                                                <BreadcrumbPage>
+                                                    {crumb.label}
                                                 </BreadcrumbPage>
                                             ) : (
-                                                <BreadcrumbLink asChild>
-                                                    <Link
-                                                        href={breadcrumb.href}
-                                                        className="hover:text-foreground transition-colors"
-                                                    >
-                                                        {breadcrumb.label}
-                                                    </Link>
+                                                <BreadcrumbLink
+                                                    href={crumb.href}
+                                                >
+                                                    {crumb.label}
                                                 </BreadcrumbLink>
                                             )}
                                         </BreadcrumbItem>
-                                    </div>
+                                        {idx < breadcrumbs.length - 1 && (
+                                            <BreadcrumbSeparator />
+                                        )}
+                                    </React.Fragment>
                                 ))}
                             </BreadcrumbList>
                         </Breadcrumb>
@@ -139,24 +138,35 @@ export function Layout({ children }: LayoutProps) {
                         >
                             <Link href="/cart">
                                 <ShoppingCart className="h-4 w-4" />
-                                {state.itemCount > 0 && (
+                                {itemCount > 0 && (
                                     <Badge
                                         variant="destructive"
                                         className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
                                     >
-                                        {state.itemCount}
+                                        {itemCount}
                                     </Badge>
                                 )}
                                 <span className="sr-only">Shopping cart</span>
                             </Link>
                         </Button>
 
-                        <Button variant="ghost" size="icon" asChild>
-                            <Link href="/profile">
-                                <User className="h-4 w-4" />
-                                <span className="sr-only">User profile</span>
-                            </Link>
-                        </Button>
+                        <SignedOut>
+                            <SignUpButton>
+                                <Button variant="ghost" size="icon" asChild>
+                                    <Link href="/profile">
+                                        <User className="h-4 w-4" />
+                                        <span className="sr-only">
+                                            User profile
+                                        </span>
+                                    </Link>
+                                </Button>
+                            </SignUpButton>
+                        </SignedOut>
+                        <SignedIn>
+                            <div className="ml-4 w-full h-full flex items-center justify-center">
+                                <UserButton />
+                            </div>
+                        </SignedIn>
                     </div>
                 </header>
 
@@ -168,7 +178,7 @@ export function Layout({ children }: LayoutProps) {
                 </main>
 
                 {/* Footer */}
-                <footer className="border-t bg-muted/50 py-8 mt-auto">
+                {/* <footer className="border-t bg-muted/50 py-8 mt-auto">
                     <div className="container-wide mx-auto px-4">
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                             <div className="space-y-4">
@@ -326,7 +336,7 @@ export function Layout({ children }: LayoutProps) {
                             </div>
                         </div>
                     </div>
-                </footer>
+                </footer> */}
             </SidebarInset>
         </SidebarProvider>
     );

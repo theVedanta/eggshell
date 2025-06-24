@@ -2,11 +2,10 @@
 
 import { useState, useMemo } from "react";
 import { notFound } from "next/navigation";
-import { Grid, List, SlidersHorizontal } from "lucide-react";
+import { Grid, List } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import {
     Select,
     SelectContent,
@@ -14,19 +13,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 import { ProductCard } from "@/components/product-card";
 import { categories, getProductsByCategory } from "@/lib/db";
+import FilterButton from "@/components/FilterButton";
 
 interface CategoryPageProps {
     params: {
@@ -47,6 +36,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     const [inStockOnly, setInStockOnly] = useState(false);
     const [sortBy, setSortBy] = useState<string>("featured");
     const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+    const [searchQuery, setSearchQuery] = useState("");
 
     if (!category) {
         notFound();
@@ -191,128 +181,6 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         selectedSizes.length +
         (inStockOnly ? 1 : 0);
 
-    const FilterContent = () => (
-        <div className="space-y-6">
-            {/* Brands */}
-            <div>
-                <h3 className="font-semibold mb-3">Brands</h3>
-                <div className="space-y-2">
-                    {availableBrands.map((brand) => (
-                        <div
-                            key={brand}
-                            className="flex items-center space-x-2"
-                        >
-                            <Checkbox
-                                id={`brand-${brand}`}
-                                checked={selectedBrands.includes(brand)}
-                                onCheckedChange={() => handleBrandToggle(brand)}
-                            />
-                            <Label
-                                htmlFor={`brand-${brand}`}
-                                className="text-sm"
-                            >
-                                {brand}
-                            </Label>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            <Separator />
-
-            {/* Colors */}
-            <div>
-                <h3 className="font-semibold mb-3">Colors</h3>
-                <div className="space-y-2">
-                    {availableColors.map((color) => (
-                        <div
-                            key={color}
-                            className="flex items-center space-x-2"
-                        >
-                            <Checkbox
-                                id={`color-${color}`}
-                                checked={selectedColors.includes(color)}
-                                onCheckedChange={() => handleColorToggle(color)}
-                            />
-                            <Label
-                                htmlFor={`color-${color}`}
-                                className="text-sm"
-                            >
-                                {color}
-                            </Label>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            <Separator />
-
-            {/* Sizes */}
-            <div>
-                <h3 className="font-semibold mb-3">Sizes</h3>
-                <div className="space-y-2">
-                    {availableSizes.map((size) => (
-                        <div key={size} className="flex items-center space-x-2">
-                            <Checkbox
-                                id={`size-${size}`}
-                                checked={selectedSizes.includes(size)}
-                                onCheckedChange={() => handleSizeToggle(size)}
-                            />
-                            <Label htmlFor={`size-${size}`} className="text-sm">
-                                {size}
-                            </Label>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            <Separator />
-
-            {/* Price Range */}
-            <div>
-                <h3 className="font-semibold mb-3">
-                    Price Range: ${priceRange[0]} - ${priceRange[1]}
-                </h3>
-                <Slider
-                    value={priceRange}
-                    onValueChange={(value) =>
-                        setPriceRange(value as [number, number])
-                    }
-                    max={maxPrice}
-                    step={10}
-                    className="w-full"
-                />
-            </div>
-
-            <Separator />
-
-            {/* Stock Status */}
-            <div className="flex items-center space-x-2">
-                <Checkbox
-                    id="in-stock"
-                    checked={inStockOnly}
-                    onCheckedChange={(checked) =>
-                        setInStockOnly(checked === true)
-                    }
-                />
-                <Label htmlFor="in-stock" className="text-sm">
-                    In stock only
-                </Label>
-            </div>
-
-            {/* Clear Filters */}
-            {activeFiltersCount > 0 && (
-                <Button
-                    variant="outline"
-                    onClick={clearFilters}
-                    className="w-full"
-                >
-                    Clear All Filters ({activeFiltersCount})
-                </Button>
-            )}
-        </div>
-    );
-
     return (
         <div className="space-y-6">
             {/* Category Header */}
@@ -353,31 +221,29 @@ export default function CategoryPage({ params }: CategoryPageProps) {
             {/* Controls */}
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                 <div className="flex items-center gap-4">
-                    {/* Mobile Filter Sheet */}
-                    <Sheet>
-                        <SheetTrigger asChild>
-                            <Button variant="outline" className="sm:hidden">
-                                <SlidersHorizontal className="h-4 w-4 mr-2" />
-                                Filters
-                                {activeFiltersCount > 0 && (
-                                    <Badge variant="secondary" className="ml-2">
-                                        {activeFiltersCount}
-                                    </Badge>
-                                )}
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="left">
-                            <SheetHeader>
-                                <SheetTitle>Filters</SheetTitle>
-                                <SheetDescription>
-                                    Filter products by your preferences
-                                </SheetDescription>
-                            </SheetHeader>
-                            <div className="mt-6">
-                                <FilterContent />
-                            </div>
-                        </SheetContent>
-                    </Sheet>
+                    <FilterButton
+                        showSearch={true}
+                        showCategories={true}
+                        showFeatured={true}
+                        searchQuery={searchQuery}
+                        setSearchQuery={setSearchQuery}
+                        availableBrands={availableBrands}
+                        selectedBrands={selectedBrands}
+                        handleBrandToggle={handleBrandToggle}
+                        availableColors={availableColors}
+                        selectedColors={selectedColors}
+                        handleColorToggle={handleColorToggle}
+                        availableSizes={availableSizes}
+                        selectedSizes={selectedSizes}
+                        handleSizeToggle={handleSizeToggle}
+                        priceRange={priceRange}
+                        setPriceRange={setPriceRange}
+                        maxPrice={maxPrice}
+                        inStockOnly={inStockOnly}
+                        setInStockOnly={setInStockOnly}
+                        activeFiltersCount={activeFiltersCount}
+                        clearFilters={clearFilters}
+                    />
 
                     <div className="text-sm text-muted-foreground">
                         {filteredProducts.length} of {allProducts.length}{" "}
@@ -430,25 +296,6 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
             {/* Main Content */}
             <div className="flex gap-8">
-                {/* Desktop Filters Sidebar */}
-                <div className="hidden sm:block w-80 flex-shrink-0">
-                    <div className="sticky top-4">
-                        <div className="bg-card border rounded-lg p-6">
-                            <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-lg font-semibold">
-                                    Filters
-                                </h2>
-                                {activeFiltersCount > 0 && (
-                                    <Badge variant="secondary">
-                                        {activeFiltersCount}
-                                    </Badge>
-                                )}
-                            </div>
-                            <FilterContent />
-                        </div>
-                    </div>
-                </div>
-
                 {/* Products Grid/List */}
                 <div className="flex-1">
                     {filteredProducts.length === 0 ? (
@@ -473,7 +320,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                         <div
                             className={
                                 viewMode === "grid"
-                                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                                    ? "products-grid"
                                     : "space-y-4"
                             }
                         >

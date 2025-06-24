@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Filter, Grid, List, SlidersHorizontal, Search } from "lucide-react";
+import { Grid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import {
     Select,
     SelectContent,
@@ -14,20 +12,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 import { ProductCard } from "@/components/product-card";
-import { products, categories, brands, Product } from "@/lib/db";
-import { FilterContent } from "@/components/FilterContent";
+import { products, categories } from "@/lib/db";
+import FilterButton from "@/components/FilterButton";
 
 export default function ShopPage() {
     // Filter states
@@ -265,55 +252,34 @@ export default function ShopPage() {
             {/* Controls */}
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                 <div className="flex items-center gap-4">
-                    {/* Mobile Filter Sheet */}
-                    <Sheet>
-                        <SheetTrigger asChild>
-                            <Button variant="outline">
-                                <SlidersHorizontal className="h-4 w-4 mr-2" />
-                                Filters
-                                {activeFiltersCount > 0 && (
-                                    <Badge variant="secondary" className="ml-2">
-                                        {activeFiltersCount}
-                                    </Badge>
-                                )}
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent
-                            side="right"
-                            className="px-6 flex flex-col max-h-screen"
-                        >
-                            <div className="mt-6 flex-1 overflow-y-auto">
-                                <FilterContent
-                                    showSearch={true}
-                                    showCategories={true}
-                                    showFeatured={true}
-                                    searchQuery={searchQuery}
-                                    setSearchQuery={setSearchQuery}
-                                    availableCategories={availableCategories}
-                                    selectedCategories={selectedCategories}
-                                    handleCategoryToggle={handleCategoryToggle}
-                                    availableBrands={availableBrands}
-                                    selectedBrands={selectedBrands}
-                                    handleBrandToggle={handleBrandToggle}
-                                    availableColors={availableColors}
-                                    selectedColors={selectedColors}
-                                    handleColorToggle={handleColorToggle}
-                                    availableSizes={availableSizes}
-                                    selectedSizes={selectedSizes}
-                                    handleSizeToggle={handleSizeToggle}
-                                    priceRange={priceRange}
-                                    setPriceRange={setPriceRange}
-                                    maxPrice={maxPrice}
-                                    inStockOnly={inStockOnly}
-                                    setInStockOnly={setInStockOnly}
-                                    featuredOnly={featuredOnly}
-                                    setFeaturedOnly={setFeaturedOnly}
-                                    activeFiltersCount={activeFiltersCount}
-                                    clearFilters={clearFilters}
-                                />
-                            </div>
-                        </SheetContent>
-                    </Sheet>
+                    <FilterButton
+                        showSearch={true}
+                        showCategories={true}
+                        showFeatured={true}
+                        searchQuery={searchQuery}
+                        setSearchQuery={setSearchQuery}
+                        availableCategories={availableCategories}
+                        selectedCategories={selectedCategories}
+                        handleCategoryToggle={handleCategoryToggle}
+                        availableBrands={availableBrands}
+                        selectedBrands={selectedBrands}
+                        handleBrandToggle={handleBrandToggle}
+                        availableColors={availableColors}
+                        selectedColors={selectedColors}
+                        handleColorToggle={handleColorToggle}
+                        availableSizes={availableSizes}
+                        selectedSizes={selectedSizes}
+                        handleSizeToggle={handleSizeToggle}
+                        priceRange={priceRange}
+                        setPriceRange={setPriceRange}
+                        maxPrice={maxPrice}
+                        inStockOnly={inStockOnly}
+                        setInStockOnly={setInStockOnly}
+                        featuredOnly={featuredOnly}
+                        setFeaturedOnly={setFeaturedOnly}
+                        activeFiltersCount={activeFiltersCount}
+                        clearFilters={clearFilters}
+                    />
 
                     <div className="text-sm text-muted-foreground">
                         {filteredProducts.length} of {products.length} products

@@ -12,19 +12,15 @@ import {
     Gem,
     ShoppingCart,
     CreditCard,
-    Search,
     User,
-    Settings,
     Heart,
     Package,
-    Tag,
     ChevronRight,
 } from "lucide-react";
 
 import {
     Sidebar,
     SidebarContent,
-    SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
@@ -37,10 +33,8 @@ import {
     SidebarMenuSubItem,
     SidebarRail,
 } from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { useCart } from "@/contexts/cart-context";
+import { useCart } from "@/state/useCart";
 import { categories } from "@/lib/db";
 
 const mainNavItems = [
@@ -134,7 +128,7 @@ const accountItems = [
 
 export function AppSidebar() {
     const pathname = usePathname();
-    const { state } = useCart();
+    const { itemCount } = useCart();
 
     return (
         <Sidebar collapsible="icon" className="ecommerce-sidebar">
@@ -142,17 +136,22 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href="/">
-                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
-                                    <ShoppingBag className="size-4" />
-                                </div>
-                                <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-semibold">
-                                        Eggshell Store
-                                    </span>
-                                    <span className="truncate text-xs text-muted-foreground">
-                                        Modern Fashion
-                                    </span>
+                            <Link
+                                href="/"
+                                className="flex items-center gap-3 px-2 py-1.5"
+                            >
+                                <img
+                                    src="/assets/logo/1x.png"
+                                    alt="Eggshell Store Logo"
+                                    className="w-12 h-12 object-contain"
+                                    width={64}
+                                    height={64}
+                                />
+
+                                <div className="flex flex-col justify-center min-w-0">
+                                    <h1 className="font-mono text-2xl">
+                                        EggShell
+                                    </h1>
                                 </div>
                             </Link>
                         </SidebarMenuButton>
@@ -210,9 +209,11 @@ export function AppSidebar() {
                                                         <Link
                                                             href={subItem.url}
                                                         >
-                                                            {subItem.icon && (
+                                                            {"icon" in
+                                                                subItem &&
+                                                            subItem.icon ? (
                                                                 <subItem.icon className="size-3" />
-                                                            )}
+                                                            ) : null}
                                                             <span>
                                                                 {subItem.title}
                                                             </span>
@@ -291,12 +292,12 @@ export function AppSidebar() {
                                             <item.icon className="size-4" />
                                             <span>{item.title}</span>
                                             {item.title === "Cart" &&
-                                                state.itemCount > 0 && (
+                                                itemCount > 0 && (
                                                     <Badge
                                                         variant="secondary"
                                                         className="ml-auto size-5 rounded-full p-0 text-xs"
                                                     >
-                                                        {state.itemCount}
+                                                        {itemCount}
                                                     </Badge>
                                                 )}
                                         </Link>
@@ -307,63 +308,6 @@ export function AppSidebar() {
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
-
-            <SidebarFooter>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
-                            <Link href="/profile">
-                                <Avatar className="h-8 w-8 rounded-lg">
-                                    <AvatarImage
-                                        src="/avatar-placeholder.jpg"
-                                        alt="User"
-                                    />
-                                    <AvatarFallback className="rounded-lg bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
-                                        JD
-                                    </AvatarFallback>
-                                </Avatar>
-                                <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-semibold">
-                                        John Doe
-                                    </span>
-                                    <span className="truncate text-xs text-muted-foreground">
-                                        john@example.com
-                                    </span>
-                                </div>
-                                <Settings className="size-4" />
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-
-                {/* Quick Actions */}
-                <div className="p-2 space-y-2">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full justify-start"
-                        asChild
-                    >
-                        <Link href="/search">
-                            <Search className="size-4 mr-2" />
-                            Search Products
-                        </Link>
-                    </Button>
-
-                    {state.itemCount > 0 && (
-                        <Button
-                            size="sm"
-                            className="w-full justify-start btn-primary-gradient"
-                            asChild
-                        >
-                            <Link href="/cart">
-                                <ShoppingCart className="size-4 mr-2" />
-                                View Cart ({state.itemCount})
-                            </Link>
-                        </Button>
-                    )}
-                </div>
-            </SidebarFooter>
 
             <SidebarRail />
         </Sidebar>

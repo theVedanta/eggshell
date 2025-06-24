@@ -1,0 +1,3 @@
+- Improve the product cards
+- Make the sidebar like anav wants it
+- Make profile page

@@ -27,7 +27,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { ProductCard } from "@/components/product-card";
 import { getProductById, getRelatedProducts, brands } from "@/lib/db";
-import { useCart } from "@/contexts/cart-context";
+import { useCart } from "@/state/useCart";
 import { toast } from "sonner";
 
 interface ProductPageProps {
@@ -251,11 +251,11 @@ export default function ProductPage({ params }: ProductPageProps) {
                     {/* Price */}
                     <div className="flex items-center gap-3">
                         <span className="text-3xl font-bold">
-                            ${product.price.toFixed(2)}
+                            ₹{product.price.toFixed(2)}
                         </span>
                         {product.originalPrice && (
                             <span className="text-xl text-muted-foreground line-through">
-                                ${product.originalPrice.toFixed(2)}
+                                ₹{product.originalPrice.toFixed(2)}
                             </span>
                         )}
                         {discountPercentage && (
@@ -330,27 +330,27 @@ export default function ProductPage({ params }: ProductPageProps) {
                                                         "white"
                                                             ? "#ffffff"
                                                             : color.toLowerCase() ===
-                                                                "black"
-                                                              ? "#000000"
-                                                              : color.toLowerCase() ===
-                                                                  "gray"
-                                                                ? "#6b7280"
-                                                                : color.toLowerCase() ===
-                                                                    "navy"
-                                                                  ? "#1e3a8a"
-                                                                  : color.toLowerCase() ===
-                                                                      "brown"
-                                                                    ? "#92400e"
-                                                                    : color.toLowerCase() ===
-                                                                        "green"
-                                                                      ? "#059669"
-                                                                      : color.toLowerCase() ===
-                                                                          "blue"
-                                                                        ? "#2563eb"
-                                                                        : color.toLowerCase() ===
-                                                                            "red"
-                                                                          ? "#dc2626"
-                                                                          : "#6b7280",
+                                                              "black"
+                                                            ? "#000000"
+                                                            : color.toLowerCase() ===
+                                                              "gray"
+                                                            ? "#6b7280"
+                                                            : color.toLowerCase() ===
+                                                              "navy"
+                                                            ? "#1e3a8a"
+                                                            : color.toLowerCase() ===
+                                                              "brown"
+                                                            ? "#92400e"
+                                                            : color.toLowerCase() ===
+                                                              "green"
+                                                            ? "#059669"
+                                                            : color.toLowerCase() ===
+                                                              "blue"
+                                                            ? "#2563eb"
+                                                            : color.toLowerCase() ===
+                                                              "red"
+                                                            ? "#dc2626"
+                                                            : "#6b7280",
                                                 }}
                                             />
                                             {color}
@@ -443,7 +443,9 @@ export default function ProductPage({ params }: ProductPageProps) {
                                 onClick={handleWishlist}
                             >
                                 <Heart
-                                    className={`h-5 w-5 ${isWishlisted ? "fill-current" : ""}`}
+                                    className={`h-5 w-5 ${
+                                        isWishlisted ? "fill-current" : ""
+                                    }`}
                                 />
                             </Button>
                         </div>

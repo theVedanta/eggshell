@@ -156,7 +156,7 @@
 
     /* Hover effects for product cards */
     .product-card {
-        @apply transition-all hover:shadow-lg;
+        @apply transition-all hover:shadow-lg border-none;
     }
 
     /* Enhanced button styles */
@@ -195,7 +195,7 @@
 
     /* Grid layouts for products */
     .products-grid {
-        @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6;
+        @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2;
     }
 
     .products-grid-large {
