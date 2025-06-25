@@ -6,7 +6,7 @@ import {
     SidebarInset,
     SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
 import { Separator } from "@/components/ui/separator";
 import {
     Breadcrumb,

@@ -13,7 +13,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ProductCard } from "@/components/product-card";
+import { ProductCard } from "@/components/ProductCard";
 import { categories, getProductsByCategory } from "@/lib/db";
 import FilterButton from "@/components/FilterButton";
 

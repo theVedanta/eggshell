@@ -15,7 +15,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ProductCard } from "@/components/product-card";
+import { ProductCard } from "@/components/ProductCard";
 import { brands, getProductsByBrand, categories } from "@/lib/db";
 
 interface BrandPageProps {

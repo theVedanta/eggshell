@@ -444,6 +444,14 @@ export const products: Product[] = [
     },
 ];
 
+export const ad_products = [
+    {
+        id: "sunglasses-001",
+        name: "Classic Aviator Sunglasses",
+        images: ["/assets/sample/ad.png"],
+    },
+];
+
 // Helper functions
 export const getProductsByCategory = (categoryId: string): Product[] => {
     return products.filter((product) => product.category === categoryId);

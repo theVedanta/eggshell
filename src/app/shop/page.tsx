@@ -12,7 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ProductCard } from "@/components/product-card";
+import { ProductCard } from "@/components/ProductCard";
 import { products, categories } from "@/lib/db";
 import FilterButton from "@/components/FilterButton";
 

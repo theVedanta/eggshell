@@ -13,41 +13,17 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ProductCard } from "@/components/product-card";
-import { getFeaturedProducts, categories, brands } from "@/lib/db";
+import { ProductCard } from "@/components/ProductCard";
+import { getFeaturedProducts, categories, brands, ad_products } from "@/lib/db";
 import {
     Carousel,
     CarouselContent,
     CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
 } from "@/components/ui/carousel";
 import Newsletter from "@/components/Newsletter";
+import BrandCard from "@/components/BrandCard";
 
 const featuredProducts = getFeaturedProducts();
-
-const features = [
-    {
-        icon: Truck,
-        title: "Free Shipping",
-        description: "Free shipping on orders over $50",
-    },
-    {
-        icon: Shield,
-        title: "Secure Payment",
-        description: "100% secure payment processing",
-    },
-    {
-        icon: Headphones,
-        title: "24/7 Support",
-        description: "Customer support available anytime",
-    },
-    {
-        icon: RefreshCw,
-        title: "Easy Returns",
-        description: "30-day hassle-free returns",
-    },
-];
 
 export default function HomePage() {
     return (
@@ -62,7 +38,7 @@ export default function HomePage() {
                     className="w-full"
                 >
                     <CarouselContent className="h-96">
-                        {featuredProducts.slice(0, 6).map((product) => (
+                        {ad_products.map((product) => (
                             <CarouselItem
                                 key={product.id}
                                 className="basis-full"
@@ -83,8 +59,8 @@ export default function HomePage() {
                         ))}
                     </CarouselContent>
 
-                    <CarouselPrevious className="left-4" />
-                    <CarouselNext className="right-4" />
+                    {/* <CarouselPrevious className="left-4" /> */}
+                    {/* <CarouselNext className="right-4" /> */}
                 </Carousel>
             </section>
 
@@ -167,7 +143,7 @@ export default function HomePage() {
             </section>
 
             {/* Brands */}
-            <section className="bg-muted/50 rounded-xl p-8">
+            <section className="rounded-xl p-8">
                 <div className="mb-8 text-center">
                     <h2 className="text-3xl font-bold tracking-tight">
                         Featured Brands
@@ -178,27 +154,9 @@ export default function HomePage() {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                    {brands
-                        .filter((brand) => brand.featured)
-                        .map((brand) => (
-                            <Link key={brand.id} href={`/brands/${brand.id}`}>
-                                <Card className="group text-center transition-all duration-300 hover:shadow-md">
-                                    <CardContent className="p-6">
-                                        <div className="mb-4 flex items-center justify-center h-12">
-                                            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-primary/80 flex items-center justify-center text-primary-foreground font-semibold text-sm">
-                                                {brand.name.charAt(0)}
-                                            </div>
-                                        </div>
-                                        <h3 className="font-semibold group-hover:text-primary transition-colors">
-                                            {brand.name}
-                                        </h3>
-                                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                                            {brand.description}
-                                        </p>
-                                    </CardContent>
-                                </Card>
-                            </Link>
-                        ))}
+                    {[...brands].map((brand, i) => (
+                        <BrandCard key={i} brand={brand} />
+                    ))}
                 </div>
 
                 <div className="text-center mt-8">

@@ -25,7 +25,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { ProductCard } from "@/components/product-card";
+import { ProductCard } from "@/components/ProductCard";
 import { getProductById, getRelatedProducts, brands } from "@/lib/db";
 import { useCart } from "@/state/useCart";
 import { toast } from "sonner";

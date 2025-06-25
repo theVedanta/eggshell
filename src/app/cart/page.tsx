@@ -19,7 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/state/useCart";
 import { getFeaturedProducts } from "@/lib/db";
-import { ProductCard } from "@/components/product-card";
+import { ProductCard } from "@/components/ProductCard";
 
 export default function CartPage() {
     const {
@@ -262,6 +262,7 @@ export default function CartPage() {
                                         setPromoCode(e.target.value)
                                     }
                                     disabled={promoApplied}
+                                    className="pt-0 mt-0"
                                 />
                                 <Button
                                     variant="outline"
