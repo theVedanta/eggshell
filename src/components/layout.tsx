@@ -25,6 +25,8 @@ import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { SignedIn, SignUpButton, UserButton } from "@clerk/nextjs";
 import { SignedOut } from "@clerk/nextjs";
+import { CartSheet } from "@/components/CartSheet";
+import { SheetTrigger } from "@/components/ui/sheet";
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -133,21 +135,27 @@ export function Layout({ children }: LayoutProps) {
                         <Button
                             variant="ghost"
                             size="icon"
-                            asChild
+                            asChild={false}
                             className="relative"
                         >
-                            <Link href="/cart">
-                                <ShoppingCart className="h-4 w-4" />
-                                {itemCount > 0 && (
-                                    <Badge
-                                        variant="destructive"
-                                        className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
-                                    >
-                                        {itemCount}
-                                    </Badge>
-                                )}
-                                <span className="sr-only">Shopping cart</span>
-                            </Link>
+                            <CartSheet>
+                                <SheetTrigger asChild>
+                                    <span className="relative">
+                                        <ShoppingCart className="h-4 w-4" />
+                                        {itemCount > 0 && (
+                                            <Badge
+                                                variant="destructive"
+                                                className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
+                                            >
+                                                {itemCount}
+                                            </Badge>
+                                        )}
+                                        <span className="sr-only">
+                                            Shopping cart
+                                        </span>
+                                    </span>
+                                </SheetTrigger>
+                            </CartSheet>
                         </Button>
 
                         <SignedOut>

@@ -229,47 +229,6 @@ export function AppSidebar() {
                     </SidebarGroupContent>
                 </SidebarGroup>
 
-                {/* Quick Categories */}
-                <SidebarGroup>
-                    <SidebarGroupLabel>Quick Access</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {categories.map((category) => (
-                                <SidebarMenuItem key={category.id}>
-                                    <SidebarMenuButton
-                                        asChild
-                                        tooltip={category.name}
-                                    >
-                                        <Link
-                                            href={`/category/${category.id}`}
-                                            className={
-                                                pathname ===
-                                                `/category/${category.id}`
-                                                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                                                    : ""
-                                            }
-                                        >
-                                            {category.id === "apparel" && (
-                                                <ShoppingBag className="size-4" />
-                                            )}
-                                            {category.id === "footwear" && (
-                                                <Footprints className="size-4" />
-                                            )}
-                                            {category.id === "accessories" && (
-                                                <Watch className="size-4" />
-                                            )}
-                                            {category.id === "jewellery" && (
-                                                <Gem className="size-4" />
-                                            )}
-                                            <span>{category.name}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-
                 {/* Account & Shopping */}
                 <SidebarGroup>
                     <SidebarGroupLabel>Account</SidebarGroupLabel>
