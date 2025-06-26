@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
     Home,
     ShoppingBag,
@@ -18,257 +17,165 @@ import {
     ChevronRight,
 } from "lucide-react";
 
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    SidebarMenuSub,
-    SidebarMenuSubButton,
-    SidebarMenuSubItem,
-    SidebarRail,
-} from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/state/useCart";
-import { categories } from "@/lib/db";
+import { categories, brands } from "@/lib/db";
 
-const mainNavItems = [
+const leftRailItems = [
     {
+        key: "home",
         title: "Home",
-        url: "/",
         icon: Home,
+        url: "/",
     },
     {
-        title: "Shop",
+        key: "apparel",
+        title: "Apparel",
         icon: ShoppingBag,
-        items: [
-            {
-                title: "All Products",
-                url: "/shop",
-            },
-            {
-                title: "Featured",
-                url: "/shop/featured",
-            },
-            {
-                title: "New Arrivals",
-                url: "/shop/new",
-            },
-            {
-                title: "Sale",
-                url: "/shop/sale",
-            },
-        ],
+        url: "/category/apparel",
     },
     {
-        title: "Categories",
-        icon: Package,
-        items: [
-            {
-                title: "Apparel",
-                url: "/category/apparel",
-                icon: ShoppingBag,
-            },
-            {
-                title: "Footwear",
-                url: "/category/footwear",
-                icon: Footprints,
-            },
-            {
-                title: "Accessories",
-                url: "/category/accessories",
-                icon: Watch,
-            },
-            {
-                title: "Jewellery",
-                url: "/category/jewellery",
-                icon: Gem,
-            },
-        ],
+        key: "jewellery",
+        title: "Jewellery",
+        icon: Gem,
+        url: "/category/jewellery",
     },
     {
+        key: "brands",
         title: "Brands",
-        url: "/brands",
         icon: Star,
+        url: "/brands",
+    },
+    {
+        key: "cart",
+        title: "Cart",
+        icon: ShoppingCart,
+        url: "/cart",
     },
 ];
 
-const accountItems = [
-    {
-        title: "Cart",
-        url: "/cart",
-        icon: ShoppingCart,
-    },
-    {
-        title: "Checkout",
-        url: "/checkout",
-        icon: CreditCard,
-    },
-    {
-        title: "Wishlist",
-        url: "/wishlist",
-        icon: Heart,
-    },
-    {
-        title: "Orders",
-        url: "/orders",
-        icon: Package,
-    },
-    {
-        title: "Profile",
-        url: "/profile",
-        icon: User,
-    },
-];
+const getSubmenu = (key: string) => {
+    if (key === "apparel") {
+        const apparel = categories.find((c) => c.id === "apparel");
+        if (!apparel) return null;
+        return (
+            <div className="flex flex-col gap-1 p-4">
+                <div className="font-semibold mb-2">Apparel</div>
+                {apparel.subcategories.map((sub) => (
+                    <Link
+                        key={sub}
+                        href={`/category/apparel?sub=${encodeURIComponent(
+                            sub
+                        )}`}
+                        className="hover:bg-muted rounded px-2 py-1"
+                    >
+                        {sub.charAt(0).toUpperCase() + sub.slice(1)}
+                    </Link>
+                ))}
+            </div>
+        );
+    }
+    if (key === "jewellery") {
+        const jewellery = categories.find((c) => c.id === "jewellery");
+        if (!jewellery) return null;
+        return (
+            <div className="flex flex-col gap-1 p-4">
+                <div className="font-semibold mb-2">Jewellery</div>
+                {jewellery.subcategories.map((sub) => (
+                    <Link
+                        key={sub}
+                        href={`/category/jewellery?sub=${encodeURIComponent(
+                            sub
+                        )}`}
+                        className="hover:bg-muted rounded px-2 py-1"
+                    >
+                        {sub.charAt(0).toUpperCase() + sub.slice(1)}
+                    </Link>
+                ))}
+            </div>
+        );
+    }
+    if (key === "brands") {
+        return (
+            <div className="flex flex-col gap-1 p-4 min-w-[200px]">
+                <div className="font-semibold mb-2">Brands</div>
+                {brands.map((brand) => (
+                    <Link
+                        key={brand.id}
+                        href={`/brands/${brand.id}`}
+                        className="flex items-center gap-2 hover:bg-muted rounded px-2 py-1"
+                    >
+                        <img
+                            src={brand.logo}
+                            alt={brand.name}
+                            className="w-6 h-3 object-contain"
+                        />
+                        <span>{brand.name}</span>
+                    </Link>
+                ))}
+            </div>
+        );
+    }
+    return null;
+};
 
 export function AppSidebar() {
-    const pathname = usePathname();
     const { itemCount } = useCart();
+    const [hovered, setHovered] = React.useState<string | null>(null);
 
     return (
-        <Sidebar collapsible="icon" className="ecommerce-sidebar">
-            <SidebarHeader>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
+        <div
+            className="flex h-screen sticky top-0 left-0 z-40"
+            onMouseLeave={() => setHovered(null)}
+        >
+            {/* Thin Left Rail */}
+            <nav className="flex flex-col items-center bg-sidebar border-r w-16 py-4 gap-2 z-20 h-screen sticky top-0 left-0">
+                {leftRailItems.map((item) => (
+                    <div
+                        key={item.key}
+                        className="flex flex-col items-center py-1"
+                    >
+                        <button
+                            className={`flex flex-col items-center justify-center w-10 h-10 rounded-lg hover:bg-sidebar-accent focus:bg-sidebar-accent transition-colors ${
+                                hovered === item.key ? "bg-sidebar-accent" : ""
+                            }`}
+                            onMouseEnter={() => setHovered(item.key)}
+                            onFocus={() => setHovered(item.key)}
+                            onBlur={() => setHovered(null)}
+                            aria-label={item.title}
+                            tabIndex={0}
+                        >
                             <Link
-                                href="/"
-                                className="flex items-center gap-3 px-2 py-1.5"
+                                href={item.url}
+                                className="flex items-center justify-center p-1 w-full h-full relative"
                             >
-                                <img
-                                    src="/assets/logo/1x.png"
-                                    alt="Eggshell Store Logo"
-                                    className="w-12 h-12 object-contain"
-                                    width={64}
-                                    height={64}
-                                />
-
-                                <div className="flex flex-col justify-center min-w-0">
-                                    <h1 className="font-mono text-2xl">
-                                        EggShell
-                                    </h1>
-                                </div>
+                                <item.icon className="w-5 h-5" />
+                                {item.key === "cart" && itemCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full px-1 min-w-[16px] h-4 flex items-center justify-center">
+                                        {itemCount}
+                                    </span>
+                                )}
+                                {/* <span className="text-[10px] text-muted-foreground mt-1 text-center w-12 leading-tight whitespace-nowrap">
+                                    {item.title}
+                                </span> */}
                             </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarHeader>
-
-            <SidebarContent>
-                {/* Main Navigation */}
-                <SidebarGroup>
-                    <SidebarGroupLabel>Navigation</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {mainNavItems.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    {item.items ? (
-                                        <SidebarMenuButton className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-                                            <item.icon className="size-4" />
-                                            <span>{item.title}</span>
-                                            <ChevronRight className="ml-auto size-4 transition-transform duration-200 data-[state=open]:rotate-90" />
-                                        </SidebarMenuButton>
-                                    ) : (
-                                        <SidebarMenuButton
-                                            asChild
-                                            tooltip={item.title}
-                                        >
-                                            <Link
-                                                href={item.url!}
-                                                className={
-                                                    pathname === item.url
-                                                        ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                                                        : ""
-                                                }
-                                            >
-                                                <item.icon className="size-4" />
-                                                <span>{item.title}</span>
-                                            </Link>
-                                        </SidebarMenuButton>
-                                    )}
-                                    {item.items && (
-                                        <SidebarMenuSub>
-                                            {item.items.map((subItem) => (
-                                                <SidebarMenuSubItem
-                                                    key={subItem.title}
-                                                >
-                                                    <SidebarMenuSubButton
-                                                        asChild
-                                                        className={
-                                                            pathname ===
-                                                            subItem.url
-                                                                ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                                                                : ""
-                                                        }
-                                                    >
-                                                        <Link
-                                                            href={subItem.url}
-                                                        >
-                                                            {"icon" in
-                                                                subItem &&
-                                                            subItem.icon ? (
-                                                                <subItem.icon className="size-3" />
-                                                            ) : null}
-                                                            <span>
-                                                                {subItem.title}
-                                                            </span>
-                                                        </Link>
-                                                    </SidebarMenuSubButton>
-                                                </SidebarMenuSubItem>
-                                            ))}
-                                        </SidebarMenuSub>
-                                    )}
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-
-                {/* Account & Shopping */}
-                <SidebarGroup>
-                    <SidebarGroupLabel>Account</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {accountItems.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton
-                                        asChild
-                                        tooltip={item.title}
-                                    >
-                                        <Link
-                                            href={item.url}
-                                            className={
-                                                pathname === item.url
-                                                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                                                    : ""
-                                            }
-                                        >
-                                            <item.icon className="size-4" />
-                                            <span>{item.title}</span>
-                                            {item.title === "Cart" &&
-                                                itemCount > 0 && (
-                                                    <Badge
-                                                        variant="secondary"
-                                                        className="ml-auto size-5 rounded-full p-0 text-xs"
-                                                    >
-                                                        {itemCount}
-                                                    </Badge>
-                                                )}
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-            </SidebarContent>
-
-            <SidebarRail />
-        </Sidebar>
+                        </button>
+                    </div>
+                ))}
+            </nav>
+            {/* Wide Right Rail (submenu) */}
+            <div
+                className={`transition-all duration-200 ${
+                    hovered && hovered !== "cart" && hovered !== "home"
+                        ? "w-56 opacity-100"
+                        : "w-0 opacity-0 pointer-events-none"
+                } bg-sidebar shadow-lg h-full z-10`}
+            >
+                {hovered &&
+                    hovered !== "cart" &&
+                    hovered !== "home" &&
+                    getSubmenu(hovered)}
+            </div>
+        </div>
     );
 }
