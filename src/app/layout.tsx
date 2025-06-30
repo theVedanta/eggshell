@@ -1,14 +1,8 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { Layout } from "@/components/layout";
 import { Toaster } from "@/components/ui/sonner";
 import { ClerkProvider } from "@clerk/nextjs";
-
-const montserrat = Montserrat({
-    variable: "--font-montserrat",
-    subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
     title: "Eggshell Store - Modern Fashion & Lifestyle",
@@ -24,7 +18,10 @@ export default function RootLayout({
     return (
         <ClerkProvider>
             <html lang="en">
-                <body className={`${montserrat.variable} dark antialiased`}>
+                <body
+                    className="dark antialiased"
+                    style={{ fontFamily: "Ostrich Sans, Arial, sans-serif" }}
+                >
                     <Layout>{children}</Layout>
                     <Toaster />
                 </body>

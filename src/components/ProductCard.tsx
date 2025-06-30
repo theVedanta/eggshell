@@ -72,7 +72,7 @@ export function ProductCard({
         <Link href={`/product/${product.id}`}>
             <Card
                 className={cn(
-                    "product-card ecommerce-card overflow-hidden transition-all duration-300 hover:shadow-xl py-0",
+                    "product-card ecommerce-card overflow-hidden transition-all duration-300 rounded-none bg-black hover:shadow-xl py-0",
                     cardVariants[variant],
                     className
                 )}
@@ -81,7 +81,7 @@ export function ProductCard({
                     {/* Image Container */}
                     <div
                         className={cn(
-                            "product-image-container relative overflow-hidden",
+                            "product-image-container relative overflow-hidden rounded-none",
                             imageVariants[variant]
                         )}
                     >
@@ -92,7 +92,7 @@ export function ProductCard({
                             }
                             alt={product.name}
                             fill
-                            className="object-cover transition-transform duration-500 rounded-t-lg rounded-b-none"
+                            className="object-cover transition-transform duration-500 rounded-none"
                             onError={() => setImageError(true)}
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                         />
@@ -130,17 +130,17 @@ export function ProductCard({
 
                         {/* Badges */}
                         <div className="absolute top-3 left-3 flex flex-wrap gap-1 w-[66%]">
-                            {product.featured && (
+                            {/* {product.featured && (
                                 <Badge className="bg-background/60 backdrop-blur-md text-black-700 border border-primary/40 font-semibold shadow-md">
                                     <Crown className="h-3 w-3 fill-amber-500 text-amber-500 mr-1" />
                                     Featured
                                 </Badge>
-                            )}
-                            {discountPercentage && (
+                            )} */}
+                            {/* {discountPercentage && (
                                 <Badge variant="destructive">
                                     -{discountPercentage}%
                                 </Badge>
-                            )}
+                            )} */}
                             {!product.inStock && (
                                 <Badge
                                     variant="secondary"
@@ -193,15 +193,15 @@ export function ProductCard({
                     </div>
 
                     {/* Product Details */}
-                    <div className="p-4 space-y-1">
+                    <div className="py-4 space-y-1">
                         {/* Product Name */}
-                        <h3 className="font-semibold text-lg leading-tight line-clamp-2 group-hover/card:text-primary transition-colors">
+                        <h3 className="font-bold text-xl leading-tight line-clamp-2 group-hover/card:text-primary transition-colors">
                             {product.name}
                         </h3>
 
                         {/* Brand */}
                         <div className="flex items-center justify-between">
-                            <span className="text-sm text-muted-foreground font-medium">
+                            <span className="text-sm text-muted-foreground font-semibold">
                                 {product.brand}
                             </span>
 
@@ -215,66 +215,70 @@ export function ProductCard({
                         </div>
 
                         {/* Price */}
-                        <div className="flex items-center gap-2">
-                            <span className="price-display text-foreground">
-                                ₹{product.price.toFixed(2)}
-                            </span>
-                            {product.originalPrice && (
-                                <span className="price-original">
-                                    ₹{product.originalPrice.toFixed(2)}
+                        <div className="flex items-center justify-between gap-2">
+                            <div>
+                                <span className="price-display text-foreground">
+                                    ₹{product.price.toFixed(2)}
                                 </span>
-                            )}
+                                {product.originalPrice && (
+                                    <span className="price-original pl-2">
+                                        ₹{product.originalPrice.toFixed(2)}
+                                    </span>
+                                )}
+                            </div>
+
+                            {variant !== "compact" &&
+                                product.colors.length > 0 && (
+                                    <div className="flex items-center gap-1">
+                                        <div className="flex gap-1">
+                                            {product.colors
+                                                .slice(0, 4)
+                                                .map((color, index) => (
+                                                    <div
+                                                        key={index}
+                                                        className="w-4 h-4 rounded-full border border-primary/60"
+                                                        style={{
+                                                            backgroundColor:
+                                                                color.toLowerCase() ===
+                                                                "white"
+                                                                    ? "#ffffff"
+                                                                    : color.toLowerCase() ===
+                                                                        "black"
+                                                                      ? "#000000"
+                                                                      : color.toLowerCase() ===
+                                                                          "gray"
+                                                                        ? "#6b7280"
+                                                                        : color.toLowerCase() ===
+                                                                            "navy"
+                                                                          ? "#1e3a8a"
+                                                                          : color.toLowerCase() ===
+                                                                              "brown"
+                                                                            ? "#92400e"
+                                                                            : color.toLowerCase() ===
+                                                                                "green"
+                                                                              ? "#059669"
+                                                                              : color.toLowerCase() ===
+                                                                                  "blue"
+                                                                                ? "#2563eb"
+                                                                                : color.toLowerCase() ===
+                                                                                    "red"
+                                                                                  ? "#dc2626"
+                                                                                  : "#6b7280",
+                                                        }}
+                                                        title={color}
+                                                    />
+                                                ))}
+                                            {product.colors.length > 4 && (
+                                                <span className="text-xs text-muted-foreground">
+                                                    +{product.colors.length - 4}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                         </div>
 
                         {/* Colors (if not compact) */}
-                        {variant !== "compact" && product.colors.length > 0 && (
-                            <div className="flex items-center gap-1">
-                                <div className="flex gap-1">
-                                    {product.colors
-                                        .slice(0, 4)
-                                        .map((color, index) => (
-                                            <div
-                                                key={index}
-                                                className="w-4 h-4 rounded-full border border-primary/60"
-                                                style={{
-                                                    backgroundColor:
-                                                        color.toLowerCase() ===
-                                                        "white"
-                                                            ? "#ffffff"
-                                                            : color.toLowerCase() ===
-                                                              "black"
-                                                            ? "#000000"
-                                                            : color.toLowerCase() ===
-                                                              "gray"
-                                                            ? "#6b7280"
-                                                            : color.toLowerCase() ===
-                                                              "navy"
-                                                            ? "#1e3a8a"
-                                                            : color.toLowerCase() ===
-                                                              "brown"
-                                                            ? "#92400e"
-                                                            : color.toLowerCase() ===
-                                                              "green"
-                                                            ? "#059669"
-                                                            : color.toLowerCase() ===
-                                                              "blue"
-                                                            ? "#2563eb"
-                                                            : color.toLowerCase() ===
-                                                              "red"
-                                                            ? "#dc2626"
-                                                            : "#6b7280",
-                                                }}
-                                                title={color}
-                                            />
-                                        ))}
-                                    {product.colors.length > 4 && (
-                                        <span className="text-xs text-muted-foreground">
-                                            +{product.colors.length - 4}
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                        )}
                     </div>
                 </CardContent>
             </Card>
