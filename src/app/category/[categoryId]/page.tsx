@@ -16,6 +16,16 @@ import {
 import { ProductCard } from "@/components/ProductCard";
 import { categories, getProductsByCategory } from "@/lib/db";
 import FilterButton from "@/components/FilterButton";
+import { useProductFilters } from "@/hooks/use-product-filters";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationPrevious,
+    PaginationLink,
+    PaginationNext,
+    PaginationEllipsis,
+} from "@/components/ui/pagination";
 
 interface CategoryPageProps {
     params: {
@@ -28,15 +38,36 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     const category = categories.find((cat) => cat.id === categoryId);
     const allProducts = getProductsByCategory(categoryId);
 
-    // Filter states
-    const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-    const [selectedColors, setSelectedColors] = useState<string[]>([]);
-    const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-    const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
-    const [inStockOnly, setInStockOnly] = useState(false);
-    const [sortBy, setSortBy] = useState<string>("featured");
+    const {
+        searchQuery,
+        setSearchQuery,
+        selectedBrands,
+        handleBrandToggle,
+        selectedColors,
+        handleColorToggle,
+        selectedSizes,
+        handleSizeToggle,
+        priceRange,
+        setPriceRange,
+        inStockOnly,
+        setInStockOnly,
+        sortBy,
+        setSortBy,
+        currentPage,
+        setCurrentPage,
+        productsPerPage,
+        maxPrice,
+        filteredProducts,
+        paginatedProducts,
+        totalPages,
+        clearFilters,
+        activeFiltersCount,
+    } = useProductFilters({
+        initialProducts: allProducts,
+        initialCategoryId: categoryId,
+    });
+
     const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-    const [searchQuery, setSearchQuery] = useState("");
 
     if (!category) {
         notFound();
@@ -57,129 +88,6 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         const sizeSet = new Set(allProducts.flatMap((p) => p.sizes));
         return Array.from(sizeSet).sort();
     }, [allProducts]);
-
-    const maxPrice = useMemo(() => {
-        return Math.max(...allProducts.map((p) => p.originalPrice || p.price));
-    }, [allProducts]);
-
-    // Filter and sort products
-    const filteredProducts = useMemo(() => {
-        let filtered = allProducts.filter((product) => {
-            // Brand filter
-            if (
-                selectedBrands.length > 0 &&
-                !selectedBrands.includes(product.brand)
-            ) {
-                return false;
-            }
-
-            // Color filter
-            if (
-                selectedColors.length > 0 &&
-                !product.colors.some((color) => selectedColors.includes(color))
-            ) {
-                return false;
-            }
-
-            // Size filter
-            if (
-                selectedSizes.length > 0 &&
-                !product.sizes.some((size) => selectedSizes.includes(size))
-            ) {
-                return false;
-            }
-
-            // Price filter
-            const productPrice = product.originalPrice || product.price;
-            if (productPrice < priceRange[0] || productPrice > priceRange[1]) {
-                return false;
-            }
-
-            // Stock filter
-            if (inStockOnly && !product.inStock) {
-                return false;
-            }
-
-            return true;
-        });
-
-        // Sort products
-        switch (sortBy) {
-            case "price-low":
-                filtered.sort((a, b) => a.price - b.price);
-                break;
-            case "price-high":
-                filtered.sort((a, b) => b.price - a.price);
-                break;
-            case "rating":
-                filtered.sort((a, b) => b.rating - a.rating);
-                break;
-            case "newest":
-                // For demo purposes, we'll sort by featured status then name
-                filtered.sort((a, b) => {
-                    if (a.featured && !b.featured) return -1;
-                    if (!a.featured && b.featured) return 1;
-                    return a.name.localeCompare(b.name);
-                });
-                break;
-            case "featured":
-            default:
-                filtered.sort((a, b) => {
-                    if (a.featured && !b.featured) return -1;
-                    if (!a.featured && b.featured) return 1;
-                    return 0;
-                });
-                break;
-        }
-
-        return filtered;
-    }, [
-        allProducts,
-        selectedBrands,
-        selectedColors,
-        selectedSizes,
-        priceRange,
-        inStockOnly,
-        sortBy,
-    ]);
-
-    const handleBrandToggle = (brand: string) => {
-        setSelectedBrands((prev) =>
-            prev.includes(brand)
-                ? prev.filter((b) => b !== brand)
-                : [...prev, brand]
-        );
-    };
-
-    const handleColorToggle = (color: string) => {
-        setSelectedColors((prev) =>
-            prev.includes(color)
-                ? prev.filter((c) => c !== color)
-                : [...prev, color]
-        );
-    };
-
-    const handleSizeToggle = (size: string) => {
-        setSelectedSizes((prev) =>
-            prev.includes(size)
-                ? prev.filter((s) => s !== size)
-                : [...prev, size]
-        );
-    };
-
-    const clearFilters = () => {
-        setSelectedBrands([]);
-        setSelectedColors([]);
-        setSelectedSizes([]);
-        setPriceRange([0, maxPrice]);
-        setInStockOnly(false);
-    };
-
-    const activeFiltersCount =
-        selectedBrands.length +
-        selectedColors.length +
-        selectedSizes.length +
-        (inStockOnly ? 1 : 0);
 
     return (
         <div className="space-y-6">
@@ -223,8 +131,8 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 <div className="flex items-center gap-4">
                     <FilterButton
                         showSearch={true}
-                        showCategories={true}
-                        showFeatured={true}
+                        showCategories={false}
+                        showFeatured={false}
                         searchQuery={searchQuery}
                         setSearchQuery={setSearchQuery}
                         availableBrands={availableBrands}
@@ -248,6 +156,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                     <div className="text-sm text-muted-foreground">
                         {filteredProducts.length} of {allProducts.length}{" "}
                         products
+                        {searchQuery && <span> matching "{searchQuery}"</span>}
                     </div>
                 </div>
 
@@ -298,14 +207,16 @@ export default function CategoryPage({ params }: CategoryPageProps) {
             <div className="flex gap-8">
                 {/* Products Grid/List */}
                 <div className="flex-1">
-                    {filteredProducts.length === 0 ? (
+                    {paginatedProducts.length === 0 ? (
                         <div className="text-center py-12">
                             <div className="text-6xl mb-4">🔍</div>
                             <h3 className="text-lg font-semibold mb-2">
                                 No products found
                             </h3>
                             <p className="text-muted-foreground mb-4">
-                                Try adjusting your filters to see more results
+                                {searchQuery
+                                    ? `No products match your search for "${searchQuery}"`
+                                    : "Try adjusting your filters to see more results"}
                             </p>
                             {activeFiltersCount > 0 && (
                                 <Button
@@ -324,14 +235,58 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                                     : "space-y-4"
                             }
                         >
-                            {filteredProducts.map((product) => (
+                            {paginatedProducts.map((product) => (
                                 <ProductCard
                                     key={product.id}
                                     product={product}
-                                    viewMode={viewMode}
+                                    variant={
+                                        viewMode === "list"
+                                            ? "compact"
+                                            : "default"
+                                    }
                                 />
                             ))}
                         </div>
+                    )}
+
+                    {totalPages > 1 && (
+                        <Pagination className="mt-8">
+                            <PaginationContent>
+                                <PaginationItem>
+                                    <PaginationPrevious
+                                        href="#"
+                                        onClick={() =>
+                                            setCurrentPage((prev) =>
+                                                Math.max(1, prev - 1)
+                                            )
+                                        }
+                                    />
+                                </PaginationItem>
+                                {Array.from({ length: totalPages }, (_, i) => (
+                                    <PaginationItem key={i}>
+                                        <PaginationLink
+                                            href="#"
+                                            isActive={currentPage === i + 1}
+                                            onClick={() =>
+                                                setCurrentPage(i + 1)
+                                            }
+                                        >
+                                            {i + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                ))}
+                                <PaginationItem>
+                                    <PaginationNext
+                                        href="#"
+                                        onClick={() =>
+                                            setCurrentPage((prev) =>
+                                                Math.min(totalPages, prev + 1)
+                                            )
+                                        }
+                                    />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
                     )}
                 </div>
             </div>

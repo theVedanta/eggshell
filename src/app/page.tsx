@@ -22,10 +22,25 @@ import {
 } from "@/components/ui/carousel";
 import Newsletter from "@/components/Newsletter";
 import BrandCard from "@/components/BrandCard";
+import { useProductFilters } from "@/hooks/use-product-filters";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationPrevious,
+    PaginationLink,
+    PaginationNext,
+    PaginationEllipsis,
+} from "@/components/ui/pagination";
 
-const featuredProducts = getFeaturedProducts();
+const featuredProductsData = getFeaturedProducts();
 
 export default function HomePage() {
+    const { currentPage, setCurrentPage, paginatedProducts, totalPages } =
+        useProductFilters({
+            initialProducts: featuredProductsData,
+        });
+
     return (
         <div className="space-y-16">
             {/* Hero Section with Product Carousel */}
@@ -67,7 +82,7 @@ export default function HomePage() {
             {/* Featured Products */}
             <section>
                 <div className="products-grid">
-                    {featuredProducts.slice(0, 8).map((product) => (
+                    {paginatedProducts.map((product) => (
                         <ProductCard
                             key={product.id}
                             product={product}
@@ -75,6 +90,43 @@ export default function HomePage() {
                         />
                     ))}
                 </div>
+                {totalPages > 1 && (
+                    <Pagination className="mt-8">
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    href="#"
+                                    onClick={() =>
+                                        setCurrentPage((prev) =>
+                                            Math.max(1, prev - 1)
+                                        )
+                                    }
+                                />
+                            </PaginationItem>
+                            {Array.from({ length: totalPages }, (_, i) => (
+                                <PaginationItem key={i}>
+                                    <PaginationLink
+                                        href="#"
+                                        isActive={currentPage === i + 1}
+                                        onClick={() => setCurrentPage(i + 1)}
+                                    >
+                                        {i + 1}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationItem>
+                                <PaginationNext
+                                    href="#"
+                                    onClick={() =>
+                                        setCurrentPage((prev) =>
+                                            Math.min(totalPages, prev + 1)
+                                        )
+                                    }
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                )}
             </section>
 
             {/* Categories */}

@@ -1,86 +1,15 @@
 "use client";
 
 import * as React from "react";
-import {
-    SidebarProvider,
-    SidebarInset,
-    SidebarTrigger,
-} from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { Separator } from "@/components/ui/separator";
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-import { Home, Search, ShoppingCart, User } from "lucide-react";
-import { useCart } from "@/state/useCart";
-import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useMemo } from "react";
-import { SignedIn, SignUpButton, UserButton } from "@clerk/nextjs";
-import { SignedOut } from "@clerk/nextjs";
-import { CartSheet } from "@/components/CartSheet";
-import { SheetTrigger } from "@/components/ui/sheet";
+import { Home } from "lucide-react";
 
 interface LayoutProps {
     children: React.ReactNode;
 }
 
-function generateBreadcrumbs(pathname: string) {
-    const segments = pathname.split("/").filter(Boolean);
-    const breadcrumbs = [];
-
-    // Always include home
-    breadcrumbs.push({ label: <Home className="h-4 w-4" />, href: "/" });
-
-    // Generate breadcrumbs based on path segments
-    let currentPath = "";
-    for (let i = 0; i < segments.length; i++) {
-        currentPath += `/${segments[i]}`;
-        let label = segments[i];
-
-        // Format labels nicely
-        if (label === "category") {
-            label = "Categories";
-        } else if (label === "product") {
-            label = "Product";
-        } else if (label === "cart") {
-            label = "Shopping Cart";
-        } else if (label === "checkout") {
-            label = "Checkout";
-        } else if (label === "brands") {
-            label = "Brands";
-        } else {
-            // Capitalize and replace dashes with spaces
-            label = label
-                .replace(/-/g, " ")
-                .replace(/\b\w/g, (l) => l.toUpperCase());
-        }
-
-        breadcrumbs.push({
-            label,
-            href: currentPath,
-            isLast: i === segments.length - 1,
-        });
-    }
-
-    return breadcrumbs;
-}
-
 export function Layout({ children }: LayoutProps) {
-    const { itemCount } = useCart();
-    const pathname = usePathname();
-    const breadcrumbs = useMemo(
-        () => generateBreadcrumbs(pathname),
-        [pathname]
-    );
-
     return (
         <SidebarProvider>
             <AppSidebar />
@@ -255,4 +184,45 @@ export function Layout({ children }: LayoutProps) {
             </SidebarInset>
         </SidebarProvider>
     );
+}
+
+export function generateBreadcrumbs(pathname: string) {
+    const segments = pathname.split("/").filter(Boolean);
+    const breadcrumbs = [];
+
+    // Always include home
+    breadcrumbs.push({ label: <Home className="h-4 w-4" />, href: "/" });
+
+    // Generate breadcrumbs based on path segments
+    let currentPath = "";
+    for (let i = 0; i < segments.length; i++) {
+        currentPath += `/${segments[i]}`;
+        let label = segments[i];
+
+        // Format labels nicely
+        if (label === "category") {
+            label = "Categories";
+        } else if (label === "product") {
+            label = "Product";
+        } else if (label === "cart") {
+            label = "Shopping Cart";
+        } else if (label === "checkout") {
+            label = "Checkout";
+        } else if (label === "brands") {
+            label = "Brands";
+        } else {
+            // Capitalize and replace dashes with spaces
+            label = label
+                .replace(/-/g, " ")
+                .replace(/\b\w/g, (l) => l.toUpperCase());
+        }
+
+        breadcrumbs.push({
+            label,
+            href: currentPath,
+            isLast: i === segments.length - 1,
+        });
+    }
+
+    return breadcrumbs;
 }

@@ -21,8 +21,74 @@ import {
     Edit,
 } from "lucide-react";
 import Link from "next/link";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+    DialogClose,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
+    const [addresses, setAddresses] = useState<any[]>([]);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [form, setForm] = useState({
+        firstName: "",
+        lastName: "",
+        street: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        phone: "",
+        landmark: "",
+    });
+
+    function handleInput(
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    }
+
+    function handleSelectChange(name: string, value: string) {
+        setForm({ ...form, [name]: value });
+    }
+
+    function handleAddAddress() {
+        setAddresses([
+            ...addresses,
+            {
+                ...form,
+                id: `address-${addresses.length + 1}`,
+                type: "shipping",
+                isDefault: addresses.length === 0,
+            },
+        ]);
+        setForm({
+            firstName: "",
+            lastName: "",
+            street: "",
+            city: "",
+            state: "",
+            zipCode: "",
+            phone: "",
+            landmark: "",
+        });
+        setDialogOpen(false);
+    }
+
     return (
         <div className="space-y-8">
             {/* Profile Header */}
@@ -101,23 +167,68 @@ export default function ProfilePage() {
                                         faster checkout
                                     </CardDescription>
                                 </div>
-                                <Button size="sm">
+                                <Button
+                                    size="sm"
+                                    onClick={() => setDialogOpen(true)}
+                                >
                                     <Plus className="h-4 w-4 mr-2" />
                                     Add Address
                                 </Button>
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-center py-8">
-                                <MapPin className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-                                <p className="text-muted-foreground mb-4">
-                                    No saved addresses
-                                </p>
-                                <Button variant="outline" size="sm">
-                                    <Plus className="h-4 w-4 mr-2" />
-                                    Add Your First Address
-                                </Button>
-                            </div>
+                            {addresses.length === 0 ? (
+                                <div className="text-center py-8">
+                                    <MapPin className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+                                    <p className="text-muted-foreground mb-4">
+                                        No saved addresses
+                                    </p>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setDialogOpen(true)}
+                                    >
+                                        <Plus className="h-4 w-4 mr-2" />
+                                        Add Your First Address
+                                    </Button>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {addresses.map((addr) => (
+                                        <div
+                                            key={addr.id}
+                                            className="border rounded p-4 text-left"
+                                        >
+                                            <div className="font-semibold flex items-center gap-2">
+                                                {addr.firstName} {addr.lastName}
+                                                {addr.isDefault && (
+                                                    <span className="text-xs text-primary ml-2 px-2 py-0.5 rounded bg-primary/10">
+                                                        Default
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div className="text-sm mt-1">
+                                                {addr.street}
+                                                {addr.landmark && (
+                                                    <span className="text-muted-foreground">
+                                                        , {addr.landmark}
+                                                    </span>
+                                                )}
+                                                <br />
+                                                {addr.city}, {addr.state} -{" "}
+                                                {addr.zipCode}
+                                                <br />
+                                                <span className="text-xs text-muted-foreground">
+                                                    India
+                                                </span>
+                                            </div>
+                                            <div className="text-xs text-muted-foreground mt-1">
+                                                Phone: {addr.phone}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
 
@@ -230,6 +341,175 @@ export default function ProfilePage() {
                     </Card>
                 </div>
             </div>
+
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Add Address</DialogTitle>
+                        <CardDescription className="mt-1 text-xs text-muted-foreground">
+                            We currently deliver only in{" "}
+                            <span className="font-semibold text-primary">
+                                India
+                            </span>
+                            .
+                        </CardDescription>
+                    </DialogHeader>
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            handleAddAddress();
+                        }}
+                        className="grid gap-4"
+                    >
+                        <div className="flex gap-3">
+                            <div className="flex-1 space-y-1">
+                                <Label htmlFor="firstName">First Name</Label>
+                                <Input
+                                    id="firstName"
+                                    name="firstName"
+                                    placeholder="First Name"
+                                    value={form.firstName}
+                                    onChange={handleInput}
+                                    required
+                                />
+                            </div>
+                            <div className="flex-1 space-y-1">
+                                <Label htmlFor="lastName">Last Name</Label>
+                                <Input
+                                    id="lastName"
+                                    name="lastName"
+                                    placeholder="Last Name"
+                                    value={form.lastName}
+                                    onChange={handleInput}
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div className="space-y-1">
+                            <Label htmlFor="street">Street Name</Label>
+                            <Input
+                                id="street"
+                                name="street"
+                                placeholder="e.g. 123 MG Road"
+                                value={form.street}
+                                onChange={handleInput}
+                                required
+                            />
+                        </div>
+                        <div className="space-y-1">
+                            <Label htmlFor="landmark">
+                                Landmark{" "}
+                                <span className="text-xs text-muted-foreground">
+                                    (optional)
+                                </span>
+                            </Label>
+                            <Input
+                                id="landmark"
+                                name="landmark"
+                                placeholder="Near City Mall, Opposite SBI ATM"
+                                value={form.landmark}
+                                onChange={handleInput}
+                            />
+                        </div>
+                        <div className="flex gap-3">
+                            <div className="flex-1 space-y-1">
+                                <Label htmlFor="city">City</Label>
+                                <Input
+                                    id="city"
+                                    name="city"
+                                    placeholder="City"
+                                    value={form.city}
+                                    onChange={handleInput}
+                                    required
+                                />
+                            </div>
+                            <div className="flex-1 space-y-1">
+                                <Label htmlFor="state">State</Label>
+                                <Select
+                                    value={form.state}
+                                    onValueChange={(val) =>
+                                        handleSelectChange("state", val)
+                                    }
+                                    required
+                                >
+                                    <SelectTrigger
+                                        id="state"
+                                        className="w-full"
+                                    >
+                                        <SelectValue placeholder="Select State" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Maharashtra">
+                                            Maharashtra
+                                        </SelectItem>
+                                        <SelectItem value="Delhi">
+                                            Delhi
+                                        </SelectItem>
+                                        <SelectItem value="Karnataka">
+                                            Karnataka
+                                        </SelectItem>
+                                        <SelectItem value="Tamil Nadu">
+                                            Tamil Nadu
+                                        </SelectItem>
+                                        <SelectItem value="Uttar Pradesh">
+                                            Uttar Pradesh
+                                        </SelectItem>
+                                        <SelectItem value="West Bengal">
+                                            West Bengal
+                                        </SelectItem>
+                                        <SelectItem value="Gujarat">
+                                            Gujarat
+                                        </SelectItem>
+                                        <SelectItem value="Rajasthan">
+                                            Rajasthan
+                                        </SelectItem>
+                                        <SelectItem value="Other">
+                                            Other
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="w-32 space-y-1">
+                                <Label htmlFor="zipCode">Pincode</Label>
+                                <Input
+                                    id="zipCode"
+                                    name="zipCode"
+                                    placeholder="e.g. 400001"
+                                    value={form.zipCode}
+                                    onChange={handleInput}
+                                    required
+                                    maxLength={6}
+                                    pattern="[0-9]{6}"
+                                />
+                            </div>
+                        </div>
+                        <div className="space-y-1">
+                            <Label htmlFor="phone">Phone Number</Label>
+                            <div className="flex">
+                                <Input
+                                    id="phone"
+                                    name="phone"
+                                    type="tel"
+                                    placeholder="10-digit mobile number"
+                                    value={form.phone}
+                                    onChange={handleInput}
+                                    required
+                                    maxLength={10}
+                                    pattern="[0-9]{10}"
+                                />
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <Button type="submit">Save Address</Button>
+                            <DialogClose asChild>
+                                <Button variant="outline" type="button">
+                                    Cancel
+                                </Button>
+                            </DialogClose>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

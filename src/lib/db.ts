@@ -41,28 +41,28 @@ export const categories: Category[] = [
         id: "apparel",
         name: "Apparel",
         description: "Modern clothing for every occasion",
-        image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=500&h=300&fit=crop",
+        image: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         subcategories: ["t-shirts", "hoodies", "shirts", "jackets", "pants"],
     },
     {
         id: "accessories",
         name: "Accessories",
         description: "Complete your look with premium accessories",
-        image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&h=300&fit=crop",
+        image: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         subcategories: ["bags", "wallets", "belts", "hats", "sunglasses"],
     },
     {
         id: "footwear",
         name: "Footwear",
         description: "Step up your style with our footwear collection",
-        image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&h=300&fit=crop",
+        image: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         subcategories: ["sneakers", "boots", "sandals", "formal", "casual"],
     },
     {
         id: "jewellery",
         name: "Jewellery",
         description: "Elegant pieces to elevate your style",
-        image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&h=300&fit=crop",
+        image: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         subcategories: [
             "necklaces",
             "rings",
@@ -124,8 +124,8 @@ export const products: Product[] = [
         subcategory: "t-shirts",
         brand: "Minimal Co.",
         images: [
-            "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&h=600&fit=crop",
-            "https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=500&h=600&fit=crop",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         ],
         colors: ["Black", "White", "Gray", "Navy"],
         sizes: ["XS", "S", "M", "L", "XL", "XXL"],
@@ -145,8 +145,8 @@ export const products: Product[] = [
         subcategory: "t-shirts",
         brand: "Urban Edge",
         images: [
-            "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=500&h=600&fit=crop",
-            "https://images.unsplash.com/photo-1583743814966-8936f37f4fc3?w=500&h=600&fit=crop",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         ],
         colors: ["Black", "White", "Olive"],
         sizes: ["S", "M", "L", "XL"],
@@ -169,8 +169,8 @@ export const products: Product[] = [
         subcategory: "hoodies",
         brand: "Comfort Zone",
         images: [
-            "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=600&fit=crop",
-            "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=600&fit=crop",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         ],
         colors: ["Charcoal", "Cream", "Forest Green"],
         sizes: ["S", "M", "L", "XL", "XXL"],
@@ -192,7 +192,7 @@ export const products: Product[] = [
         subcategory: "jackets",
         brand: "Classic Heritage",
         images: [
-            "https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=500&h=600&fit=crop",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         ],
         colors: ["Indigo", "Black", "Light Wash"],
         sizes: ["S", "M", "L", "XL"],
@@ -214,8 +214,8 @@ export const products: Product[] = [
         subcategory: "sneakers",
         brand: "Minimal Co.",
         images: [
-            "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&h=600&fit=crop",
-            "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=500&h=600&fit=crop",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         ],
         colors: ["White", "Black", "Gray"],
         sizes: [
@@ -247,8 +247,8 @@ export const products: Product[] = [
         subcategory: "sneakers",
         brand: "Urban Edge",
         images: [
-            "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&h=600&fit=crop",
-            "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&h=600&fit=crop",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         ],
         colors: ["Black/White", "Navy/Orange", "Gray/Blue"],
         sizes: ["7", "8", "9", "10", "11", "12"],
@@ -270,8 +270,8 @@ export const products: Product[] = [
         subcategory: "boots",
         brand: "Classic Heritage",
         images: [
-            "https://images.unsplash.com/photo-1520256862855-398228c41684?w=500&h=600&fit=crop",
-            "https://images.unsplash.com/photo-1608256246200-53e8b47b859f?w=500&h=600&fit=crop",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         ],
         colors: ["Brown", "Black", "Tan"],
         sizes: ["7", "8", "9", "10", "11", "12"],
@@ -294,8 +294,8 @@ export const products: Product[] = [
         subcategory: "bags",
         brand: "Luxe Craft",
         images: [
-            "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&h=600&fit=crop",
-            "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&h=600&fit=crop",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         ],
         colors: ["Brown", "Black", "Cognac"],
         sizes: ["One Size"],
@@ -315,8 +315,8 @@ export const products: Product[] = [
         subcategory: "bags",
         brand: "Minimal Co.",
         images: [
-            "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&h=600&fit=crop",
-            "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=500&h=600&fit=crop",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         ],
         colors: ["Natural", "Black", "Navy"],
         sizes: ["One Size"],
@@ -338,7 +338,7 @@ export const products: Product[] = [
         subcategory: "wallets",
         brand: "Minimal Co.",
         images: [
-            "https://images.unsplash.com/photo-1627123424574-724758594e93?w=500&h=600&fit=crop",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
             sample_image_url,
         ],
         colors: ["Black", "Brown", "Navy"],
@@ -362,8 +362,8 @@ export const products: Product[] = [
         subcategory: "watches",
         brand: "Classic Heritage",
         images: [
-            "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500&h=600&fit=crop",
-            "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=500&h=600&fit=crop",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         ],
         colors: ["Silver", "Gold", "Black"],
         sizes: ["One Size"],
@@ -385,8 +385,8 @@ export const products: Product[] = [
         subcategory: "necklaces",
         brand: "Luxe Craft",
         images: [
-            "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&h=600&fit=crop",
-            "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&h=600&fit=crop",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         ],
         colors: ["Silver", "Gold"],
         sizes: ['16"', '18"', '20"'],
@@ -408,7 +408,7 @@ export const products: Product[] = [
         subcategory: "rings",
         brand: "Luxe Craft",
         images: [
-            "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500&h=600&fit=crop",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
             sample_image_url,
         ],
         colors: ["Silver", "Gold", "Black"],
@@ -431,8 +431,8 @@ export const products: Product[] = [
         subcategory: "sunglasses",
         brand: "Classic Heritage",
         images: [
-            "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500&h=600&fit=crop",
-            "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&h=600&fit=crop",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+            "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
         ],
         colors: ["Gold/Brown", "Silver/Gray", "Black/Black"],
         sizes: ["One Size"],
@@ -452,6 +452,123 @@ export const ad_products = [
     },
 ];
 
+export const orders = [
+    {
+        id: "order-001",
+        userId: "user-001",
+        items: [
+            {
+                id: "cartitem-001",
+                productId: "tshirt-001",
+                name: "Essential Crew Neck Tee",
+                price: 29.99,
+                image: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+                color: "Black",
+                size: "M",
+                quantity: 2,
+            },
+            {
+                id: "cartitem-002",
+                productId: "sneaker-001",
+                name: "Minimalist Low-Top Sneakers",
+                price: 149.99,
+                image: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+                color: "White",
+                size: "9",
+                quantity: 1,
+            },
+        ],
+        total: 209.97,
+        subtotal: 209.97,
+        tax: 0,
+        shipping: 0,
+        discount: 0,
+        status: "delivered",
+        shippingAddress: {
+            id: "address-001",
+            type: "shipping",
+            firstName: "Vedanta",
+            lastName: "Singh",
+            address: "123 Main St",
+            city: "New York",
+            state: "NY",
+            zipCode: "10001",
+            country: "USA",
+            phone: "1234567890",
+            isDefault: true,
+        },
+        billingAddress: {
+            id: "address-002",
+            type: "billing",
+            firstName: "Vedanta",
+            lastName: "Singh",
+            address: "123 Main St",
+            city: "New York",
+            state: "NY",
+            zipCode: "10001",
+            country: "USA",
+            phone: "1234567890",
+            isDefault: true,
+        },
+        paymentMethod: "card",
+        trackingNumber: "TRACK123456",
+        createdAt: "2024-06-01T10:00:00Z",
+        updatedAt: "2024-06-02T12:00:00Z",
+    },
+    {
+        id: "order-002",
+        userId: "user-001",
+        items: [
+            {
+                id: "cartitem-003",
+                productId: "bag-001",
+                name: "Leather Messenger Bag",
+                price: 199.99,
+                image: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+                color: "Brown",
+                size: "One Size",
+                quantity: 1,
+            },
+        ],
+        total: 199.99,
+        subtotal: 199.99,
+        tax: 0,
+        shipping: 0,
+        discount: 0,
+        status: "shipped",
+        shippingAddress: {
+            id: "address-001",
+            type: "shipping",
+            firstName: "Vedanta",
+            lastName: "Singh",
+            address: "123 Main St",
+            city: "New York",
+            state: "NY",
+            zipCode: "10001",
+            country: "USA",
+            phone: "1234567890",
+            isDefault: true,
+        },
+        billingAddress: {
+            id: "address-002",
+            type: "billing",
+            firstName: "Vedanta",
+            lastName: "Singh",
+            address: "123 Main St",
+            city: "New York",
+            state: "NY",
+            zipCode: "10001",
+            country: "USA",
+            phone: "1234567890",
+            isDefault: true,
+        },
+        paymentMethod: "card",
+        trackingNumber: "TRACK654321",
+        createdAt: "2024-06-03T09:00:00Z",
+        updatedAt: "2024-06-03T10:00:00Z",
+    },
+];
+
 // Helper functions
 export const getProductsByCategory = (categoryId: string): Product[] => {
     return products.filter((product) => product.category === categoryId);
@@ -466,7 +583,7 @@ export const getProductsByBrand = (brandName: string): Product[] => {
 };
 
 export const getFeaturedProducts = (): Product[] => {
-    return products.filter((product) => product.featured);
+    return products.filter((product) => product);
 };
 
 export const getProductById = (id: string): Product | undefined => {
