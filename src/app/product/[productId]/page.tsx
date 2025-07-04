@@ -134,11 +134,6 @@ export default function ProductPage({ params }: ProductPageProps) {
 
                         {/* Image Badges */}
                         <div className="absolute top-4 left-4 flex flex-col gap-2">
-                            {product.featured && (
-                                <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">
-                                    Featured
-                                </Badge>
-                            )}
                             {discountPercentage && (
                                 <Badge
                                     variant="destructive"
@@ -330,27 +325,27 @@ export default function ProductPage({ params }: ProductPageProps) {
                                                         "white"
                                                             ? "#ffffff"
                                                             : color.toLowerCase() ===
-                                                              "black"
-                                                            ? "#000000"
-                                                            : color.toLowerCase() ===
-                                                              "gray"
-                                                            ? "#6b7280"
-                                                            : color.toLowerCase() ===
-                                                              "navy"
-                                                            ? "#1e3a8a"
-                                                            : color.toLowerCase() ===
-                                                              "brown"
-                                                            ? "#92400e"
-                                                            : color.toLowerCase() ===
-                                                              "green"
-                                                            ? "#059669"
-                                                            : color.toLowerCase() ===
-                                                              "blue"
-                                                            ? "#2563eb"
-                                                            : color.toLowerCase() ===
-                                                              "red"
-                                                            ? "#dc2626"
-                                                            : "#6b7280",
+                                                                "black"
+                                                              ? "#000000"
+                                                              : color.toLowerCase() ===
+                                                                  "gray"
+                                                                ? "#6b7280"
+                                                                : color.toLowerCase() ===
+                                                                    "navy"
+                                                                  ? "#1e3a8a"
+                                                                  : color.toLowerCase() ===
+                                                                      "brown"
+                                                                    ? "#92400e"
+                                                                    : color.toLowerCase() ===
+                                                                        "green"
+                                                                      ? "#059669"
+                                                                      : color.toLowerCase() ===
+                                                                          "blue"
+                                                                        ? "#2563eb"
+                                                                        : color.toLowerCase() ===
+                                                                            "red"
+                                                                          ? "#dc2626"
+                                                                          : "#6b7280",
                                                 }}
                                             />
                                             {color}

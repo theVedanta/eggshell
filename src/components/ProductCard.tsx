@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Crown, Heart, Plus, ShoppingCart, Star } from "lucide-react";
+import { Heart, Plus, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -92,7 +92,7 @@ export function ProductCard({
                             }
                             alt={product.name}
                             fill
-                            className="object-cover transition-transform duration-500 rounded-none"
+                            className="object-cover transition-transform duration-500 rounded-lg"
                             onError={() => setImageError(true)}
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                         />
@@ -116,15 +116,6 @@ export function ProductCard({
                                             : "text-gray-600"
                                     )}
                                 />
-                            </Button>
-                            <Button
-                                size="icon"
-                                variant="secondary"
-                                className="h-8 w-8 rounded-full bg-primary/90 backdrop-blur-sm hover:bg-primary"
-                                onClick={handleAddToCart}
-                                disabled={!product.inStock}
-                            >
-                                <ShoppingCart className="h-4 w-4 text-gray-600" />
                             </Button>
                         </div>
 

@@ -25,7 +25,6 @@ import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     Select,
     SelectContent,
@@ -520,7 +519,7 @@ export default function CheckoutPage() {
                                                 value as any
                                             )
                                         }
-                                        className="space-y-4"
+                                        className="space-y-0"
                                     >
                                         <div className="flex items-center space-x-3 p-4 border rounded-lg">
                                             <RadioGroupItem
@@ -538,19 +537,11 @@ export default function CheckoutPage() {
                                                             Credit or Debit Card
                                                         </span>
                                                     </div>
-                                                    <div className="flex gap-1">
-                                                        <div className="w-8 h-5 bg-blue-600 rounded text-white text-xs flex items-center justify-center font-bold">
-                                                            V
-                                                        </div>
-                                                        <div className="w-8 h-5 bg-red-600 rounded text-white text-xs flex items-center justify-center font-bold">
-                                                            M
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </Label>
                                         </div>
 
-                                        <div className="flex items-center space-x-3 p-4 border rounded-lg opacity-50">
+                                        <div className="flex items-center space-x-3 p-4 border rounded-lg">
                                             <RadioGroupItem
                                                 value="paypal"
                                                 id="paypal"
@@ -565,14 +556,17 @@ export default function CheckoutPage() {
                                                         <div className="w-4 h-4 bg-blue-500 rounded-full" />
                                                         <span>PayPal</span>
                                                     </div>
-                                                    <Badge variant="secondary">
+                                                    <Badge
+                                                        className="ml-3"
+                                                        variant="secondary"
+                                                    >
                                                         Coming Soon
                                                     </Badge>
                                                 </div>
                                             </Label>
                                         </div>
 
-                                        <div className="flex items-center space-x-3 p-4 border rounded-lg opacity-50">
+                                        <div className="flex items-center space-x-3 p-4 border rounded-lg">
                                             <RadioGroupItem
                                                 value="apple_pay"
                                                 id="apple_pay"
@@ -587,7 +581,10 @@ export default function CheckoutPage() {
                                                         <div className="w-4 h-4 bg-black rounded" />
                                                         <span>Apple Pay</span>
                                                     </div>
-                                                    <Badge variant="secondary">
+                                                    <Badge
+                                                        className="ml-3"
+                                                        variant="secondary"
+                                                    >
                                                         Coming Soon
                                                     </Badge>
                                                 </div>

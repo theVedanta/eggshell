@@ -106,8 +106,16 @@ export default function BrandPage({ params }: BrandPageProps) {
         <div className="space-y-8">
             {/* Brand Header */}
             <div className="text-center space-y-6">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground text-3xl font-bold mb-4">
-                    {brand.name.charAt(0)}
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground text-3xl font-bold mb-4 overflow-hidden">
+                    {brand.logo ? (
+                        <img
+                            src={brand.logo}
+                            alt={brand.name}
+                            className="object-cover w-full h-full"
+                        />
+                    ) : (
+                        brand.name.charAt(0)
+                    )}
                 </div>
 
                 <div>
@@ -120,7 +128,7 @@ export default function BrandPage({ params }: BrandPageProps) {
 
                     <div className="flex flex-wrap justify-center gap-4 mb-6">
                         {brand.featured && (
-                            <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">
+                            <Badge className="bg-gradient-to-r from-indigo-800 to-purple-900 text-white border-0">
                                 Featured Brand
                             </Badge>
                         )}
@@ -140,42 +148,6 @@ export default function BrandPage({ params }: BrandPageProps) {
                         </Badge>
                     </div>
                 </div>
-
-                {/* Brand Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
-                    <Card>
-                        <CardContent className="p-4 text-center">
-                            <div className="text-2xl font-bold text-primary mb-1">
-                                {brandProducts.length}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                                Total Products
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardContent className="p-4 text-center">
-                            <div className="text-2xl font-bold text-primary mb-1">
-                                ${priceRange.min} - ${priceRange.max}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                                Price Range
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardContent className="p-4 text-center">
-                            <div className="text-2xl font-bold text-primary mb-1">
-                                {availableCategories.length}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                                Categories
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
             </div>
 
             {/* Featured Products */}
@@ -191,7 +163,7 @@ export default function BrandPage({ params }: BrandPageProps) {
                     </div>
 
                     <div className="products-grid">
-                        {featuredProducts.slice(0, 4).map((product) => (
+                        {brandProducts.slice(0, 4).map((product) => (
                             <ProductCard
                                 key={product.id}
                                 product={product}
@@ -342,7 +314,7 @@ export default function BrandPage({ params }: BrandPageProps) {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
                         {availableCategories.map((categoryId) => {
                             const category = categories.find(
                                 (c) => c.id === categoryId

@@ -85,7 +85,7 @@ export const brands: Brand[] = [
         id: "minimal-co",
         name: "Minimal Co.",
         description: "Clean, minimalist designs for everyday wear",
-        logo: "https://via.placeholder.com/150x75/f5f5f5/333333?text=Minimal+Co",
+        logo: "https://brandlogos.net/wp-content/uploads/2020/03/Adidas-logo-300x300.png",
         featured: true,
     },
     {
