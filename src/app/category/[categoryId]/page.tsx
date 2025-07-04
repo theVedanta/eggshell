@@ -156,7 +156,12 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                     <div className="text-sm text-muted-foreground">
                         {filteredProducts.length} of {allProducts.length}{" "}
                         products
-                        {searchQuery && <span> matching "{searchQuery}"</span>}
+                        {searchQuery && (
+                            <span>
+                                {" "}
+                                matching &quot;{searchQuery}&quot;
+                            </span>
+                        )}
                     </div>
                 </div>
 

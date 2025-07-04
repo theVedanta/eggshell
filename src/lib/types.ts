@@ -151,7 +151,7 @@ export interface NavItem {
     href: string;
     description?: string;
     items?: NavItem[];
-    icon?: React.ComponentType<any>;
+    icon?: React.FC;
 }
 
 export interface SiteConfig {

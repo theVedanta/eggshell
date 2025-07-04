@@ -156,7 +156,7 @@ export default function OrderConfirmationPage() {
                             <div className="flex-1">
                                 <div className="font-medium">Processing</div>
                                 <div className="text-sm text-muted-foreground">
-                                    We're preparing your items for shipment
+                                    We&apos;re preparing your items for shipment
                                 </div>
                             </div>
                             <Badge variant="secondary">In Progress</Badge>
@@ -286,7 +286,7 @@ export default function OrderConfirmationPage() {
             {/* Next Steps */}
             <Card>
                 <CardHeader>
-                    <CardTitle>What's Next?</CardTitle>
+                    <CardTitle>What&apos;s Next?</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -298,7 +298,7 @@ export default function OrderConfirmationPage() {
                                 Track Your Order
                             </h3>
                             <p className="text-sm text-muted-foreground mb-3">
-                                You'll receive a tracking number via email once
+                                You&apos;ll receive a tracking number via email once
                                 your order ships.
                             </p>
                         </div>
@@ -311,7 +311,7 @@ export default function OrderConfirmationPage() {
                                 Delivery Updates
                             </h3>
                             <p className="text-sm text-muted-foreground mb-3">
-                                We'll send you updates about your delivery
+                                We&apos;ll send you updates about your delivery
                                 status.
                             </p>
                         </div>
@@ -322,7 +322,7 @@ export default function OrderConfirmationPage() {
                             </div>
                             <h3 className="font-semibold mb-2">Easy Returns</h3>
                             <p className="text-sm text-muted-foreground mb-3">
-                                30-day hassle-free returns if you're not
+                                30-day hassle-free returns if you&apos;re not
                                 completely satisfied.
                             </p>
                         </div>

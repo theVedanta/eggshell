@@ -151,7 +151,9 @@ export default function ShopPage() {
 
                     <div className="text-sm text-muted-foreground">
                         {filteredProducts.length} of {products.length} products
-                        {searchQuery && <span> matching "{searchQuery}"</span>}
+                        {searchQuery && (
+                            <span> matching &quot;{searchQuery}&quot;</span>
+                        )}
                     </div>
                 </div>
 

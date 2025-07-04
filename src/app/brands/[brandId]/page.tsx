@@ -3,10 +3,10 @@
 import { useState, useMemo } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Star, Package, Filter, Grid, List } from "lucide-react";
+import { Star, Package, Grid, List } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
     Select,
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { ProductCard } from "@/components/ProductCard";
 import { brands, getProductsByBrand, categories } from "@/lib/db";
+import Image from "next/image";
 
 interface BrandPageProps {
     params: {
@@ -27,7 +28,10 @@ interface BrandPageProps {
 export default function BrandPage({ params }: BrandPageProps) {
     const { brandId } = params;
     const brand = brands.find((b) => b.id === brandId);
-    const brandProducts = brand ? getProductsByBrand(brand.name) : [];
+
+    const brandProducts = useMemo(() => {
+        return brand ? getProductsByBrand(brand.name) : [];
+    }, [brand]);
 
     const [sortBy, setSortBy] = useState<string>("featured");
     const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -45,7 +49,7 @@ export default function BrandPage({ params }: BrandPageProps) {
 
     // Filter and sort products
     const filteredProducts = useMemo(() => {
-        let filtered = brandProducts;
+        let filtered = [...brandProducts];
 
         // Category filter
         if (selectedCategory !== "all") {
@@ -108,10 +112,13 @@ export default function BrandPage({ params }: BrandPageProps) {
             <div className="text-center space-y-6">
                 <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground text-3xl font-bold mb-4 overflow-hidden">
                     {brand.logo ? (
-                        <img
+                        <Image
                             src={brand.logo}
                             alt={brand.name}
                             className="object-cover w-full h-full"
+                            width={80}
+                            height={80}
+                            priority
                         />
                     ) : (
                         brand.name.charAt(0)
@@ -158,7 +165,7 @@ export default function BrandPage({ params }: BrandPageProps) {
                             Featured from {brand.name}
                         </h2>
                         <p className="text-muted-foreground">
-                            Our top picks from this brand's collection
+                            Our top picks from this brand&apos;s collection
                         </p>
                     </div>
 
@@ -358,7 +365,7 @@ export default function BrandPage({ params }: BrandPageProps) {
             {/* Back to all brands */}
             <div className="text-center pt-8">
                 <Button variant="outline" asChild>
-                    <Link href="/brands">← Back to All Brands</Link>
+                    <Link href="/brands">&larr; Back to All Brands</Link>
                 </Button>
             </div>
         </div>

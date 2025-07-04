@@ -10,7 +10,7 @@ import {
 interface UseProductFiltersProps {
     initialProducts?: Product[];
     productsData?: Product[];
-    categoriesData?: any[];
+    categoriesData?: { id: string; name: string }[];
     initialCategoryId?: string;
     productsPerPage?: number;
 }
@@ -71,7 +71,7 @@ export const useProductFilters = ({
 
     // Filter and sort products
     const filteredProducts = useMemo(() => {
-        let filtered = productsToFilter.filter((product) => {
+        const filtered = productsToFilter.filter((product) => {
             // Search query
             if (searchQuery) {
                 const query = searchQuery.toLowerCase();

@@ -39,6 +39,7 @@ import { categories } from "@/lib/db";
 import { Button } from "./ui/button";
 import { CartSheet } from "./CartSheet";
 import { SheetTrigger } from "./ui/sheet";
+import Image from "next/image";
 
 const mainNavItems = [
     {
@@ -128,7 +129,7 @@ export function AppSidebar() {
                                 href="/"
                                 className="flex items-center gap-3 px-2 py-1.5"
                             >
-                                <img
+                                <Image
                                     src="/assets/logo/1x.png"
                                     alt="Eggshell Store Logo"
                                     className="w-12 h-12 object-contain"

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/sheet";
 import {
     Carousel,
+    CarouselApi,
     CarouselContent,
     CarouselItem,
 } from "@/components/ui/carousel";
@@ -21,7 +22,7 @@ import { Check, ShoppingCart } from "lucide-react";
 export function CartSheet({ children }: { children: React.ReactNode }) {
     const { items, total, itemCount } = useCart();
     const [activeIndex, setActiveIndex] = useState(0);
-    const [carouselApi, setCarouselApi] = useState<any>(null);
+    const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
     const [open, setOpen] = useState(false);
 
     // Order summary calculations (mimic cart page)
@@ -32,7 +33,7 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
     const grandTotal = subtotal - discount + shipping + tax;
 
     // Handle carousel change
-    const handleApi = (api: any) => {
+    const handleApi = (api: CarouselApi | null) => {
         setCarouselApi(api);
         if (api) {
             setActiveIndex(api.selectedScrollSnap());

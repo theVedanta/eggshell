@@ -140,7 +140,7 @@ export default function CheckoutPage() {
     const tax = (subtotal + shipping) * 0.08;
     const total = subtotal + shipping + tax;
 
-    const updateForm = (field: keyof CheckoutForm, value: any) => {
+    const updateForm = (field: keyof CheckoutForm, value: string) => {
         setForm((prev) => ({ ...prev, [field]: value }));
     };
 
@@ -315,7 +315,7 @@ export default function CheckoutPage() {
                                             onCheckedChange={(checked) =>
                                                 updateForm(
                                                     "newsletter",
-                                                    checked
+                                                    checked as string
                                                 )
                                             }
                                         />
@@ -514,10 +514,7 @@ export default function CheckoutPage() {
                                     <RadioGroup
                                         value={form.paymentMethod}
                                         onValueChange={(value) =>
-                                            updateForm(
-                                                "paymentMethod",
-                                                value as any
-                                            )
+                                            updateForm("paymentMethod", value)
                                         }
                                         className="space-y-0"
                                     >

@@ -1,6 +1,5 @@
 "use client";
 
-import { UserProfile } from "@clerk/nextjs";
 import {
     Card,
     CardContent,
@@ -39,11 +38,9 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
-    const [addresses, setAddresses] = useState<any[]>([]);
+    const [addresses, setAddresses] = useState<unknown[]>([]);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [form, setForm] = useState({
         firstName: "",

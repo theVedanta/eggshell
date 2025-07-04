@@ -66,7 +66,7 @@ export default function CartPage() {
                             Your cart is empty
                         </h1>
                         <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-                            Looks like you haven't added anything to your cart
+                            Looks like you haven&apos;t added anything to your cart
                             yet. Start shopping to fill it up!
                         </p>
                         <Button
@@ -283,7 +283,7 @@ export default function CartPage() {
                                 </div>
                             )}
                             <p className="text-xs text-muted-foreground mt-2">
-                                Try code "SAVE10" for 10% off your order
+                                Try code &quot;SAVE10&quot; for 10% off your order
                             </p>
                         </CardContent>
                     </Card>
