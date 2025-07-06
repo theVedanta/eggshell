@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, Plus, ShoppingCart } from "lucide-react";
+import { Heart, Plus, ShoppingCart, Star } from "lucide-react";
+import tailwindColorMapping from "@/lib/tailwindColorMapping";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -184,25 +185,25 @@ export function ProductCard({
                     </div>
 
                     {/* Product Details */}
-                    <div className="py-4 space-y-1">
+                    <div className="py-2 space-y-1">
                         {/* Product Name */}
-                        <h3 className="font-bold text-xl leading-tight line-clamp-2 group-hover/card:text-primary transition-colors">
+                        <h3 className="font-bebas text-xl line-clamp-1 group-hover/card:text-primary">
                             {product.name}
                         </h3>
 
                         {/* Brand */}
                         <div className="flex items-center justify-between">
-                            <span className="text-sm text-muted-foreground font-semibold">
+                            <span className="text-sm text-muted-foreground font-semibold line-clamp-1">
                                 {product.brand}
                             </span>
 
                             {/* Rating */}
-                            {/* <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-1">
                                 <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                                 <span className="text-xs text-muted-foreground">
                                     {product.rating} ({product.reviewCount})
                                 </span>
-                            </div> */}
+                            </div>
                         </div>
 
                         {/* Price */}
@@ -227,34 +228,12 @@ export function ProductCard({
                                                 .map((color, index) => (
                                                     <div
                                                         key={index}
-                                                        className="w-4 h-4 rounded-full border border-primary/60"
+                                                        className={`w-4 h-4 rounded-full ${color.toLowerCase() === "black" ? "border border-primary/60" : ""}`}
                                                         style={{
                                                             backgroundColor:
-                                                                color.toLowerCase() ===
-                                                                "white"
-                                                                    ? "#ffffff"
-                                                                    : color.toLowerCase() ===
-                                                                        "black"
-                                                                      ? "#000000"
-                                                                      : color.toLowerCase() ===
-                                                                          "gray"
-                                                                        ? "#6b7280"
-                                                                        : color.toLowerCase() ===
-                                                                            "navy"
-                                                                          ? "#1e3a8a"
-                                                                          : color.toLowerCase() ===
-                                                                              "brown"
-                                                                            ? "#92400e"
-                                                                            : color.toLowerCase() ===
-                                                                                "green"
-                                                                              ? "#059669"
-                                                                              : color.toLowerCase() ===
-                                                                                  "blue"
-                                                                                ? "#2563eb"
-                                                                                : color.toLowerCase() ===
-                                                                                    "red"
-                                                                                  ? "#dc2626"
-                                                                                  : "#6b7280",
+                                                                tailwindColorMapping[
+                                                                    color.toLowerCase()
+                                                                ] || "#6b7280",
                                                         }}
                                                         title={color}
                                                     />
@@ -268,8 +247,6 @@ export function ProductCard({
                                     </div>
                                 )}
                         </div>
-
-                        {/* Colors (if not compact) */}
                     </div>
                 </CardContent>
             </Card>
