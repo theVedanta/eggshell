@@ -2,16 +2,16 @@
 import { Button } from "@/components/ui/button";
 import { categories } from "@/lib/db";
 import Link from "next/link";
-import Image from "next/image";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignUpButton,
-  UserButton,
-} from "@clerk/nextjs";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Separator } from "@radix-ui/react-separator";
+// import Image from "next/image";
+// import {
+//   SignedIn,
+//   SignedOut,
+//   SignInButton,
+//   SignUpButton,
+//   UserButton,
+// } from "@clerk/nextjs";
+// import { SidebarTrigger } from "@/components/ui/sidebar";
+// import { Separator } from "@radix-ui/react-separator";
 
 export default function HomePage() {
   return (
@@ -30,7 +30,7 @@ export default function HomePage() {
           </Link>
 
           {/* Auth Section */}
-          <div className="flex items-center space-x-4">
+          {/* <div className="flex items-center space-x-4">
             <SignedOut>
               <SignInButton>
                 <Button asChild variant="ghost" size="sm">
@@ -39,9 +39,9 @@ export default function HomePage() {
               </SignInButton>
             </SignedOut>
             <SignedIn>
-              <UserButton showName/>
+              <UserButton showName />
             </SignedIn>
-          </div>
+          </div> */}
         </div>
       </nav>
 

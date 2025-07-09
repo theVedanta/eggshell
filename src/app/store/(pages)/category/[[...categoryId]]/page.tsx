@@ -35,15 +35,6 @@ export default function CategoryPage() {
 
   const [categoryId, subcategoryId] = categoryPath || [];
 
-  // Debug: Check what we're getting
-  console.log("Category Path:", categoryPath);
-  console.log("Category ID:", categoryId);
-  console.log("Subcategory ID:", subcategoryId);
-  console.log(
-    "Available categories:",
-    categories.map((c) => c.id)
-  );
-
   // Map URL-friendly names to actual category IDs
   const categoryMapping: Record<string, string> = {
     clothing: "apparel",
@@ -56,21 +47,36 @@ export default function CategoryPage() {
   const actualCategoryId = categoryMapping[categoryId] || categoryId;
   const category = categories.find((cat) => cat.id === actualCategoryId);
 
-  console.log("Actual Category ID:", actualCategoryId);
-  console.log("Found Category:", category);
+  // Filter products by category and optionally by subcategory (wrapped in useMemo)
+  const allProducts = useMemo(() => {
+    let products = actualCategoryId
+      ? getProductsByCategory(actualCategoryId)
+      : [];
 
-  // Filter products by category and optionally by subcategory
-  let allProducts = actualCategoryId
-    ? getProductsByCategory(actualCategoryId)
-    : [];
+    if (subcategoryId && products.length > 0) {
+      products = products.filter(
+        (product) => product.subcategory === subcategoryId
+      );
+    }
 
-  if (subcategoryId && allProducts.length > 0) {
-    allProducts = allProducts.filter(
-      (product) => product.subcategory === subcategoryId
-    );
-  }
+    return products;
+  }, [actualCategoryId, subcategoryId]);
 
-  console.log("All Products Count:", allProducts.length);
+  // Get unique filter options (moved to top level)
+  const availableBrands = useMemo(() => {
+    const brandSet = new Set(allProducts.map((p) => p.brand));
+    return Array.from(brandSet).sort();
+  }, [allProducts]);
+
+  const availableColors = useMemo(() => {
+    const colorSet = new Set(allProducts.flatMap((p) => p.colors));
+    return Array.from(colorSet).sort();
+  }, [allProducts]);
+
+  const availableSizes = useMemo(() => {
+    const sizeSet = new Set(allProducts.flatMap((p) => p.sizes));
+    return Array.from(sizeSet).sort();
+  }, [allProducts]);
 
   const {
     searchQuery,
@@ -105,7 +111,6 @@ export default function CategoryPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   if (categoryId && !category) {
-    console.log("Category not found, returning 404");
     notFound();
   }
 
@@ -140,22 +145,6 @@ export default function CategoryPage() {
       </div>
     );
   }
-
-  // Get unique filter options
-  const availableBrands = useMemo(() => {
-    const brandSet = new Set(allProducts.map((p) => p.brand));
-    return Array.from(brandSet).sort();
-  }, [allProducts]);
-
-  const availableColors = useMemo(() => {
-    const colorSet = new Set(allProducts.flatMap((p) => p.colors));
-    return Array.from(colorSet).sort();
-  }, [allProducts]);
-
-  const availableSizes = useMemo(() => {
-    const sizeSet = new Set(allProducts.flatMap((p) => p.sizes));
-    return Array.from(sizeSet).sort();
-  }, [allProducts]);
 
   return (
     <div className="space-y-6">

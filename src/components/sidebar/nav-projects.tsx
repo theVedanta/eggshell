@@ -35,7 +35,7 @@ export function NavLinks({
       href: string;
       icon: LucideIcon | undefined;
       disabled: boolean;
-    }
+    },
   ];
 }) {
   const { isMobile } = useSidebar();

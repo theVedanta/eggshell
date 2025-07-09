@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -73,17 +73,17 @@ export default function ShopPage() {
   const availableBrands = useMemo(() => {
     const brandSet = new Set(products.map((p) => p.brand));
     return Array.from(brandSet).sort();
-  }, [products]);
+  }, []);
 
   const availableColors = useMemo(() => {
     const colorSet = new Set(products.flatMap((p) => p.colors || []));
     return Array.from(colorSet).sort();
-  }, [products]);
+  }, []);
 
   const availableSizes = useMemo(() => {
     const sizeSet = new Set(products.flatMap((p) => p.sizes || []));
     return Array.from(sizeSet).sort();
-  }, [products]);
+  }, []);
 
   return (
     <div className="space-y-6">

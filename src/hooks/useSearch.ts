@@ -63,17 +63,20 @@ export function useSearch<T extends SearchableItem>({
         // Search in subcategory (very high priority) - for shoes, sneakers, t-shirts, etc.
         if (item.subcategory && typeof item.subcategory === "string") {
           const subcategoryValue = item.subcategory.toLowerCase();
-          
+
           // Use category to determine footwear vs apparel matches
           const isFootwearCategory = item.category === "footwear";
           const isApparelCategory = item.category === "apparel";
-          
+
           // Handle variations like "shoes" matching any footwear subcategory
           const isShoeMatch = query.includes("shoe") && isFootwearCategory;
-          
+
           // Handle variations like "shirt" matching apparel subcategories
-          const isShirtMatch = query.includes("shirt") && isApparelCategory &&
-            (subcategoryValue.includes("t-shirt") || subcategoryValue.includes("polo"));
+          const isShirtMatch =
+            query.includes("shirt") &&
+            isApparelCategory &&
+            (subcategoryValue.includes("t-shirt") ||
+              subcategoryValue.includes("polo"));
 
           if (subcategoryValue.includes(query) || isShoeMatch || isShirtMatch) {
             hasMatch = true;
@@ -160,7 +163,7 @@ export function useSearch<T extends SearchableItem>({
     }
 
     return filtered;
-  }, [items, searchQuery, searchFields, sortBy, nameField, descriptionField]);
+  }, [items, searchQuery, searchFields]);
 
   return {
     filteredItems: filteredAndSortedItems,
