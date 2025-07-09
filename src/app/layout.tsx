@@ -33,7 +33,7 @@ export default function RootLayout({
                 <body
                     className={`${geist.variable} ${bebas_neue.variable} dark antialiased`}
                 >
-                    <Layout>{children}</Layout>
+                    {children}
                     <Toaster />
                 </body>
             </html>
