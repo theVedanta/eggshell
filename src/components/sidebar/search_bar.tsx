@@ -24,6 +24,13 @@ export default function SearchBar() {
   useEffect(() => {
     setIsLoading(false);
 
+    // Only perform search on store pages
+    const isStorePage = pathname === "/store" || pathname.startsWith("/store/");
+
+    if (!isStorePage) {
+      return;
+    }
+
     // Create new URLSearchParams object
     const params = new URLSearchParams(searchParams);
 
@@ -38,6 +45,13 @@ export default function SearchBar() {
     const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
     router.replace(newUrl);
   }, [query, pathname, router, searchParams]);
+
+  // Check if we're on a store page to show/hide the search bar
+  const isStorePage = pathname === "/store" || pathname.startsWith("/store/");
+
+  if (!isStorePage) {
+    return null;
+  }
 
   return (
     <div className="p-2">

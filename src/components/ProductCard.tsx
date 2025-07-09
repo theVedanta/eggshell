@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Crown, Heart, Plus, ShoppingCart, Star } from "lucide-react";
+import { Heart, Plus, ShoppingCart, Star } from "lucide-react";
 import tailwindColorMapping from "@/lib/tailwindColorMapping";
 import { useState } from "react";
 
@@ -70,7 +70,7 @@ export function ProductCard({
     <Link href={`/product/${product.id}`}>
       <Card
         className={cn(
-          "product-card ecommerce-card overflow-hidden transition-all duration-300 bg-black hover:shadow-xl py-0 rounded-lg",
+          "product-card ecommerce-card overflow-hidden transition-all duration-300 rounded-none bg-black hover:shadow-xl py-0",
           cardVariants[variant],
           className
         )}
@@ -88,7 +88,7 @@ export function ProductCard({
               src={product.images[0] || "/placeholder-product.jpg"}
               alt={product.name}
               fill
-              className="object-cover transition-transform duration-500"
+              className="object-cover transition-transform duration-500 rounded-lg"
               onError={() => setImageError(true)}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
             />
@@ -115,15 +115,17 @@ export function ProductCard({
 
             {/* Badges */}
             <div className="absolute top-3 left-3 flex flex-wrap gap-1 w-[66%]">
-              {product.featured && (
-                <Badge className="bg-background/60 backdrop-blur-md text-black-700 border border-primary/40 font-semibold shadow-md">
-                  <Crown className="h-3 w-3 fill-amber-500 text-amber-500 mr-1" />
-                  Featured
-                </Badge>
-              )}
-              {discountPercentage && (
-                <Badge variant="default">-{discountPercentage}%</Badge>
-              )}
+              {/* {product.featured && (
+                                <Badge className="bg-background/60 backdrop-blur-md text-black-700 border border-primary/40 font-semibold shadow-md">
+                                    <Crown className="h-3 w-3 fill-amber-500 text-amber-500 mr-1" />
+                                    Featured
+                                </Badge>
+                            )} */}
+              {/* {discountPercentage && (
+                                <Badge variant="destructive">
+                                    -{discountPercentage}%
+                                </Badge>
+                            )} */}
               {!product.inStock && (
                 <Badge variant="secondary" className="bg-gray-500 text-primary">
                   Out of Stock
@@ -167,9 +169,9 @@ export function ProductCard({
           </div>
 
           {/* Product Details */}
-          <div className="space-y-1 p-4">
+          <div className="py-2 space-y-1">
             {/* Product Name */}
-            <h3 className="font-semibold text-xl line-clamp-1 group-hover/card:text-primary">
+            <h3 className="font-bebas text-xl line-clamp-1 group-hover/card:text-primary">
               {product.name}
             </h3>
 
@@ -207,11 +209,7 @@ export function ProductCard({
                     {product.colors.slice(0, 4).map((color, index) => (
                       <div
                         key={index}
-                        className={`w-4 h-4 rounded-full ${
-                          color.toLowerCase() === "black"
-                            ? "border border-primary/60"
-                            : ""
-                        }`}
+                        className={`w-4 h-4 rounded-full ${color.toLowerCase() === "black" ? "border border-primary/60" : ""}`}
                         style={{
                           backgroundColor:
                             tailwindColorMapping[color.toLowerCase()] ||
