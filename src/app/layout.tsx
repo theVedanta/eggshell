@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Suspense } from "react";
 // import { ClerkProvider } from "@clerk/nextjs";
 import { Poppins, Geist } from "next/font/google";
+import { Layout } from "@/components/layout";
 
 const geist = Geist({
   variable: "--font-geist",
@@ -32,7 +33,9 @@ export default function RootLayout({
       <body
         className={`${geist.variable} ${bebas_neue.variable} dark antialiased`}
       >
-        <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout>{children}</Layout>
+        </Suspense>
         <Toaster />
       </body>
     </html>

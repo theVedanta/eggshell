@@ -26,3 +26,12 @@ export interface SidebarItemTypes {
 }
 
 export type SidebarItems = SidebarItemTypes[];
+
+interface SideBarAccountInfoItemsTypes {
+  title: string;
+  href: string;
+  icon: LucideIcon | undefined;
+  disabled: boolean;
+}
+
+export type SideBarAccountInfoItems = SideBarAccountInfoItemsTypes[];
