@@ -1,5 +1,15 @@
-import { SidebarItems } from "@/types/sidebar.items.types";
-import { BriefcaseBusiness, Home, LayoutDashboard, Store } from "lucide-react";
+import {
+  SideBarAccountInfoItems,
+  SidebarItems,
+} from "@/types/sidebar.items.types";
+import {
+  BriefcaseBusiness,
+  Home,
+  LayoutDashboard,
+  ScrollText,
+  Store,
+  User,
+} from "lucide-react";
 
 export const SideBarNavItems: SidebarItems = [
   {
@@ -64,6 +74,34 @@ export const SideBarNavItems: SidebarItems = [
           },
         ],
       },
+      {
+        subItemName: "Accessories",
+        href: "/store/category/accessories",
+        icon: undefined,
+        disabled: false,
+        isEndItem: false,
+      },
+      {
+        subItemName: "Bags",
+        href: "/store/category/bags",
+        icon: undefined,
+        disabled: false,
+        isEndItem: true,
+        EndItemsList: [
+          {
+            title: "Backpacks",
+            href: "/store/category/bags/backpacks",
+            icon: undefined,
+            disabled: false,
+          },
+          {
+            title: "Handbags",
+            href: "/store/category/bags/handbags",
+            icon: undefined,
+            disabled: false,
+          },
+        ],
+      },
     ],
   },
   {
@@ -72,5 +110,20 @@ export const SideBarNavItems: SidebarItems = [
     icon: BriefcaseBusiness,
     disabled: false,
     isSubItem: false,
+  },
+];
+
+export const sideBarAccountInfoItems: SideBarAccountInfoItems = [
+  {
+    title: "Orders",
+    href: "/orders",
+    icon: ScrollText,
+    disabled: false,
+  },
+  {
+    title: "Profile",
+    href: "/profile",
+    icon: User,
+    disabled: false,
   },
 ];
