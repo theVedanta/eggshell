@@ -1,23 +1,15 @@
 import { type LucideIcon } from "lucide-react";
 
-interface EndItem {
+export interface SubItem {
   title: string;
   href: string;
   icon: LucideIcon | undefined;
   disabled: boolean;
-}
-
-interface SubItem {
-  subItemName: string;
-  href: string;
-  icon: LucideIcon | undefined;
-  disabled: boolean;
-  isEndItem: boolean;
-  EndItemsList?: EndItem[];
 }
 
 export interface SidebarItemTypes {
   title: string;
+  subMenuViewName: string | undefined;
   href?: string;
   icon?: LucideIcon | undefined;
   disabled: boolean;

@@ -7,6 +7,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetFooter,
+  SheetTitle,
 } from "@/components/ui/sheet";
 import {
   Carousel,
@@ -49,6 +50,7 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
       <SheetContent side="right" className="p-0 max-w-sm w-full flex flex-col">
         <SheetHeader className="border-b p-4 flex flex-row items-center justify-between">
           <span className="font-semibold text-lg">Your Cart ({itemCount})</span>
+          <SheetTitle className="hidden">{}</SheetTitle>
         </SheetHeader>
         <div className="flex-1 flex flex-col gap-4 p-4 overflow-y-auto">
           {items.length === 0 ? (
