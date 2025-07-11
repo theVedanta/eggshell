@@ -4,6 +4,7 @@ import {
 } from "@/types/sidebar.items.types";
 import {
   BriefcaseBusiness,
+  Footprints,
   Home,
   LayoutDashboard,
   ScrollText,
@@ -16,6 +17,7 @@ export const SideBarNavItems: SidebarItems = [
     title: "Home",
     href: "/",
     icon: Home,
+    subMenuViewName: undefined,
     disabled: false,
     isSubItem: false,
   },
@@ -23,93 +25,75 @@ export const SideBarNavItems: SidebarItems = [
     title: "Store",
     href: "/store",
     icon: Store,
+    subMenuViewName: undefined,
     disabled: false,
     isSubItem: false,
-  },
-  {
-    title: "Categories",
-    icon: LayoutDashboard,
-    disabled: false,
-    isSubItem: true,
-    SubItemsList: [
-      {
-        subItemName: "Footwear",
-        href: "/store/category/footwear",
-        icon: undefined,
-        disabled: false,
-        isEndItem: true,
-        EndItemsList: [
-          {
-            title: "Sneakers",
-            href: "/store/category/footwear/sneakers",
-            icon: undefined,
-            disabled: false,
-          },
-          {
-            title: "Trainers",
-            href: "/store/category/footwear/trainers",
-            icon: undefined,
-            disabled: false,
-          },
-        ],
-      },
-      {
-        subItemName: "Clothing",
-        href: "/category/clothing",
-        icon: undefined,
-        disabled: false,
-        isEndItem: true,
-        EndItemsList: [
-          {
-            title: "T-Shirts",
-            href: "/store/category/clothing/t-shirts",
-            icon: undefined,
-            disabled: false,
-          },
-          {
-            title: "Jeans",
-            href: "/store/category/clothing/jeans",
-            icon: undefined,
-            disabled: false,
-          },
-        ],
-      },
-      {
-        subItemName: "Accessories",
-        href: "/store/category/accessories",
-        icon: undefined,
-        disabled: false,
-        isEndItem: false,
-      },
-      {
-        subItemName: "Bags",
-        href: "/store/category/bags",
-        icon: undefined,
-        disabled: false,
-        isEndItem: true,
-        EndItemsList: [
-          {
-            title: "Backpacks",
-            href: "/store/category/bags/backpacks",
-            icon: undefined,
-            disabled: false,
-          },
-          {
-            title: "Handbags",
-            href: "/store/category/bags/handbags",
-            icon: undefined,
-            disabled: false,
-          },
-        ],
-      },
-    ],
   },
   {
     title: "Brands",
     href: "/brands",
+    subMenuViewName: "brands",
     icon: BriefcaseBusiness,
     disabled: false,
-    isSubItem: false,
+    isSubItem: true,
+    SubItemsList: [
+      {
+        title: "Nike",
+        href: "/brands/nike",
+        icon: BriefcaseBusiness,
+        disabled: false,
+      },
+      {
+        title: "Adidas",
+        href: "/brands/adidas",
+        icon: BriefcaseBusiness,
+        disabled: false,
+      },
+    ],
+  },
+  {
+    title: "FootWares",
+    href: "/footwares",
+    subMenuViewName: "footwares",
+    icon: Footprints,
+    disabled: false,
+    isSubItem: true,
+    SubItemsList: [
+      {
+        title: "Shoes",
+        href: "/brands/nike",
+        icon: BriefcaseBusiness,
+        disabled: false,
+      },
+      {
+        title: "Sanals",
+        href: "/brands/adidas",
+        icon: BriefcaseBusiness,
+        disabled: false,
+      },
+    ],
+  },
+  {
+    title: "Clothing",
+    href: "/cloathing",
+    subMenuViewName: "cloathing",
+    icon: Footprints,
+    disabled: false,
+    isSubItem: true,
+    SubItemsList: [
+      {
+        title: "Shoes",
+        href: "/brands/nike",
+        icon: BriefcaseBusiness,
+        disabled: false,
+      },
+      {
+        title: "Sanals",
+        href: "/brands/adidas",
+        icon: BriefcaseBusiness,
+        disabled: false,
+      },
+    ],
   },
 ];
 

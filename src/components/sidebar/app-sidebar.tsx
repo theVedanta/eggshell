@@ -14,15 +14,21 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { sideBarAccountInfoItems, SideBarNavItems } from "./demo_data";
-import { Search } from "lucide-react";
+import { Search, ShoppingCart } from "lucide-react";
 
 import { useRef, useEffect } from "react";
 import SearchBar from "./search_bar";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { CartSheet } from "../CartSheet";
+import { Button } from "../ui/button";
+import { SheetTrigger } from "../ui/sheet";
+import { Badge } from "../ui/badge";
+import { useCart } from "@/state/useCart";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { itemCount } = useCart();
   const path = usePathname();
   const { state, setOpen } = useSidebar();
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -57,7 +63,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="overflow-hidden">
         {state == "collapsed" ? (
           <div className="flex items-center justify-center p-2">
             <SidebarMenuButton
@@ -85,6 +91,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {sideBarAccountInfoItems.map((opt) => (
           <SidebarMenuItem key={opt.title} className="list-none">
             <SidebarMenuButton
+              tooltip={opt.title}
               asChild
               className={`flex items-center gap-2 px-3 py-2 hover:bg-accent/60 ${
                 path === opt.href
@@ -99,6 +106,37 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}
+        {/* Cart button moved to the bottom */}
+        <SidebarMenuItem>
+          <SidebarMenuButton
+            tooltip={"Cart"}
+            isActive={itemCount > 0}
+            className="py-0 p-0 cursor-pointer transition duration-300"
+          >
+            <CartSheet>
+              <SheetTrigger asChild>
+                <span
+                  className={`${state === "collapsed" ? "px-0" : "px-3"} relative w-full flex items-center h-full transition duration-300`}
+                >
+                  <ShoppingCart className="h-4 w-4" />
+                  {/* Show text only when expanded */}
+                  {state === "expanded" && (
+                    <span className="ml-2 text-sm">Cart</span>
+                  )}
+                  {itemCount > 0 && state === "expanded" && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute top-2 right-3 h-4 w-4 rounded-full p-0 text-xs flex items-center justify-center px-3"
+                    >
+                      {itemCount > 100 ? "99+" : itemCount}
+                    </Badge>
+                  )}
+                  <span className="sr-only">Shopping cart</span>
+                </span>
+              </SheetTrigger>
+            </CartSheet>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
       </SidebarFooter>
     </Sidebar>
   );

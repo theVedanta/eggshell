@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { categories } from "@/lib/db";
 import Link from "next/link";
-import Image from "next/image";
+import SearchBar from "@/components/sidebar/search_bar";
 
 export default function HomePage() {
   return (
@@ -33,6 +33,7 @@ export default function HomePage() {
             </Button>
           </Link>
         ))}
+        <SearchBar />
       </div>
     </section>
   );
