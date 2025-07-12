@@ -1,7 +1,7 @@
 import { SidebarItems } from "@/types/sidebar.items.types";
 import { useSidebarStore } from "@/hooks/useSideBar";
 import MainMenu from "./menus/MainMenu";
-import BrainsList from "./menus/BrandsMenu";
+import BrandslList from "./menus/BrandsMenu";
 import NormalList from "./menus/NormalMenu";
 import { AnimatePresence, motion } from "motion/react";
 
@@ -16,7 +16,7 @@ export function NavMain({ navItems }: { navItems: SidebarItems }) {
         initial={{ opacity: 0 }}
         exit={{ opacity: 0 }}
         transition={{
-          duration: 0.2,
+          duration: 0.1,
           ease: "easeInOut",
         }}
       >
@@ -25,7 +25,7 @@ export function NavMain({ navItems }: { navItems: SidebarItems }) {
             case "main":
               return <MainMenu array={navItems} />;
             case "brands":
-              return <BrainsList brandsList={navItems} />;
+              return <BrandslList brandsList={navItems} />;
             default:
               return <NormalList itemsList={navItems} />;
           }

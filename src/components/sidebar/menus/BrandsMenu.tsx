@@ -1,14 +1,7 @@
-import {
-  ArrowLeft,
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  Leaf,
-} from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Leaf } from "lucide-react";
 import {
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -25,30 +18,35 @@ export default function BrandslList({
 }) {
   const { view, goBack, goForward, isLast } = useSidebarStore();
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel className="p-3 py-6">
-        <Button
-          onClick={() => goBack()}
-          variant="ghost"
-          className="p-2"
-          size={"icon"}
-        >
-          <ChevronLeft />
-        </Button>
-        <h1 className="w-full text-center text-xl p-2 capitalize">Brands</h1>
-        <Button
-          disabled={isLast}
-          onClick={() => goForward()}
-          variant="ghost"
-          className="p-2"
-          size={"icon"}
-        >
-          <ChevronRight />
-        </Button>
-      </SidebarGroupLabel>
+    <SidebarGroup className="!pt-0">
+      <div className="flex-col">
+        <div className="flex items-center">
+          <Button onClick={() => goBack()} variant="ghost" size={"icon"}>
+            <ChevronLeft />
+          </Button>
+          <h1 className="w-full text-center text-xl capitalize">Brands</h1>
+          <Button
+            disabled={isLast}
+            onClick={() => goForward()}
+            variant="ghost"
+            size={"icon"}
+          >
+            <ChevronRight />
+          </Button>
+        </div>
+      </div>
+
       <SidebarGroupContent>
         <SidebarMenu>
-          <SidebarMenuItem className="space-y-2 mt-3">
+          <SidebarMenuItem className="space-y-1 mt-3">
+            <Button
+              onClick={() => goBack()}
+              variant="link"
+              className="w-full text-left flex items-center justify-start"
+            >
+              <ArrowLeft /> Go Back
+            </Button>
+
             {brandsList.map(
               (list) =>
                 list.isSubItem &&

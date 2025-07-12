@@ -70,7 +70,7 @@ export function ProductCard({
     <Link href={`/product/${product.id}`}>
       <Card
         className={cn(
-          "product-card ecommerce-card overflow-hidden transition-all duration-300 rounded-none bg-black hover:shadow-xl py-0",
+          "product-card ecommerce-card overflow-hidden transition-all duration-300 rounded-none bg-neutral-950 hover:shadow-xl py-0",
           cardVariants[variant],
           className
         )}

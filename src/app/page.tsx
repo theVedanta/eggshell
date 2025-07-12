@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { categories } from "@/lib/db";
 import Link from "next/link";
 import SearchBar from "@/components/sidebar/search_bar";
+import { ChevronDown } from "lucide-react";
 
 export default function HomePage() {
   return (
@@ -33,8 +34,11 @@ export default function HomePage() {
             </Button>
           </Link>
         ))}
-        <SearchBar />
       </div>
+      <SearchBar />
+      <Button variant="ghost" className="mt-10">
+        <ChevronDown size={96} />
+      </Button>
     </section>
   );
 }

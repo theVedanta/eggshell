@@ -152,7 +152,7 @@
 
   /* Product image container with aspect ratio */
   .product-image-container {
-    @apply relative overflow-hidden bg-muted;
+    @apply relative overflow-hidden bg-neutral-950;
     aspect-ratio: 4/5;
   }
 

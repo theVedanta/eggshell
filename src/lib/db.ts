@@ -44,7 +44,7 @@ export const categories: Category[] = [
     name: "Apparel",
     description: "Modern clothing for every occasion",
     image:
-      "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+      "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/8f5a0b79-653c-4bee-bcb0-f611dd3c11e6/WMNS+NIKE+FIELD+GENERAL.png",
     subcategories: ["t-shirts", "hoodies", "shirts", "jackets", "pants"],
   },
   {
@@ -52,7 +52,7 @@ export const categories: Category[] = [
     name: "Accessories",
     description: "Complete your look with premium accessories",
     image:
-      "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+      "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/8f5a0b79-653c-4bee-bcb0-f611dd3c11e6/WMNS+NIKE+FIELD+GENERAL.png",
     subcategories: ["bags", "wallets", "belts", "hats", "sunglasses"],
   },
   {
@@ -60,7 +60,7 @@ export const categories: Category[] = [
     name: "Footwear",
     description: "Step up your style with our footwear collection",
     image:
-      "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+      "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/8f5a0b79-653c-4bee-bcb0-f611dd3c11e6/WMNS+NIKE+FIELD+GENERAL.png",
     subcategories: ["sneakers", "boots", "sandals", "formal", "casual"],
   },
   {
@@ -68,7 +68,7 @@ export const categories: Category[] = [
     name: "Jewellery",
     description: "Elegant pieces to elevate your style",
     image:
-      "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+      "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/8f5a0b79-653c-4bee-bcb0-f611dd3c11e6/WMNS+NIKE+FIELD+GENERAL.png",
     subcategories: ["necklaces", "rings", "earrings", "bracelets", "watches"],
   },
 ];
@@ -130,7 +130,7 @@ export const orders = [
         name: "Essential Crew Neck Tee",
         price: 29.99,
         image:
-          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/8f5a0b79-653c-4bee-bcb0-f611dd3c11e6/WMNS+NIKE+FIELD+GENERAL.png",
         color: "Black",
         size: "M",
         quantity: 2,
@@ -141,7 +141,7 @@ export const orders = [
         name: "Minimalist Low-Top Sneakers",
         price: 149.99,
         image:
-          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/8f5a0b79-653c-4bee-bcb0-f611dd3c11e6/WMNS+NIKE+FIELD+GENERAL.png",
         color: "White",
         size: "9",
         quantity: 1,
@@ -194,7 +194,7 @@ export const orders = [
         name: "Leather Messenger Bag",
         price: 199.99,
         image:
-          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/bd5c28ef-0041-408e-bde2-c4a6588bc069/NIKE+FIELD+GENERAL.png",
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/8f5a0b79-653c-4bee-bcb0-f611dd3c11e6/WMNS+NIKE+FIELD+GENERAL.png",
         color: "Brown",
         size: "One Size",
         quantity: 1,
