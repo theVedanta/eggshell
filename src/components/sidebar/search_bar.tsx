@@ -23,27 +23,51 @@ const SearchBar = forwardRef<HTMLInputElement, unknown>(
 
     useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
 
+    // Sync input value with URL search params and clear when not on store page
     useEffect(() => {
-      // Create new URLSearchParams object
-      const params = new URLSearchParams(searchParams);
-
-      if (query) {
-        if (!pathname.startsWith("/store")) {
-          router.push(`/store?search=${query}`);
-          return;
-        }
-        params.set("search", query);
+      const searchParam = searchParams.get("search");
+      
+      if (!pathname.startsWith("/store")) {
+        // Clear input when not on store page
+        setInputVal("");
+        setIsLoading(false);
+      } else if (searchParam) {
+        // Set input value from URL when on store page
+        setInputVal(searchParam);
         setIsLoading(false);
       } else {
-        params.delete("search");
+        // Clear input when no search param on store page
+        setInputVal("");
         setIsLoading(false);
       }
+    }, [pathname, searchParams]); // Run when pathname or searchParams change
 
-      // Update URL without navigation
-      const queryString = params.toString();
-      const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
-      router.replace(newUrl);
-    }, [query, pathname, router, searchParams]);
+    // Handle search query updates
+    useEffect(() => {
+      // Only update URL if we're on the store page or if there's a query
+      if (!pathname.startsWith("/store") && query) {
+        router.push(`/store?search=${query}`);
+        setIsLoading(false);
+        return;
+      }
+
+      if (pathname.startsWith("/store")) {
+        const params = new URLSearchParams(searchParams);
+        
+        if (query) {
+          params.set("search", query);
+        } else {
+          params.delete("search");
+        }
+        
+        setIsLoading(false);
+        
+        // Update URL without navigation
+        const queryString = params.toString();
+        const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
+        router.replace(newUrl);
+      }
+    }, [query]); // Only depend on query, not pathname
 
     return (
       <div className="p-2 mt-3">
