@@ -22,7 +22,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CartSheet } from "../CartSheet";
-import { Button } from "../ui/button";
 import { SheetTrigger } from "../ui/sheet";
 import { Badge } from "../ui/badge";
 import { useCart } from "@/state/useCart";
@@ -55,7 +54,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 />
 
                 <div className="flex flex-col justify-center min-w-0">
-                  <h1 className="font-bold text-xl">EggShell</h1>
+                  <h1 className="font-bebas text-xl">EggShell</h1>
                 </div>
               </Link>
             </SidebarMenuButton>

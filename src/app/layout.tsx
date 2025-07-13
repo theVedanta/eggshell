@@ -30,6 +30,58 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="icon"
+          href="/assets/favicon/android-chrome-192x192.png"
+          sizes="192x192"
+          type="image/png"
+        />
+        <link
+          rel="icon"
+          href="/assets/favicon/android-chrome-512x512.png"
+          sizes="512x512"
+          type="image/png"
+        />
+        <link rel="manifest" href="/assets/favicon/site.webmanifest" />
+        <meta
+          name="description"
+          content="EggShell - Buy clothes, shoes, and accessories from Indian homegrown brands. Modern fashion and lifestyle products."
+        />
+        <meta
+          name="keywords"
+          content="fashion, lifestyle, Indian brands, homegrown, clothes, shoes, accessories, ecommerce, EggShell, buy online, modern fashion, premium products"
+        />
+        <meta name="theme-color" content="#ffffff" />
+        <meta
+          property="og:title"
+          content="EggShell - Modern Fashion & Lifestyle"
+        />
+        <meta
+          property="og:description"
+          content="EggShell is your destination for modern fashion, footwear, accessories, and premium lifestyle products from Indian brands."
+        />
+        <meta
+          property="og:image"
+          content="/assets/images/eggshell-og-image.png"
+        />
+        <meta property="og:url" content="https://www.eggshellstore.com" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="EggShell - Modern Fashion & Lifestyle"
+        />
+        <meta
+          name="twitter:description"
+          content="EggShell is your destination for modern fashion, footwear, accessories, and premium lifestyle products from Indian brands."
+        />
+        <meta
+          name="twitter:image"
+          content="/assets/images/eggshell-twitter-image.png"
+        />
+        <link rel="canonical" href="https://www.eggshellstore.com" />
+      </head>
       <body
         className={`${geist.variable} ${bebas_neue.variable} dark antialiased`}
       >

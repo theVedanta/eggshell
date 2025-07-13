@@ -171,13 +171,13 @@ export function ProductCard({
           {/* Product Details */}
           <div className="py-2 space-y-1">
             {/* Product Name */}
-            <h3 className="font-bebas text-xl line-clamp-1 group-hover/card:text-primary">
+            <h3 className="font-bebas text-base md:text-xl line-clamp-1 group-hover/card:text-primary">
               {product.name}
             </h3>
 
             {/* Brand */}
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground font-semibold line-clamp-1">
+              <span className="text-xs md:text-sm text-muted-foreground font-semibold line-clamp-1">
                 {product.brand}
               </span>
 
@@ -191,13 +191,14 @@ export function ProductCard({
             </div>
 
             {/* Price */}
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex items-start justify-between gap-2">
               <div>
-                <span className="price-display text-foreground">
+                <span className="price-display text-foreground text-sm md:text-base">
                   ₹{product.price.toFixed(2)}
                 </span>
+                <br className="block md:hidden" />
                 {product.originalPrice && (
-                  <span className="price-original pl-2">
+                  <span className="price-original md:pl-2 text-sm md:text-base">
                     ₹{product.originalPrice.toFixed(2)}
                   </span>
                 )}
@@ -206,23 +207,43 @@ export function ProductCard({
               {variant !== "compact" && product.colors.length > 0 && (
                 <div className="flex items-center gap-1">
                   <div className="flex gap-1">
-                    {product.colors.slice(0, 4).map((color, index) => (
-                      <div
-                        key={index}
-                        className={`w-4 h-4 rounded-full ${color.toLowerCase() === "black" ? "border border-primary/60" : ""}`}
-                        style={{
-                          backgroundColor:
-                            tailwindColorMapping[color.toLowerCase()] ||
-                            "#6b7280",
-                        }}
-                        title={color}
-                      />
-                    ))}
-                    {product.colors.length > 4 && (
-                      <span className="text-xs text-muted-foreground">
-                        +{product.colors.length - 4}
-                      </span>
-                    )}
+                    {/* Responsive color display: 2 on mobile, 4 on desktop */}
+                    {(() => {
+                      // Use a media query to determine screen size
+                      // This is a simple approach using window.matchMedia
+                      // For SSR, fallback to 2
+                      let maxColors = 2;
+                      if (typeof window !== "undefined") {
+                        if (window.matchMedia("(min-width: 768px)").matches) {
+                          maxColors = 4;
+                        }
+                      }
+                      const displayedColors = product.colors.slice(
+                        0,
+                        maxColors
+                      );
+                      return (
+                        <div className="flex items-center space-x-1 md:space-x-2">
+                          {displayedColors.map((color, index) => (
+                            <div
+                              key={index}
+                              className={`w-3 h-3 md:w-4 md:h-4 rounded-full ${color.toLowerCase() === "black" ? "border border-primary/60" : ""}`}
+                              style={{
+                                backgroundColor:
+                                  tailwindColorMapping[color.toLowerCase()] ||
+                                  "#6b7280",
+                              }}
+                              title={color}
+                            />
+                          ))}
+                          {product.colors.length > maxColors && (
+                            <span className="text-xs text-muted-foreground">
+                              +{product.colors.length - maxColors}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
               )}
