@@ -11,7 +11,6 @@ import {
   ShoppingCart,
   Plus,
   Minus,
-  Check,
   Truck,
   Shield,
   RefreshCw,
@@ -42,7 +41,6 @@ export default function ProductPage() {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [hovering, setHovering] = useState(false);
 
   const { addToCart } = useCart();
 
@@ -109,10 +107,10 @@ export default function ProductPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Product Images */}
-        <div className="space-y-4">
+        <div>
           {/* Main Image */}
-          <div className="aspect-square relative overflow-hidden rounded-xl bg-muted">
-            <Lens hovering={hovering} setHovering={setHovering}>
+          <div className="space-y-4 sticky top-20">
+            <div className="aspect-square relative overflow-hidden rounded-xl bg-muted">
               <img
                 src={
                   product.images[selectedImage] || "/placeholder-product.jpg"
@@ -124,45 +122,47 @@ export default function ProductPage() {
                   height: "100",
                 }}
               />
-            </Lens>
 
-            {/* Image Badges */}
-            <div className="absolute top-4 left-4 flex flex-col gap-2">
-              {discountPercentage && (
-                <Badge variant="destructive" className="bg-red-500">
-                  -{discountPercentage}%
-                </Badge>
-              )}
-              {!product.inStock && (
-                <Badge variant="secondary" className="bg-gray-500 text-white">
-                  Out of Stock
-                </Badge>
-              )}
+              {/* Image Badges */}
+              {/* <div className="absolute top-4 left-4 flex flex-col gap-2">
+                  {discountPercentage && (
+                    <Badge variant="destructive" className="bg-red-500">
+                      -{discountPercentage}%
+                    </Badge>
+                  )}
+                  {!product.inStock && (
+                    <Badge variant="secondary" className="bg-gray-500 text-white">
+                      Out of Stock
+                    </Badge>
+                  )}
+                </div> */}
             </div>
+
+            {/* Thumbnail Images */}
+            {product.images.length > 1 && (
+              <div className="flex gap-2 overflow-x-auto">
+                {product.images.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImage(index)}
+                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
+                      selectedImage === index
+                        ? "border-primary"
+                        : "border-border"
+                    }`}
+                  >
+                    <Image
+                      src={image || "/placeholder-product.jpg"}
+                      alt={`${product.name} ${index + 1}`}
+                      width={80}
+                      height={80}
+                      className="object-cover w-full h-full"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-
-          {/* Thumbnail Images */}
-          {product.images.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto">
-              {product.images.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImage(index)}
-                  className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                    selectedImage === index ? "border-primary" : "border-border"
-                  }`}
-                >
-                  <Image
-                    src={image || "/placeholder-product.jpg"}
-                    alt={`${product.name} ${index + 1}`}
-                    width={80}
-                    height={80}
-                    className="object-cover w-full h-full"
-                  />
-                </button>
-              ))}
-            </div>
-          )}
         </div>
 
         {/* Product Details */}
@@ -172,7 +172,7 @@ export default function ProductPage() {
             <div>
               <Link
                 href={`/brands/${brand?.id}`}
-                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                className="text-lg text-muted-foreground hover:text-primary transition-colors"
               >
                 {product.brand}
               </Link>

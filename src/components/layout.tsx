@@ -5,6 +5,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { Home } from "lucide-react";
 import { AppSidebar } from "./sidebar/app-sidebar";
 import Footer from "./Footer";
+import TopNavbar from "./TopNavbar";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,7 +15,8 @@ export function Layout({ children }: LayoutProps) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset className="ml-16 md:ml-64">
+      <TopNavbar />
+      <SidebarInset className="ml-0 mt-12 sm:ml-16 md:ml-64">
         {/* Main Content */}
         <main className="flex-1 min-h-screen">
           <div className="container-wide mx-auto px-4 py-6">{children}</div>

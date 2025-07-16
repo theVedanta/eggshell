@@ -29,8 +29,17 @@ import { useCart } from "@/state/useCart";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { itemCount } = useCart();
   const path = usePathname();
-  const { state, setOpen } = useSidebar();
+  const { state, setOpen, open } = useSidebar();
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const isPhone =
+    typeof window !== "undefined" &&
+    window.matchMedia("(max-width: 767px)").matches;
+
+  // If screen is phone, setOpen to false
+  if (!isPhone && !open) {
+    setOpen(true);
+  }
 
   useEffect(() => {
     if (state === "expanded" && searchInputRef.current) {
@@ -41,7 +50,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       collapsible="none"
-      className="fixed left-0 top-0 h-screen z-40"
+      className={`fixed top-0 h-screen z-40
+          ${open ? "left-0" : "left-full"}
+          sm:left-0`}
       {...props}
     >
       <SidebarHeader className="mb-4">
