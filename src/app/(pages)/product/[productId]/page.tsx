@@ -29,6 +29,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { getProductById, getRelatedProducts, brands } from "@/lib/db";
 import { useCart } from "@/state/useCart";
 import { toast } from "sonner";
+import { Lens } from "@/components/ui/lens";
 
 export default function ProductPage() {
   const params = useParams<{ productId: string }>();
@@ -41,6 +42,7 @@ export default function ProductPage() {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [hovering, setHovering] = useState(false);
 
   const { addToCart } = useCart();
 
@@ -110,14 +112,19 @@ export default function ProductPage() {
         <div className="space-y-4">
           {/* Main Image */}
           <div className="aspect-square relative overflow-hidden rounded-xl bg-muted">
-            <Image
-              src={product.images[selectedImage] || "/placeholder-product.jpg"}
-              alt={product.name}
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
+            <Lens hovering={hovering} setHovering={setHovering}>
+              <img
+                src={
+                  product.images[selectedImage] || "/placeholder-product.jpg"
+                }
+                alt={product.name}
+                style={{
+                  objectFit: "cover",
+                  width: "100",
+                  height: "100",
+                }}
+              />
+            </Lens>
 
             {/* Image Badges */}
             <div className="absolute top-4 left-4 flex flex-col gap-2">
@@ -131,29 +138,6 @@ export default function ProductPage() {
                   Out of Stock
                 </Badge>
               )}
-            </div>
-
-            {/* Wishlist & Share */}
-            <div className="absolute top-4 right-4 flex flex-col gap-2">
-              <Button
-                size="icon"
-                variant="secondary"
-                className="h-10 w-10 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white"
-                onClick={handleWishlist}
-              >
-                <Heart
-                  className={`h-5 w-5 transition-colors ${
-                    isWishlisted ? "fill-red-500 text-red-500" : "text-gray-600"
-                  }`}
-                />
-              </Button>
-              <Button
-                size="icon"
-                variant="secondary"
-                className="h-10 w-10 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white"
-              >
-                <Share2 className="h-5 w-5 text-gray-600" />
-              </Button>
             </div>
           </div>
 
@@ -183,15 +167,38 @@ export default function ProductPage() {
 
         {/* Product Details */}
         <div className="space-y-6">
-          {/* Brand & Title */}
-          <div>
-            <Link
-              href={`/brands/${brand?.id}`}
-              className="text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              {product.brand}
-            </Link>
-            <h1 className="text-3xl font-bold mt-1">{product.name}</h1>
+          {/* Brand & Title & Wishlist/Share */}
+          <div className="flex items-start justify-between">
+            <div>
+              <Link
+                href={`/brands/${brand?.id}`}
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                {product.brand}
+              </Link>
+              <h1 className="text-3xl font-bold mt-1">{product.name}</h1>
+            </div>
+            <div className="flex flex-col gap-2 ml-4">
+              <Button
+                size="icon"
+                variant="secondary"
+                className="h-10 w-10 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white"
+                onClick={handleWishlist}
+              >
+                <Heart
+                  className={`h-5 w-5 transition-colors ${
+                    isWishlisted ? "fill-red-500 text-red-500" : "text-gray-600"
+                  }`}
+                />
+              </Button>
+              <Button
+                size="icon"
+                variant="secondary"
+                className="h-10 w-10 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white"
+              >
+                <Share2 className="h-5 w-5 text-gray-600" />
+              </Button>
+            </div>
           </div>
 
           {/* Rating */}
@@ -425,121 +432,122 @@ export default function ProductPage() {
               </div>
             </div>
           )}
+          {/* Product Details Tabs */}
+          <Tabs defaultValue="description" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="description">Description</TabsTrigger>
+              <TabsTrigger value="specifications">Specifications</TabsTrigger>
+              <TabsTrigger value="reviews">
+                Reviews ({product.reviewCount})
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="description" className="mt-0">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="prose prose-sm max-w-none">
+                    <p className="text-muted-foreground leading-relaxed mb-4">
+                      {product.description}
+                    </p>
+                    <h4 className="font-semibold mb-2">Key Features:</h4>
+                    <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                      {product.tags.map((tag) => (
+                        <li key={tag} className="capitalize">
+                          {tag} quality
+                        </li>
+                      ))}
+                      <li>Premium materials</li>
+                      <li>Modern design</li>
+                      <li>Versatile styling</li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="specifications" className="mt-6">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-semibold mb-3">Product Details</h4>
+                      <dl className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <dt className="text-muted-foreground">Brand:</dt>
+                          <dd className="font-medium">{product.brand}</dd>
+                        </div>
+                        <div className="flex justify-between">
+                          <dt className="text-muted-foreground">Category:</dt>
+                          <dd className="font-medium capitalize">
+                            {product.category}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between">
+                          <dt className="text-muted-foreground">Type:</dt>
+                          <dd className="font-medium capitalize">
+                            {product.subcategory.replace("-", " ")}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between">
+                          <dt className="text-muted-foreground">SKU:</dt>
+                          <dd className="font-medium">
+                            {product.id.toUpperCase()}
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-3">Available Options</h4>
+                      <dl className="space-y-2 text-sm">
+                        <div>
+                          <dt className="text-muted-foreground mb-1">
+                            Colors:
+                          </dt>
+                          <dd className="font-medium">
+                            {product.colors.join(", ")}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-muted-foreground mb-1">Sizes:</dt>
+                          <dd className="font-medium">
+                            {product.sizes.join(", ")}
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="reviews" className="mt-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-4">
+                    <span>Customer Reviews</span>
+                    <div className="flex items-center gap-1">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <span className="font-normal">
+                        {product.rating} ({product.reviewCount} reviews)
+                      </span>
+                    </div>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-8">
+                    <div className="text-4xl mb-4">⭐</div>
+                    <p className="text-muted-foreground">
+                      Reviews feature coming soon! This product has{" "}
+                      {product.reviewCount} reviews with an average rating of{" "}
+                      {product.rating} stars.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
-
-      {/* Product Details Tabs */}
-      <Tabs defaultValue="description" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="description">Description</TabsTrigger>
-          <TabsTrigger value="specifications">Specifications</TabsTrigger>
-          <TabsTrigger value="reviews">
-            Reviews ({product.reviewCount})
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="description" className="mt-6">
-          <Card>
-            <CardContent className="p-6">
-              <div className="prose prose-sm max-w-none">
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  {product.description}
-                </p>
-                <h4 className="font-semibold mb-2">Key Features:</h4>
-                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                  {product.tags.map((tag) => (
-                    <li key={tag} className="capitalize">
-                      {tag} quality
-                    </li>
-                  ))}
-                  <li>Premium materials</li>
-                  <li>Modern design</li>
-                  <li>Versatile styling</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="specifications" className="mt-6">
-          <Card>
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="font-semibold mb-3">Product Details</h4>
-                  <dl className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <dt className="text-muted-foreground">Brand:</dt>
-                      <dd className="font-medium">{product.brand}</dd>
-                    </div>
-                    <div className="flex justify-between">
-                      <dt className="text-muted-foreground">Category:</dt>
-                      <dd className="font-medium capitalize">
-                        {product.category}
-                      </dd>
-                    </div>
-                    <div className="flex justify-between">
-                      <dt className="text-muted-foreground">Type:</dt>
-                      <dd className="font-medium capitalize">
-                        {product.subcategory.replace("-", " ")}
-                      </dd>
-                    </div>
-                    <div className="flex justify-between">
-                      <dt className="text-muted-foreground">SKU:</dt>
-                      <dd className="font-medium">
-                        {product.id.toUpperCase()}
-                      </dd>
-                    </div>
-                  </dl>
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-3">Available Options</h4>
-                  <dl className="space-y-2 text-sm">
-                    <div>
-                      <dt className="text-muted-foreground mb-1">Colors:</dt>
-                      <dd className="font-medium">
-                        {product.colors.join(", ")}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-muted-foreground mb-1">Sizes:</dt>
-                      <dd className="font-medium">
-                        {product.sizes.join(", ")}
-                      </dd>
-                    </div>
-                  </dl>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="reviews" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-4">
-                <span>Customer Reviews</span>
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  <span className="font-normal">
-                    {product.rating} ({product.reviewCount} reviews)
-                  </span>
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <div className="text-4xl mb-4">⭐</div>
-                <p className="text-muted-foreground">
-                  Reviews feature coming soon! This product has{" "}
-                  {product.reviewCount} reviews with an average rating of{" "}
-                  {product.rating} stars.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
 
       {/* Related Products */}
       {relatedProducts.length > 0 && (
