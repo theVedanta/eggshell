@@ -6,6 +6,7 @@ type SidebarView = "main" | string;
 
 interface SidebarStore {
   view: SidebarView;
+  direction: "left" | "right" | null;
   setView: (view: SidebarView) => void;
   goBack: () => void;
   goForward: () => void;
@@ -26,9 +27,15 @@ const availableViews = ["main", ...allMultiMenuItems];
 
 export const useSidebarStore = create<SidebarStore>((set, get) => ({
   view: "main",
+  direction: null,
   setView: (view) => {
+    const currentIndex = availableViews.indexOf(get().view);
+    const newIndex = availableViews.indexOf(view);
+    const direction = newIndex > currentIndex ? "right" : "left";
+
     set(() => ({
       view,
+      direction,
       isFirst: view === "main",
       isLast: availableViews[availableViews.length - 1] === view,
     }));
@@ -39,6 +46,7 @@ export const useSidebarStore = create<SidebarStore>((set, get) => ({
       const prevView = availableViews[currentIndex - 1];
       set({
         view: prevView,
+        direction: "left",
         isFirst: prevView === "main",
         isLast: prevView === availableViews[availableViews.length - 1],
       });
@@ -50,6 +58,7 @@ export const useSidebarStore = create<SidebarStore>((set, get) => ({
       const nextView = availableViews[currentIndex + 1];
       set({
         view: nextView,
+        direction: "right",
         isFirst: nextView === "main",
         isLast: nextView === availableViews[availableViews.length - 1],
       });
@@ -58,6 +67,7 @@ export const useSidebarStore = create<SidebarStore>((set, get) => ({
   reset: () =>
     set({
       view: "main",
+      direction: null,
       isFirst: true,
       isLast: availableViews.length === 1,
     }),

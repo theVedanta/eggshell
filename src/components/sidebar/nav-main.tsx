@@ -6,19 +6,34 @@ import NormalList from "./menus/NormalMenu";
 import { AnimatePresence, motion } from "motion/react";
 
 export function NavMain({ navItems }: { navItems: SidebarItems }) {
-  const { view } = useSidebarStore();
+  const { view, direction } = useSidebarStore();
+
+  const slideVariants = {
+    enter: (direction: "left" | "right" | null) => ({
+      x: direction === "right" ? "100%" : direction === "left" ? "-100%" : 0,
+    }),
+    center: {
+      x: 0,
+    },
+    exit: (direction: "left" | "right" | null) => ({
+      x: direction === "right" ? "-100%" : direction === "left" ? "100%" : 0,
+    }),
+  };
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait" custom={direction}>
       <motion.div
         key={view}
-        animate={{ opacity: 1 }}
-        initial={{ opacity: 0 }}
-        exit={{ opacity: 0 }}
+        custom={direction}
+        variants={slideVariants}
+        initial="enter"
+        animate="center"
+        exit="exit"
         transition={{
-          duration: 0.1,
           ease: "easeInOut",
+          duration: 0.1,
         }}
+        className="w-full overflow-hidden"
       >
         {(() => {
           switch (view) {

@@ -4,6 +4,7 @@ import { categories } from "@/lib/db";
 import Link from "next/link";
 import SearchBar from "@/components/sidebar/search_bar";
 import { ChevronDown } from "lucide-react";
+import { SignInButton, SignUp, SignUpButton } from "@clerk/nextjs";
 
 export default function HomePage() {
   return (

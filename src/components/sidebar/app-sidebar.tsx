@@ -40,7 +40,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }, [state]);
 
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar
+      collapsible="none"
+      className="fixed left-0 top-0 h-screen z-40"
+      {...props}
+    >
       <SidebarHeader className="mb-4">
         <SidebarMenu>
           <SidebarMenuItem>
@@ -63,7 +67,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarContent className="overflow-hidden">
+      <SidebarContent className="flex flex-col overflow-hidden">
         {state == "collapsed" ? (
           <div className="flex items-center justify-center p-2">
             <SidebarMenuButton
@@ -84,7 +88,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SearchBar ref={searchInputRef} />
           </>
         )}
-        <NavMain navItems={SideBarNavItems} />
+        <div className="flex-1 overflow-auto" id="NavSlider">
+          <NavMain navItems={SideBarNavItems} />
+        </div>
       </SidebarContent>
       <SidebarRail />
       <SidebarFooter className="mb-2">

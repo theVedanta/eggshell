@@ -26,7 +26,7 @@ const SearchBar = forwardRef<HTMLInputElement, unknown>(
     // Sync input value with URL search params and clear when not on store page
     useEffect(() => {
       const searchParam = searchParams.get("search");
-      
+
       if (!pathname.startsWith("/store")) {
         // Clear input when not on store page
         setInputVal("");
@@ -53,15 +53,15 @@ const SearchBar = forwardRef<HTMLInputElement, unknown>(
 
       if (pathname.startsWith("/store")) {
         const params = new URLSearchParams(searchParams);
-        
+
         if (query) {
           params.set("search", query);
         } else {
           params.delete("search");
         }
-        
+
         setIsLoading(false);
-        
+
         // Update URL without navigation
         const queryString = params.toString();
         const newUrl = queryString ? `${pathname}?${queryString}` : pathname;

@@ -220,7 +220,7 @@ export function AppSidebar() {
             </Link>
           ))}
 
-          <Button size="icon" variant="secondary">
+          <Button size="icon" variant="secondary" className="">
             <CartSheet>
               <SheetTrigger asChild>
                 <span className="relative">

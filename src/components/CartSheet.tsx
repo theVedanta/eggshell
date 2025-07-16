@@ -47,7 +47,7 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       {children}
-      <SheetContent side="right" className="p-0 max-w-sm w-full flex flex-col">
+      <SheetContent side="left" className="p-0 max-w-sm w-full flex flex-col">
         <SheetHeader className="border-b p-4 flex flex-row items-center justify-between">
           <span className="font-semibold text-lg">Your Cart ({itemCount})</span>
           <SheetTitle className="hidden">{}</SheetTitle>

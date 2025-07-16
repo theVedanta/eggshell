@@ -15,37 +15,41 @@ export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
   const { setView } = useSidebarStore();
   const { open, setOpen } = useSidebar();
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel>Navigation</SidebarGroupLabel>
-      <SidebarMenu>
-        {array.map((item) => (
-          <SidebarMenuItem key={item.title}>
-            {item.isSubItem && item.SubItemsList ? (
-              <SidebarMenuButton
-                onClickCapture={() => {
-                  if (!open) setOpen(true);
-                }}
-                asChild
-                tooltip={item.title}
-                onClick={() => setView(item.subMenuViewName as string)}
-              >
-                <p>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
-                  <ChevronRight className="ml-auto" />
-                </p>
-              </SidebarMenuButton>
-            ) : (
-              <SidebarMenuButton asChild tooltip={item.title}>
-                <Link href={item.href ?? ""}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
-                </Link>
-              </SidebarMenuButton>
-            )}
-          </SidebarMenuItem>
-        ))}
-      </SidebarMenu>
+    <SidebarGroup className="flex flex-col h-full">
+      <SidebarGroupLabel className="flex-shrink-0">
+        Navigation
+      </SidebarGroupLabel>
+      <div className="flex-1 overflow-y-auto">
+        <SidebarMenu className="space-y-1">
+          {array.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              {item.isSubItem && item.SubItemsList ? (
+                <SidebarMenuButton
+                  onClickCapture={() => {
+                    if (!open) setOpen(true);
+                  }}
+                  asChild
+                  tooltip={item.title}
+                  onClick={() => setView(item.subMenuViewName as string)}
+                >
+                  <p>
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                    <ChevronRight className="ml-auto" />
+                  </p>
+                </SidebarMenuButton>
+              ) : (
+                <SidebarMenuButton asChild tooltip={item.title}>
+                  <Link href={item.href ?? ""}>
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              )}
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </div>
     </SidebarGroup>
   );
 }

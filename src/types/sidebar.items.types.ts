@@ -5,6 +5,7 @@ export interface SubItem {
   href: string;
   icon: LucideIcon | undefined;
   disabled: boolean;
+  brandImage?: string;
 }
 
 export interface SidebarItemTypes {

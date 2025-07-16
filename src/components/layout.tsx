@@ -13,9 +13,9 @@ export function Layout({ children }: LayoutProps) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
+      <SidebarInset className="ml-16 md:ml-64">
         {/* Main Content */}
-        <main className="flex-1 min-h-0">
+        <main className="flex-1 min-h-screen">
           <div className="container-wide mx-auto px-4 py-6">{children}</div>
         </main>
 

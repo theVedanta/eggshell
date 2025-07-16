@@ -18,8 +18,8 @@ export default function BrandslList({
 }) {
   const { view, goBack, goForward, isLast } = useSidebarStore();
   return (
-    <SidebarGroup className="!pt-0">
-      <div className="flex-col">
+    <SidebarGroup className="flex flex-col h-full !pt-0">
+      <div className="flex-shrink-0 mb-2">
         <div className="flex items-center">
           <Button onClick={() => goBack()} variant="ghost" size={"icon"}>
             <ChevronLeft />
@@ -36,9 +36,9 @@ export default function BrandslList({
         </div>
       </div>
 
-      <SidebarGroupContent>
-        <SidebarMenu>
-          <SidebarMenuItem className="space-y-1 mt-3">
+      <SidebarGroupContent className="flex-1 overflow-y-auto">
+        <SidebarMenu className="space-y-2">
+          <SidebarMenuItem>
             <Button
               onClick={() => goBack()}
               variant="link"
@@ -46,25 +46,32 @@ export default function BrandslList({
             >
               <ArrowLeft /> Go Back
             </Button>
+          </SidebarMenuItem>
 
-            {brandsList.map(
-              (list) =>
-                list.isSubItem &&
-                list.SubItemsList &&
-                list.subMenuViewName === view &&
-                list.SubItemsList.map((item) => (
+          {brandsList.map(
+            (list) =>
+              list.isSubItem &&
+              list.SubItemsList &&
+              list.subMenuViewName === view &&
+              list.SubItemsList.map((item) => (
+                <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
-                    className="p-4.5 bg-accent/40"
+                    style={{
+                      backgroundImage: `url(${item.brandImage})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      backgroundRepeat: "no-repeat",
+                    }}
+                    className="bg-accent/40 w-full p-6"
                     asChild
-                    key={item.title}
                   >
                     <Link href={item.href}>
-                      <span>{item.title}</span>
+                      {/* <span>{item.title}</span> */}
                     </Link>
                   </SidebarMenuButton>
-                ))
-            )}
-          </SidebarMenuItem>
+                </SidebarMenuItem>
+              ))
+          )}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

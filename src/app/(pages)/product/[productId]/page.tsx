@@ -99,7 +99,7 @@ export default function ProductPage() {
     <div className="space-y-8">
       {/* Back Button */}
       <Button variant="ghost" asChild className="mb-4">
-        <Link href="/shop">
+        <Link href="/store">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Shop
         </Link>

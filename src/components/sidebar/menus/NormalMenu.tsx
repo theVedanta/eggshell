@@ -18,8 +18,8 @@ export default function NormalList({
 }) {
   const { view, goBack, goForward, isLast } = useSidebarStore();
   return (
-    <SidebarGroup>
-      <div className="flex items-center">
+    <SidebarGroup className="flex flex-col h-full">
+      <div className="flex items-center flex-shrink-0 mb-2">
         <Button onClick={() => goBack()} variant="ghost" size={"icon"}>
           <ChevronLeft />
         </Button>
@@ -33,9 +33,9 @@ export default function NormalList({
           <ChevronRight />
         </Button>
       </div>
-      <SidebarGroupContent>
-        <SidebarMenu>
-          <SidebarMenuItem className="space-y-2 mt-3">
+      <SidebarGroupContent className="flex-1 overflow-y-auto">
+        <SidebarMenu className="space-y-2">
+          <SidebarMenuItem>
             <Button
               onClick={() => {
                 while (!useSidebarStore.getState().isFirst) {
@@ -47,25 +47,23 @@ export default function NormalList({
             >
               <ArrowLeft /> Go Back
             </Button>
+          </SidebarMenuItem>
 
-            {itemsList.map(
-              (list) =>
-                list.isSubItem &&
-                list.SubItemsList &&
-                list.subMenuViewName === view &&
-                list.SubItemsList.map((item) => (
-                  <SidebarMenuButton
-                    className="p-4.5 bg-accent/40"
-                    asChild
-                    key={item.title}
-                  >
+          {itemsList.map(
+            (list) =>
+              list.isSubItem &&
+              list.SubItemsList &&
+              list.subMenuViewName === view &&
+              list.SubItemsList.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton className="p-4.5 bg-accent/40" asChild>
                     <Link href={item.href}>
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
-                ))
-            )}
-          </SidebarMenuItem>
+                </SidebarMenuItem>
+              ))
+          )}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
