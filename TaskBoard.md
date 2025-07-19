@@ -11,3 +11,10 @@
 - Product page needs to give more real estate to the images / Move the tabs in / sticky top
 - 70:30 - padding between image and text
 - Remove the lens
+
+  Remove /store
+  Home
+  Brand
+  Apparel
+  Shoe
+  Accessories
