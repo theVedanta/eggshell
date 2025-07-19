@@ -109,7 +109,7 @@ export default function ProductPage() {
         {/* Product Images */}
         <div>
           {/* Main Image */}
-          <div className="space-y-4 sticky top-20">
+          <div className="space-y-4 sticky top-3">
             <div className="aspect-square relative overflow-hidden rounded-xl bg-muted">
               <img
                 src={

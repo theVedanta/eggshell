@@ -16,9 +16,6 @@ export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
   const { open, setOpen } = useSidebar();
   return (
     <SidebarGroup className="flex flex-col h-full">
-      <SidebarGroupLabel className="flex-shrink-0">
-        Navigation
-      </SidebarGroupLabel>
       <div className="flex-1 overflow-y-auto">
         <SidebarMenu className="space-y-1">
           {array.map((item) => (

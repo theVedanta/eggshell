@@ -19,8 +19,13 @@ export async function GET() {
     serviceAccountAuth
   );
 
-  await doc.loadInfo(); // loads document properties and worksheets
-  console.log(doc.title);
+  await doc.loadInfo();
 
-  return Response.json({ title: doc.title });
+  const sheet = doc.sheetsByTitle["Test"];
+  const rows = await sheet.getRows();
+  const data = rows.map((row) => row.toObject());
+
+  console.log(data);
+
+  return Response.json({ title: doc.title, data });
 }
