@@ -4,19 +4,18 @@ export interface Product {
   id: string;
   name: string;
   description: string;
-  price: number;
-  originalPrice?: number;
+  price: string;
+  original_price?: string;
   category: string;
   subcategory: string;
   brand: string;
-  images: string[];
-  colors: string[];
-  sizes: string[];
-  inStock: boolean;
-  featured: boolean;
-  rating: number;
-  reviewCount: number;
-  tags: string[];
+  sizes: string;
+  in_stock: string;
+  featured: string;
+  tags: string;
+  colors: {
+    [color: string]: string[];
+  };
 }
 
 export interface Brand {
@@ -34,9 +33,6 @@ export interface Category {
   image: string;
   subcategories: string[];
 }
-
-const sample_image_url =
-  "https://cdn.shopify.com/s/files/1/0420/7073/7058/files/4MST2734-02_1_fb49cb4f-614f-4d9b-8995-3a8f55ca46b2.jpg?v=1748541298&quality=50";
 
 export const categories: Category[] = [
   {

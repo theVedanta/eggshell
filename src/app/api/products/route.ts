@@ -1,31 +1,67 @@
-import { GoogleSpreadsheet } from "google-spreadsheet";
-import { JWT } from "google-auth-library";
-
-// For setting up authentication later with Anav:
-// https://theoephraim.github.io/node-google-spreadsheet/#/guides/authentication
-
-const serviceAccountAuth = new JWT({
-  email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-  key: process.env.GOOGLE_PRIVATE_KEY,
-  scopes: [
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive.file",
-  ],
-});
+import { getSheetData } from "@/lib/gsheet";
 
 export async function GET() {
-  const doc = new GoogleSpreadsheet(
-    "17G_SVOO0srm33sBa-1PCE-3S_Kv95v5WNFhvbQK_Xfk",
-    serviceAccountAuth
-  );
+  const data = await getSheetData("Products");
 
-  await doc.loadInfo();
+  const transformedData = data.map((item: any) => {
+    const colors: Record<string, string[]> = {};
+    if (item.color_image_map) {
+      item.color_image_map.split(";").forEach((entry: string) => {
+        const [color, images] = entry.split("|").map((str) => str.trim());
+        if (color && images) {
+          colors[color.toLowerCase()] = images
+            .split(",")
+            .map((img) => img.trim())
+            .filter(Boolean);
+        }
+      });
+    }
 
-  const sheet = doc.sheetsByTitle["Test"];
-  const rows = await sheet.getRows();
-  const data = rows.map((row) => row.toObject());
+    // Convert sizes to array
+    const sizes = item.sizes
+      ? item.sizes
+          .split(";")
+          .map((size: string) => size.trim())
+          .filter(Boolean)
+      : [];
 
-  console.log(data);
+    // Convert in_stock and featured to boolean
+    const in_stock =
+      typeof item.in_stock === "string"
+        ? item.in_stock.trim().toLowerCase() === "true"
+        : Boolean(item.in_stock);
 
-  return Response.json({ title: doc.title, data });
+    const featured =
+      typeof item.featured === "string"
+        ? item.featured.trim().toLowerCase() === "true"
+        : Boolean(item.featured);
+
+    // Convert tags to array
+    const tags = item.tags
+      ? item.tags
+          .split(";")
+          .map((tag: string) => tag.trim())
+          .filter(Boolean)
+      : [];
+
+    // Remove color_image_map and add colors, sizes, in_stock, featured, tags
+    const {
+      color_image_map,
+      sizes: _sizes,
+      in_stock: _in_stock,
+      featured: _featured,
+      tags: _tags,
+      ...rest
+    } = item;
+    return {
+      ...rest,
+      colors,
+      sizes,
+      in_stock,
+      featured,
+      tags,
+    };
+  });
+
+  return Response.json({ data: transformedData });
 }
