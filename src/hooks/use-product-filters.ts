@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { Product, categories as allCategories } from "@/lib/db";
+import { OldProduct, categories as allCategories } from "@/lib/db";
 import { useSearch } from "./useSearch";
 import { products as allProductsData } from "@/lib/products";
 
 interface UseProductFiltersProps {
-  initialProducts?: Product[];
-  productsData?: Product[];
+  initialProducts?: OldProduct[];
+  productsData?: OldProduct[];
   categoriesData?: { id: string; name: string }[];
   initialCategoryId?: string;
   productsPerPage?: number;

@@ -76,7 +76,7 @@ export default function ShopPage() {
   }, []);
 
   const availableColors = useMemo(() => {
-    const colorSet = new Set(products.flatMap((p) => p.colors || []));
+    const colorSet = new Set(products.flatMap((p) => p.colors || {}));
     return Array.from(colorSet).sort();
   }, []);
 

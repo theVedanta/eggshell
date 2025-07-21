@@ -18,6 +18,25 @@ export interface Product {
   };
 }
 
+export interface OldProduct {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  originalPrice?: number;
+  category: string;
+  subcategory: string;
+  brand: string;
+  images: string[];
+  colors: string[];
+  sizes: string[];
+  inStock: boolean;
+  featured: boolean;
+  rating: number;
+  reviewCount: number;
+  tags: string[];
+}
+
 export interface Brand {
   id: string;
   name: string;
@@ -236,27 +255,27 @@ export const orders = [
 ];
 
 // Helper functions
-export const getProductsByCategory = (categoryId: string): Product[] => {
+export const getProductsByCategory = (categoryId: string): OldProduct[] => {
   return products.filter((product) => product.category === categoryId);
 };
 
-export const getProductsBySubcategory = (subcategory: string): Product[] => {
+export const getProductsBySubcategory = (subcategory: string): OldProduct[] => {
   return products.filter((product) => product.subcategory === subcategory);
 };
 
-export const getProductsByBrand = (brandName: string): Product[] => {
+export const getProductsByBrand = (brandName: string): OldProduct[] => {
   return products.filter((product) => product.brand === brandName);
 };
 
-export const getFeaturedProducts = (): Product[] => {
+export const getFeaturedProducts = (): OldProduct[] => {
   return products.filter((product) => product);
 };
 
-export const getProductById = (id: string): Product | undefined => {
+export const getProductById = (id: string): OldProduct | undefined => {
   return products.find((product) => product.id === id);
 };
 
-export const searchProducts = (query: string): Product[] => {
+export const searchProducts = (query: string): OldProduct[] => {
   const lowercaseQuery = query.toLowerCase();
   return products.filter(
     (product) =>
@@ -270,7 +289,7 @@ export const searchProducts = (query: string): Product[] => {
 export const getRelatedProducts = (
   productId: string,
   limit: number = 4
-): Product[] => {
+): OldProduct[] => {
   const product = getProductById(productId);
   if (!product) return [];
 

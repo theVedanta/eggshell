@@ -1,12 +1,12 @@
-import { Product } from "./db";
+import { OldProduct } from "./db";
 
 type ProductResponse = {
-  products: Product[];
+  products: OldProduct[];
 };
 const sheetDBUrl =
   "https://script.google.com/macros/s/AKfycbwsuuY8Tfg6D7GIazcX3p9LTfgIVWQKLBkjkUaoYO-el3ZglpJKMqTJjkk5xs52DhVsnw/exec";
 
-export async function getSheetProdducts(): Promise<Product[]> {
+export async function getSheetProdducts(): Promise<OldProduct[]> {
   try {
     const sheetData = await fetch(sheetDBUrl, {
       method: "GET",
