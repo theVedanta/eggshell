@@ -4,6 +4,24 @@ export interface Product {
   id: string;
   name: string;
   description: string;
+  price: string;
+  original_price?: string;
+  category: string;
+  subcategory: string;
+  brand: string;
+  sizes: string;
+  in_stock: string;
+  featured: string;
+  tags: string;
+  colors: {
+    [color: string]: string[];
+  };
+}
+
+export interface OldProduct {
+  id: string;
+  name: string;
+  description: string;
   price: number;
   originalPrice?: number;
   category: string;
@@ -34,9 +52,6 @@ export interface Category {
   image: string;
   subcategories: string[];
 }
-
-const sample_image_url =
-  "https://cdn.shopify.com/s/files/1/0420/7073/7058/files/4MST2734-02_1_fb49cb4f-614f-4d9b-8995-3a8f55ca46b2.jpg?v=1748541298&quality=50";
 
 export const categories: Category[] = [
   {
@@ -240,27 +255,27 @@ export const orders = [
 ];
 
 // Helper functions
-export const getProductsByCategory = (categoryId: string): Product[] => {
+export const getProductsByCategory = (categoryId: string): OldProduct[] => {
   return products.filter((product) => product.category === categoryId);
 };
 
-export const getProductsBySubcategory = (subcategory: string): Product[] => {
+export const getProductsBySubcategory = (subcategory: string): OldProduct[] => {
   return products.filter((product) => product.subcategory === subcategory);
 };
 
-export const getProductsByBrand = (brandName: string): Product[] => {
+export const getProductsByBrand = (brandName: string): OldProduct[] => {
   return products.filter((product) => product.brand === brandName);
 };
 
-export const getFeaturedProducts = (): Product[] => {
+export const getFeaturedProducts = (): OldProduct[] => {
   return products.filter((product) => product);
 };
 
-export const getProductById = (id: string): Product | undefined => {
+export const getProductById = (id: string): OldProduct | undefined => {
   return products.find((product) => product.id === id);
 };
 
-export const searchProducts = (query: string): Product[] => {
+export const searchProducts = (query: string): OldProduct[] => {
   const lowercaseQuery = query.toLowerCase();
   return products.filter(
     (product) =>
@@ -274,7 +289,7 @@ export const searchProducts = (query: string): Product[] => {
 export const getRelatedProducts = (
   productId: string,
   limit: number = 4
-): Product[] => {
+): OldProduct[] => {
   const product = getProductById(productId);
   if (!product) return [];
 

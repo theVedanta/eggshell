@@ -1,6 +1,6 @@
-import { Product } from "./db";
+import { OldProduct } from "./db";
 
-export const products: Product[] = [
+export const products: OldProduct[] = [
   // T-Shirts
   {
     id: "tshirt-001",

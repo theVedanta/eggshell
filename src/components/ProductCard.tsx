@@ -9,12 +9,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Product } from "@/lib/db";
+import { OldProduct } from "@/lib/db";
 import { useCart } from "@/state/useCart";
 import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
-  product: Product;
+  product: OldProduct;
   className?: string;
   variant?: "default" | "compact" | "featured";
 }
