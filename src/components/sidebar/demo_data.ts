@@ -25,14 +25,6 @@ export const SideBarNavItems: SidebarItems = [
     isSubItem: false,
   },
   {
-    title: "Store",
-    href: "/store",
-    icon: Store,
-    subMenuViewName: undefined,
-    disabled: false,
-    isSubItem: false,
-  },
-  {
     title: "Brands",
     href: "/brands",
     subMenuViewName: "brands",
@@ -99,9 +91,9 @@ export const SideBarNavItems: SidebarItems = [
     ],
   },
   {
-    title: "Footwears",
-    href: "/footwears",
-    subMenuViewName: "footwears",
+    title: "Sneakers",
+    href: "/sneakers",
+    subMenuViewName: "sneakers",
     icon: Footprints,
     disabled: false,
     isSubItem: true,
@@ -163,9 +155,9 @@ export const SideBarNavItems: SidebarItems = [
     ],
   },
   {
-    title: "Topwear",
-    href: "/topwear",
-    subMenuViewName: "topwear",
+    title: "Apparel",
+    href: "/apparel",
+    subMenuViewName: "apparel",
     icon: Shirt,
     disabled: false,
     isSubItem: true,
@@ -290,19 +282,20 @@ export const SideBarNavItems: SidebarItems = [
       },
     ],
   },
-];
-
-export const sideBarAccountInfoItems: SideBarAccountInfoItems = [
   {
     title: "Orders",
     href: "/orders",
     icon: ScrollText,
     disabled: false,
+    isSubItem: false,
+    subMenuViewName: undefined,
   },
   {
     title: "Profile",
     href: "/profile",
     icon: User,
+    isSubItem: false,
+    subMenuViewName: undefined,
     disabled: false,
   },
 ];

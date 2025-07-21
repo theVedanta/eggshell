@@ -26,7 +26,7 @@ import {
 
 import { products } from "@/lib/products";
 
-export default function ShopPage() {
+export default function StorePage() {
   const searchParams = useSearchParams();
   const urlSearchQuery = searchParams.get("search") || "";
 
@@ -39,8 +39,10 @@ export default function ShopPage() {
     handleBrandToggle,
     selectedColors,
     handleColorToggle,
-    selectedSizes,
-    handleSizeToggle,
+    clothingSizes,
+    shoeSizes,
+    handleClothingSizeToggle,
+    handleShoeSizeToggle,
     priceRange,
     setPriceRange,
     inStockOnly,
@@ -80,41 +82,24 @@ export default function ShopPage() {
     return Array.from(colorSet).sort();
   }, []);
 
-  const availableSizes = useMemo(() => {
-    const sizeSet = new Set(products.flatMap((p) => p.sizes || []));
+  const availableShoeSizes = useMemo(() => {
+    const sizeSet = new Set(
+      products.flatMap(
+        (p) => p.sizes?.filter((s) => /^\d+(\.\d+)?$/.test(s)) || []
+      )
+    );
+    return Array.from(sizeSet).sort((a, b) => parseFloat(a) - parseFloat(b));
+  }, []);
+  const availableClothingSizes = useMemo(() => {
+    const sizeSet = new Set(
+      products.flatMap(
+        (p) => p.sizes?.filter((s) => !s.includes("US") && !/\d/.test(s)) || []
+      )
+    );
     return Array.from(sizeSet).sort();
   }, []);
-
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold heading-gradient">
-          Shop All Products
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Discover our complete collection of modern fashion, footwear,
-          accessories, and premium lifestyle products.
-        </p>
-      </div>
-
-      {/* Quick Category Links */}
-      <div className="flex flex-wrap justify-center gap-2">
-        {categories.map((category) => (
-          <Button
-            key={category.id}
-            variant={
-              selectedCategories.includes(category.id) ? "default" : "outline"
-            }
-            size="sm"
-            onClick={() => handleCategoryToggle(category.id)}
-            className="capitalize"
-          >
-            {category.name}
-          </Button>
-        ))}
-      </div>
-
+    <div className="space-y-6 md:px-5 px-2 mb-7">
       {/* Controls */}
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         <div className="flex items-center gap-4">
@@ -136,9 +121,12 @@ export default function ShopPage() {
             availableColors={availableColors}
             selectedColors={selectedColors}
             handleColorToggle={handleColorToggle}
-            availableSizes={availableSizes}
-            selectedSizes={selectedSizes}
-            handleSizeToggle={handleSizeToggle}
+            availableShoeSizes={availableShoeSizes}
+            availableClothingSizes={availableClothingSizes}
+            clothingSizes={clothingSizes}
+            shoeSizes={shoeSizes}
+            handleClothingSizeToggle={handleClothingSizeToggle}
+            handleShoeSizeToggle={handleShoeSizeToggle}
             priceRange={priceRange}
             setPriceRange={setPriceRange}
             maxPrice={maxPrice}

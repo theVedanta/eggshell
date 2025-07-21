@@ -1,4 +1,10 @@
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -8,6 +14,10 @@ import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { SlidersHorizontal } from "lucide-react";
 
+interface Sizes {
+  clothingSizes: string[];
+  shoeSizes: string[];
+}
 export default function FilterButton({
   showSearch,
   searchQuery,
@@ -21,9 +31,12 @@ export default function FilterButton({
   availableColors,
   selectedColors,
   handleColorToggle,
-  availableSizes,
-  selectedSizes,
-  handleSizeToggle,
+  availableShoeSizes,
+  availableClothingSizes,
+  clothingSizes,
+  shoeSizes,
+  handleClothingSizeToggle,
+  handleShoeSizeToggle,
   priceRange,
   setPriceRange,
   maxPrice,
@@ -48,9 +61,12 @@ export default function FilterButton({
   availableColors: string[];
   selectedColors: string[];
   handleColorToggle: (color: string) => void;
-  availableSizes: string[];
-  selectedSizes: string[];
-  handleSizeToggle: (size: string) => void;
+  availableShoeSizes: string[];
+  availableClothingSizes: string[];
+  clothingSizes: string[];
+  shoeSizes: string[];
+  handleClothingSizeToggle: (size: string) => void;
+  handleShoeSizeToggle: (size: string) => void;
   priceRange: [number, number];
   setPriceRange: (range: [number, number]) => void;
   maxPrice: number;
@@ -76,6 +92,7 @@ export default function FilterButton({
           )}
         </Button>
       </SheetTrigger>
+      <SheetTitle className="hidden">{""}</SheetTitle>
       <SheetContent side="right" className="px-6 flex flex-col max-h-screen">
         <div className="mt-6 flex-1 overflow-y-auto">
           <div className="space-y-6">
@@ -195,16 +212,35 @@ export default function FilterButton({
 
             <Separator />
 
-            {/* Sizes */}
+            {/* Shoe Sizes */}
             <div>
-              <h3 className="font-semibold mb-3">Sizes</h3>
+              <h3 className="font-semibold mb-3">Shoe Sizes</h3>
               <div className="space-y-2">
-                {availableSizes.map((size) => (
+                {availableShoeSizes.map((size) => (
                   <div key={size} className="flex items-center space-x-2">
                     <Checkbox
                       id={`size-${size}`}
-                      checked={selectedSizes.includes(size)}
-                      onCheckedChange={() => handleSizeToggle(size)}
+                      checked={shoeSizes.includes(size)}
+                      onCheckedChange={() => handleShoeSizeToggle(size)}
+                    />
+                    <Label htmlFor={`size-${size}`} className="text-sm">
+                      {size}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Clothing Sizes */}
+            <div>
+              <h3 className="font-semibold mb-3">Clothing Sizes</h3>
+              <div className="space-y-2">
+                {availableClothingSizes.map((size) => (
+                  <div key={size} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`size-${size}`}
+                      checked={clothingSizes.includes(size)}
+                      onCheckedChange={() => handleClothingSizeToggle(size)}
                     />
                     <Label htmlFor={`size-${size}`} className="text-sm">
                       {size}

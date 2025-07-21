@@ -29,7 +29,8 @@ export const useProductFilters = ({
   );
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [clothingSizes, setClothingSizes] = useState<string[]>([]);
+  const [shoeSizes, setShoeSizes] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [featuredOnly, setFeaturedOnly] = useState(false);
@@ -105,10 +106,16 @@ export const useProductFilters = ({
         return false;
       }
 
-      // Size filter
       if (
-        selectedSizes.length > 0 &&
-        !product.sizes.some((size) => selectedSizes.includes(size))
+        clothingSizes.length > 0 &&
+        !product.sizes.some((size) => clothingSizes.includes(size))
+      ) {
+        return false;
+      }
+
+      if (
+        shoeSizes.length > 0 &&
+        !product.sizes.some((size) => shoeSizes.includes(size))
       ) {
         return false;
       }
@@ -138,7 +145,8 @@ export const useProductFilters = ({
     selectedCategories,
     selectedBrands,
     selectedColors,
-    selectedSizes,
+    clothingSizes,
+    shoeSizes,
     priceRange,
     inStockOnly,
     featuredOnly,
@@ -178,8 +186,13 @@ export const useProductFilters = ({
     );
   };
 
-  const handleSizeToggle = (size: string) => {
-    setSelectedSizes((prev) =>
+  const handleClothingSizeToggle = (size: string) => {
+    setClothingSizes((prev) =>
+      prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
+    );
+  };
+  const handleShoeSizeToggle = (size: string) => {
+    setShoeSizes((prev) =>
       prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
     );
   };
@@ -191,7 +204,8 @@ export const useProductFilters = ({
     }
     setSelectedBrands([]);
     setSelectedColors([]);
-    setSelectedSizes([]);
+    setClothingSizes([]);
+    setShoeSizes([]);
     setPriceRange([0, maxPrice]);
     setInStockOnly(false);
     setFeaturedOnly(false);
@@ -202,7 +216,8 @@ export const useProductFilters = ({
     (initialCategoryId ? 0 : selectedCategories.length) +
     selectedBrands.length +
     selectedColors.length +
-    selectedSizes.length +
+    clothingSizes.length +
+    shoeSizes.length +
     (inStockOnly ? 1 : 0) +
     (featuredOnly && !initialCategoryId ? 1 : 0) +
     (searchQuery ? 1 : 0);
@@ -216,8 +231,10 @@ export const useProductFilters = ({
     handleBrandToggle,
     selectedColors,
     handleColorToggle,
-    selectedSizes,
-    handleSizeToggle,
+    clothingSizes,
+    shoeSizes,
+    handleClothingSizeToggle,
+    handleShoeSizeToggle,
     priceRange,
     setPriceRange,
     inStockOnly,

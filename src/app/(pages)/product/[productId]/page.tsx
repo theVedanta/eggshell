@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { notFound, useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -28,7 +28,6 @@ import { ProductCard } from "@/components/ProductCard";
 import { getProductById, getRelatedProducts, brands } from "@/lib/db";
 import { useCart } from "@/state/useCart";
 import { toast } from "sonner";
-import { Lens } from "@/components/ui/lens";
 
 export default function ProductPage() {
   const params = useParams<{ productId: string }>();
@@ -96,12 +95,12 @@ export default function ProductPage() {
   const decrementQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 p-2">
       {/* Back Button */}
       <Button variant="ghost" asChild className="mb-4">
-        <Link href="/store">
+        <Link href="/">
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Shop
+          Go Back
         </Link>
       </Button>
 
@@ -111,7 +110,7 @@ export default function ProductPage() {
           {/* Main Image */}
           <div className="space-y-4 sticky top-3">
             <div className="aspect-square relative overflow-hidden rounded-xl bg-muted">
-              <img
+              <Image
                 src={
                   product.images[selectedImage] || "/placeholder-product.jpg"
                 }

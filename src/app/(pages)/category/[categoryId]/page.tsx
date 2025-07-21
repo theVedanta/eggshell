@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { notFound, useParams } from "next/navigation";
+import { notFound, useParams, useSearchParams } from "next/navigation";
 import { Grid, List } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -24,51 +24,44 @@ import {
   PaginationPrevious,
   PaginationLink,
   PaginationNext,
-  PaginationEllipsis,
 } from "@/components/ui/pagination";
 
 export default function CategoryPage() {
-  const params = useParams<{ categoryId: string }>();
-  const { categoryId } = params;
-  const category = categories.find((cat) => cat.id === categoryId);
-  const allProducts = getProductsByCategory(categoryId);
+  const param = useParams();
+  const searchParams = useSearchParams();
+  const urlSearchQuery = searchParams.get("search") || "";
+  const categoryPath = param.categoryId as string[] | undefined;
 
-  const {
-    searchQuery,
-    setSearchQuery,
-    selectedBrands,
-    handleBrandToggle,
-    selectedColors,
-    handleColorToggle,
-    selectedSizes,
-    handleSizeToggle,
-    priceRange,
-    setPriceRange,
-    inStockOnly,
-    setInStockOnly,
-    sortBy,
-    setSortBy,
-    currentPage,
-    setCurrentPage,
-    productsPerPage,
-    maxPrice,
-    filteredProducts,
-    paginatedProducts,
-    totalPages,
-    clearFilters,
-    activeFiltersCount,
-  } = useProductFilters({
-    initialProducts: allProducts,
-    initialCategoryId: categoryId,
-  });
+  const [categoryId, subcategoryId] = categoryPath || [];
 
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  // Map URL-friendly names to actual category IDs
+  const categoryMapping: Record<string, string> = {
+    clothing: "apparel",
+    shoes: "footwear",
+    accessories: "accessories",
+    jewelry: "jewellery",
+  };
 
-  if (!category) {
-    notFound();
-  }
+  // Use mapped category ID or fallback to original
+  const actualCategoryId = categoryMapping[categoryId] || categoryId;
+  const category = categories.find((cat) => cat.id === actualCategoryId);
 
-  // Get unique filter options
+  // Filter products by category and optionally by subcategory (wrapped in useMemo)
+  const allProducts = useMemo(() => {
+    let products = actualCategoryId
+      ? getProductsByCategory(actualCategoryId)
+      : [];
+
+    if (subcategoryId && products.length > 0) {
+      products = products.filter(
+        (product) => product.subcategory === subcategoryId
+      );
+    }
+
+    return products;
+  }, [actualCategoryId, subcategoryId]);
+
+  // Get unique filter options (moved to top level)
   const availableBrands = useMemo(() => {
     const brandSet = new Set(allProducts.map((p) => p.brand));
     return Array.from(brandSet).sort();
@@ -79,10 +72,90 @@ export default function CategoryPage() {
     return Array.from(colorSet).sort();
   }, [allProducts]);
 
-  const availableSizes = useMemo(() => {
-    const sizeSet = new Set(allProducts.flatMap((p) => p.sizes));
+  const availableShoeSizes = useMemo(() => {
+    const sizeSet = new Set(
+      allProducts.flatMap(
+        (p) => p.sizes?.filter((s) => /^\d+(\.\d+)?$/.test(s)) || []
+      )
+    );
+    return Array.from(sizeSet).sort((a, b) => parseFloat(a) - parseFloat(b));
+  }, []);
+  const availableClothingSizes = useMemo(() => {
+    const sizeSet = new Set(
+      allProducts.flatMap(
+        (p) => p.sizes?.filter((s) => !s.includes("US") && !/\d/.test(s)) || []
+      )
+    );
     return Array.from(sizeSet).sort();
-  }, [allProducts]);
+  }, []);
+  const {
+    searchQuery,
+    shoeSizes,
+    setSearchQuery,
+    selectedBrands,
+    handleBrandToggle,
+    selectedColors,
+    handleColorToggle,
+    priceRange,
+    setPriceRange,
+    inStockOnly,
+    setInStockOnly,
+    sortBy,
+    setSortBy,
+    currentPage,
+    setCurrentPage,
+    maxPrice,
+    filteredProducts,
+    paginatedProducts,
+    totalPages,
+    clearFilters,
+    handleClothingSizeToggle,
+    handleShoeSizeToggle,
+    clothingSizes,
+    activeFiltersCount,
+  } = useProductFilters({
+    initialProducts: allProducts,
+    initialCategoryId: actualCategoryId,
+    initialSearchQuery: urlSearchQuery,
+  });
+
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+  if (categoryId && !category) {
+    notFound();
+  }
+
+  // If no category specified, show category listing
+  if (!categoryId) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl font-bold heading-gradient">
+            Shop by Category
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Browse our collection by category
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categories.map((cat) => (
+            <div key={cat.id} className="p-6 bg-card rounded-lg border">
+              <h3 className="text-xl font-semibold mb-2">{cat.name}</h3>
+              <p className="text-muted-foreground mb-4">{cat.description}</p>
+              <div className="flex flex-wrap gap-2">
+                {cat.subcategories.map((sub) => (
+                  <Badge key={sub} variant="secondary" className="capitalize">
+                    {sub.replace("-", " ")}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -94,17 +167,28 @@ export default function CategoryPage() {
           {categoryId === "accessories" && <span className="text-3xl">⌚</span>}
           {categoryId === "jewellery" && <span className="text-3xl">💎</span>}
         </div>
-        <h1 className="text-4xl font-bold heading-gradient">{category.name}</h1>
+        <h1 className="text-4xl font-bold heading-gradient">
+          {category?.name}
+          {subcategoryId && ` - ${subcategoryId.replace("-", " ")}`}
+        </h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          {category.description}
+          {category?.description}
+          {subcategoryId && ` | ${subcategoryId.replace("-", " ")}`}
         </p>
-        <div className="flex flex-wrap justify-center gap-2">
-          {category.subcategories.map((subcategory) => (
-            <Badge key={subcategory} variant="secondary" className="capitalize">
-              {subcategory.replace("-", " ")}
-            </Badge>
-          ))}
-        </div>
+
+        {!subcategoryId && (
+          <div className="flex flex-wrap justify-center gap-2">
+            {category?.subcategories.map((subcategory) => (
+              <Badge
+                key={subcategory}
+                variant="secondary"
+                className="capitalize"
+              >
+                {subcategory.replace("-", " ")}
+              </Badge>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Controls */}
@@ -114,6 +198,8 @@ export default function CategoryPage() {
             showSearch={true}
             showCategories={false}
             showFeatured={false}
+            availableClothingSizes={availableClothingSizes}
+            availableShoeSizes={availableShoeSizes}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             availableBrands={availableBrands}
@@ -122,9 +208,10 @@ export default function CategoryPage() {
             availableColors={availableColors}
             selectedColors={selectedColors}
             handleColorToggle={handleColorToggle}
-            availableSizes={availableSizes}
-            selectedSizes={selectedSizes}
-            handleSizeToggle={handleSizeToggle}
+            shoeSizes={shoeSizes}
+            handleClothingSizeToggle={handleClothingSizeToggle}
+            handleShoeSizeToggle={handleShoeSizeToggle}
+            clothingSizes={clothingSizes}
             priceRange={priceRange}
             setPriceRange={setPriceRange}
             maxPrice={maxPrice}
@@ -156,6 +243,24 @@ export default function CategoryPage() {
           </Select>
 
           {/* View Toggle */}
+          <div className="flex border rounded-lg">
+            <Button
+              variant={viewMode === "grid" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("grid")}
+              className="rounded-r-none"
+            >
+              <Grid className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewMode === "list" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("list")}
+              className="rounded-l-none"
+            >
+              <List className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
 

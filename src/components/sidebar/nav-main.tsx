@@ -30,8 +30,9 @@ export function NavMain({ navItems }: { navItems: SidebarItems }) {
         animate="center"
         exit="exit"
         transition={{
+          damping: 100,
           ease: "easeInOut",
-          duration: 0.1,
+          duration: 0.2,
         }}
         className="w-full overflow-hidden"
       >
