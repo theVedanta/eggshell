@@ -20,7 +20,7 @@ export function Layout({ children }: LayoutProps) {
       <AppSidebar collapsible="offcanvas" />
       <SidebarInset>
         {/* Main Content */}
-        <main className="flex-1 min-h-screen">
+        <main className="flex-1 min-h-screen px-4 py-2 mb-2">
           <SidebarTrigger className="md:hidden w-10 h-10 m-3" />
           <div className="">{children}</div>
         </main>

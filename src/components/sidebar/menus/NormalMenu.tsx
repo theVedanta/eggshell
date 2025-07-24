@@ -1,4 +1,4 @@
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronLeft } from "lucide-react";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -16,39 +16,46 @@ export default function NormalList({
 }: {
   itemsList: SidebarItemTypes[];
 }) {
-  const { view, goBack, goForward, isLast } = useSidebarStore();
+  const {
+    view,
+    goBack,
+    goForward,
+    isLast,
+    prevIcon: PrevIcon,
+    nextIcon: NextIcon,
+  } = useSidebarStore();
   return (
     <SidebarGroup className="flex flex-col h-full">
-      <div className="flex items-center flex-shrink-0 mb-2">
-        <Button onClick={() => goBack()} variant="ghost" size={"icon"}>
-          <ChevronLeft />
-        </Button>
-        <h1 className="w-full text-center text-xl capitalize">{view}</h1>
+      <div className="flex-shrink-0 mb-2 px-2 py-1">
         <Button
-          disabled={isLast}
-          onClick={() => goForward()}
-          variant="ghost"
-          size={"icon"}
+          onClick={() => {
+            while (!useSidebarStore.getState().isFirst) {
+              goBack();
+            }
+          }}
+          variant="outline"
+          size={"sm"}
+          className="text-left flex items-center mb-4 justify-start"
         >
-          <ChevronRight />
+          <ChevronLeft /> Go Back
         </Button>
+        <div className="flex items-center">
+          <Button onClick={goBack} variant="ghost" size={"icon"}>
+            <PrevIcon />
+          </Button>
+          <h1 className="w-full text-center text-xl capitalize">{view}</h1>
+          <Button
+            disabled={isLast}
+            onClick={goForward}
+            variant="ghost"
+            size={"icon"}
+          >
+            <NextIcon />
+          </Button>
+        </div>
       </div>
       <SidebarGroupContent className="flex-1 overflow-y-auto">
         <SidebarMenu className="space-y-2">
-          <SidebarMenuItem>
-            <Button
-              onClick={() => {
-                while (!useSidebarStore.getState().isFirst) {
-                  goBack();
-                }
-              }}
-              variant="link"
-              className="w-full text-left flex items-center justify-start"
-            >
-              <ArrowLeft /> Go Back
-            </Button>
-          </SidebarMenuItem>
-
           {itemsList.map(
             (list) =>
               list.isSubItem &&

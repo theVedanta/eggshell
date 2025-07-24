@@ -5,11 +5,11 @@ import Link from "next/link";
 import SearchBar from "@/components/sidebar/search_bar";
 import { ChevronDown } from "lucide-react";
 import StorePage from "@/components/store/store-page";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 export default function HomePage() {
-  const [inStorePgInView, setIsStorePgInView] = useState(false);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   // Scroll to store section on button click smoothly
@@ -19,7 +19,6 @@ export default function HomePage() {
       behavior: "smooth",
       top: storePg.current?.offsetTop,
     });
-    setIsStorePgInView(true);
   };
 
   useEffect(() => {
@@ -33,15 +32,16 @@ export default function HomePage() {
   return (
     <>
       <section className="w-full h-screen flex flex-col items-center justify-center">
-        {/* <Image
-                src="/assets/logo/1x.png"
-                alt="Eggshell Store Logo"
-                className="w-32 h-32 object-contain"
-                width={64}
-                height={64}
-            /> */}
+        <Image
+          src="/assets/logo/1x.png"
+          alt="Eggshell Store Logo"
+          className="w-32 h-32 object-contain"
+          width={128}
+          height={128}
+        />
 
         <div className="text-center">
+          {/* Embossed Text Section */}
           <h1 className="text-4xl md:text-5xl font-bold heading-gradient">
             what would you like today?
           </h1>
@@ -65,7 +65,7 @@ export default function HomePage() {
           <ChevronDown size={96} />
         </Button>
       </section>
-      <div ref={storePg} className="py-2">
+      <div ref={storePg} className="py-2" id="products">
         <StorePage />
       </div>
     </>

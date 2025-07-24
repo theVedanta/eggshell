@@ -15,14 +15,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { categories } from "@/lib/db";
 import FilterButton from "@/components/FilterButton";
 import { useProductFilters } from "@/hooks/use-product-filters";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationLink,
-  PaginationNext,
-} from "@/components/ui/pagination";
+import InfiniteScrollTrigger from "@/components/InfiniteScrollTrigger";
 
 import { products } from "@/lib/products";
 
@@ -51,12 +44,12 @@ export default function StorePage() {
     setFeaturedOnly,
     sortBy,
     setSortBy,
-    currentPage,
-    setCurrentPage,
     maxPrice,
     filteredProducts,
-    paginatedProducts,
-    totalPages,
+    displayedProducts,
+    hasNextPage,
+    isLoading,
+    loadMore,
     clearFilters,
     activeFiltersCount,
   } = useProductFilters({
@@ -99,7 +92,7 @@ export default function StorePage() {
     return Array.from(sizeSet).sort();
   }, []);
   return (
-    <div className="space-y-6 md:px-5 px-2 mb-7">
+    <div className="space-y-6 mb-7">
       {/* Controls */}
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         <div className="flex items-center gap-4">
@@ -164,7 +157,7 @@ export default function StorePage() {
 
       {/* Products Grid */}
       <div className="flex-1">
-        {paginatedProducts.length === 0 ? (
+        {displayedProducts.length === 0 ? (
           <Card>
             <CardContent className="p-12 text-center">
               <div className="text-6xl mb-4">🔍</div>
@@ -182,49 +175,26 @@ export default function StorePage() {
             </CardContent>
           </Card>
         ) : (
-          <div className="products-grid">
-            {paginatedProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                variant="default"
-              />
-            ))}
-          </div>
-        )}
-
-        {totalPages > 1 && (
-          <Pagination className="mt-8">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(1, prev - 1))
-                  }
+          <>
+            <div className="products-grid">
+              {displayedProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  variant="default"
                 />
-              </PaginationItem>
-              {Array.from({ length: totalPages }, (_, i) => (
-                <PaginationItem key={i}>
-                  <PaginationLink
-                    href="#"
-                    isActive={currentPage === i + 1}
-                    onClick={() => setCurrentPage(i + 1)}
-                  >
-                    {i + 1}
-                  </PaginationLink>
-                </PaginationItem>
               ))}
-              <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+            </div>
+
+            {/* Infinite scroll trigger */}
+            <InfiniteScrollTrigger
+              hasNextPage={hasNextPage}
+              isLoading={isLoading}
+              loadMore={loadMore}
+              filteredCount={filteredProducts.length}
+              displayedCount={displayedProducts.length}
+            />
+          </>
         )}
       </div>
     </div>

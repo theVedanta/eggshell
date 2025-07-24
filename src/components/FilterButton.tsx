@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { SlidersHorizontal } from "lucide-react";
+import ColorIcon from "@/components/ColorIcon";
 
 interface Sizes {
   clothingSizes: string[];
@@ -180,29 +181,7 @@ export default function FilterButton({
                       htmlFor={`color-${color}`}
                       className="text-sm flex items-center gap-2"
                     >
-                      <div
-                        className="w-4 h-4 rounded-full border border-border"
-                        style={{
-                          backgroundColor:
-                            color.toLowerCase() === "white"
-                              ? "#ffffff"
-                              : color.toLowerCase() === "black"
-                                ? "#000000"
-                                : color.toLowerCase() === "gray"
-                                  ? "#6b7280"
-                                  : color.toLowerCase() === "navy"
-                                    ? "#1e3a8a"
-                                    : color.toLowerCase() === "brown"
-                                      ? "#92400e"
-                                      : color.toLowerCase() === "green"
-                                        ? "#059669"
-                                        : color.toLowerCase() === "blue"
-                                          ? "#2563eb"
-                                          : color.toLowerCase() === "red"
-                                            ? "#dc2626"
-                                            : "#6b7280",
-                        }}
-                      />
+                      <ColorIcon color={color} />
                       {color}
                     </Label>
                   </div>
@@ -253,7 +232,7 @@ export default function FilterButton({
             <Separator />
 
             {/* Price Range */}
-            <div>
+            <div className="px-4">
               <h3 className="font-semibold mb-3">
                 Price Range: ${priceRange[0]} - ${priceRange[1]}
               </h3>
@@ -271,7 +250,7 @@ export default function FilterButton({
             <Separator />
 
             {/* Stock Status */}
-            <div className="space-y-2">
+            <div className="space-y-2 mb-5">
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="in-stock"
@@ -301,7 +280,7 @@ export default function FilterButton({
               <Button
                 variant="outline"
                 onClick={clearFilters}
-                className="w-full"
+                className="w-full mb-5"
               >
                 Clear All Filters ({activeFiltersCount})
               </Button>

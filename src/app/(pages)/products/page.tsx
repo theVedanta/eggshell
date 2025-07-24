@@ -16,24 +16,20 @@ import {
 import Newsletter from "@/components/Newsletter";
 import BrandCard from "@/components/BrandCard";
 import { useProductFilters } from "@/hooks/use-product-filters";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationLink,
-  PaginationNext,
-  PaginationEllipsis,
-} from "@/components/ui/pagination";
+import InfiniteScrollTrigger from "@/components/InfiniteScrollTrigger";
 
 const featuredProductsData = getFeaturedProducts();
 
 export default function HomePage() {
-  const { currentPage, setCurrentPage, paginatedProducts, totalPages } =
-    useProductFilters({
-      initialProducts: featuredProductsData,
-    });
-
+  const {
+    filteredProducts,
+    isLoading,
+    hasNextPage,
+    loadMore,
+    displayedProducts,
+  } = useProductFilters({
+    initialProducts: featuredProductsData,
+  });
   return (
     <div className="space-y-16">
       {/* Hero Section with Product Carousel */}
@@ -72,47 +68,21 @@ export default function HomePage() {
       {/* Featured Products */}
       <section>
         <div className="products-grid">
-          {paginatedProducts.map((product) => (
+          {featuredProductsData.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
               variant="featured"
             />
           ))}
+          <InfiniteScrollTrigger
+            hasNextPage={hasNextPage}
+            isLoading={isLoading}
+            loadMore={loadMore}
+            filteredCount={filteredProducts.length}
+            displayedCount={displayedProducts.length}
+          />
         </div>
-        {totalPages > 1 && (
-          <Pagination className="mt-8">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(1, prev - 1))
-                  }
-                />
-              </PaginationItem>
-              {Array.from({ length: totalPages }, (_, i) => (
-                <PaginationItem key={i}>
-                  <PaginationLink
-                    href="#"
-                    isActive={currentPage === i + 1}
-                    onClick={() => setCurrentPage(i + 1)}
-                  >
-                    {i + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        )}
       </section>
 
       {/* Categories */}

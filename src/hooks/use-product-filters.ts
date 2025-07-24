@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { OldProduct, categories as allCategories } from "@/lib/db";
 import { useSearch } from "./useSearch";
 import { products as allProductsData } from "@/lib/products";
@@ -36,11 +36,9 @@ export const useProductFilters = ({
   const [featuredOnly, setFeaturedOnly] = useState(false);
   const [sortBy, setSortBy] = useState<string>("featured");
 
-  // Pagination states
-  const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage, setProductsPerPage] = useState(
-    initialProductsPerPage
-  );
+  // Infinite scroll states
+  const [displayedCount, setDisplayedCount] = useState(initialProductsPerPage);
+  const [productsPerPage] = useState(initialProductsPerPage);
 
   const productsToFilter = initialProducts || productsData;
 
@@ -153,18 +151,37 @@ export const useProductFilters = ({
     initialCategoryId,
   ]);
 
-  // Pagination logic
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-  const paginatedProducts = useMemo(() => {
-    const startIndex = (currentPage - 1) * productsPerPage;
-    const endIndex = startIndex + productsPerPage;
-    return filteredProducts.slice(startIndex, endIndex);
-  }, [filteredProducts, currentPage, productsPerPage]);
+  // Infinite scroll logic
+  const displayedProducts = useMemo(() => {
+    return filteredProducts.slice(0, displayedCount);
+  }, [filteredProducts, displayedCount]);
 
-  // Reset pagination only when search query changes
+  const hasNextPage = displayedCount < filteredProducts.length;
+  const isLoading = false; // You can add loading state if needed
+
+  const loadMore = useCallback(() => {
+    if (hasNextPage && !isLoading) {
+      setDisplayedCount((prev) =>
+        Math.min(prev + productsPerPage, filteredProducts.length)
+      );
+    }
+  }, [hasNextPage, isLoading, productsPerPage, filteredProducts.length]);
+
+  // Reset displayed count when filters change
   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
+    setDisplayedCount(productsPerPage);
+  }, [
+    searchQuery,
+    selectedCategories,
+    selectedBrands,
+    selectedColors,
+    clothingSizes,
+    shoeSizes,
+    priceRange,
+    inStockOnly,
+    featuredOnly,
+    productsPerPage,
+  ]);
 
   const handleCategoryToggle = (categoryId: string) => {
     setSelectedCategories((prev) =>
@@ -209,7 +226,7 @@ export const useProductFilters = ({
     setPriceRange([0, maxPrice]);
     setInStockOnly(false);
     setFeaturedOnly(false);
-    setCurrentPage(1); // Reset pagination on clear
+    setDisplayedCount(productsPerPage); // Reset displayed count on clear
   };
 
   const activeFiltersCount =
@@ -243,18 +260,16 @@ export const useProductFilters = ({
     setFeaturedOnly,
     sortBy,
     setSortBy,
-    currentPage,
-    setCurrentPage,
-    productsPerPage,
-    setProductsPerPage,
     availableCategories,
     availableBrands,
     availableColors,
     availableSizes,
     maxPrice,
     filteredProducts,
-    paginatedProducts,
-    totalPages,
+    displayedProducts,
+    hasNextPage,
+    isLoading,
+    loadMore,
     clearFilters,
     activeFiltersCount,
   };

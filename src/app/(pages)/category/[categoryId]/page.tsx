@@ -17,14 +17,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { categories, getProductsByCategory } from "@/lib/db";
 import FilterButton from "@/components/FilterButton";
 import { useProductFilters } from "@/hooks/use-product-filters";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationLink,
-  PaginationNext,
-} from "@/components/ui/pagination";
+import InfiniteScrollTrigger from "@/components/InfiniteScrollTrigger";
 
 export default function CategoryPage() {
   const param = useParams();
@@ -79,7 +72,7 @@ export default function CategoryPage() {
       )
     );
     return Array.from(sizeSet).sort((a, b) => parseFloat(a) - parseFloat(b));
-  }, []);
+  }, [allProducts]);
   const availableClothingSizes = useMemo(() => {
     const sizeSet = new Set(
       allProducts.flatMap(
@@ -87,7 +80,7 @@ export default function CategoryPage() {
       )
     );
     return Array.from(sizeSet).sort();
-  }, []);
+  }, [allProducts]);
   const {
     searchQuery,
     shoeSizes,
@@ -99,15 +92,15 @@ export default function CategoryPage() {
     priceRange,
     setPriceRange,
     inStockOnly,
+    hasNextPage,
+    isLoading,
+    loadMore,
+    displayedProducts,
     setInStockOnly,
     sortBy,
     setSortBy,
-    currentPage,
-    setCurrentPage,
     maxPrice,
     filteredProducts,
-    paginatedProducts,
-    totalPages,
     clearFilters,
     handleClothingSizeToggle,
     handleShoeSizeToggle,
@@ -268,7 +261,7 @@ export default function CategoryPage() {
       <div className="flex gap-8">
         {/* Products Grid/List */}
         <div className="flex-1">
-          {paginatedProducts.length === 0 ? (
+          {filteredProducts.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-6xl mb-4">🔍</div>
               <h3 className="text-lg font-semibold mb-2">No products found</h3>
@@ -287,48 +280,21 @@ export default function CategoryPage() {
             <div
               className={viewMode === "grid" ? "products-grid" : "space-y-4"}
             >
-              {paginatedProducts.map((product) => (
+              {filteredProducts.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
                   variant={viewMode === "list" ? "compact" : "default"}
                 />
               ))}
+              <InfiniteScrollTrigger
+                hasNextPage={hasNextPage}
+                isLoading={isLoading}
+                loadMore={loadMore}
+                filteredCount={filteredProducts.length}
+                displayedCount={displayedProducts.length}
+              />
             </div>
-          )}
-
-          {totalPages > 1 && (
-            <Pagination className="mt-8">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.max(1, prev - 1))
-                    }
-                  />
-                </PaginationItem>
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <PaginationItem key={i}>
-                    <PaginationLink
-                      href="#"
-                      isActive={currentPage === i + 1}
-                      onClick={() => setCurrentPage(i + 1)}
-                    >
-                      {i + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
           )}
         </div>
       </div>

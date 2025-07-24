@@ -36,134 +36,76 @@ export function useSearch<T extends SearchableItem>({
   descriptionField?: keyof T;
 }) {
   const filteredAndSortedItems = useMemo(() => {
-    let filtered = [...items];
+    if (!searchQuery.trim()) return items;
 
-    // Search filter with scoring for relevance - focus on category, subcategory, name, description, brand, tags
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      const searchResults = filtered.map((item) => {
-        let relevanceScore = 0;
-        let hasMatch = false;
+    const query = searchQuery.toLowerCase();
+    type R = { item: T; score: number; onlyDesc: boolean };
 
-        // Search in category (highest priority)
-        if (item.category && typeof item.category === "string") {
-          const categoryValue = item.category.toLowerCase();
-          if (categoryValue.includes(query)) {
-            hasMatch = true;
-            if (categoryValue === query) {
-              relevanceScore += 200;
-            } else if (categoryValue.startsWith(query)) {
-              relevanceScore += 150;
-            } else {
-              relevanceScore += 100;
-            }
-          }
+    const results: R[] = items.map((item) => {
+      let score = 0;
+      const matchedFields: string[] = [];
+      let descMatched = false;
+
+      const matchText = (field: keyof T, value: string, base: number) => {
+        const val = value.toLowerCase();
+        if (val.includes(query)) {
+          let s = base;
+          if (val === query) s *= 1.5;
+          else if (val.startsWith(query)) s *= 1.25;
+          score += s;
+          matchedFields.push(field as string);
+          if (field === descriptionField) descMatched = true;
         }
+      };
 
-        // Search in subcategory (very high priority) - for shoes, sneakers, t-shirts, etc.
-        if (item.subcategory && typeof item.subcategory === "string") {
-          const subcategoryValue = item.subcategory.toLowerCase();
-
-          // Use category to determine footwear vs apparel matches
-          const isFootwearCategory = item.category === "footwear";
-          const isApparelCategory = item.category === "apparel";
-
-          // Handle variations like "shoes" matching any footwear subcategory
-          const isShoeMatch = query.includes("shoe") && isFootwearCategory;
-
-          // Handle variations like "shirt" matching apparel subcategories
-          const isShirtMatch =
-            query.includes("shirt") &&
-            isApparelCategory &&
-            (subcategoryValue.includes("t-shirt") ||
-              subcategoryValue.includes("polo"));
-
-          if (subcategoryValue.includes(query) || isShoeMatch || isShirtMatch) {
-            hasMatch = true;
-            if (subcategoryValue === query || isShoeMatch || isShirtMatch) {
-              relevanceScore += 180;
-            } else if (subcategoryValue.startsWith(query)) {
-              relevanceScore += 140;
-            } else {
-              relevanceScore += 120;
-            }
-          }
-        }
-
-        // Search in name (high priority)
-        if (item.name && typeof item.name === "string") {
-          const nameValue = item.name.toLowerCase();
-          if (nameValue.includes(query)) {
-            hasMatch = true;
-            if (nameValue === query) {
-              relevanceScore += 150; // Exact name match
-            } else if (nameValue.startsWith(query)) {
-              relevanceScore += 100;
-            } else {
-              relevanceScore += 75;
-            }
-          }
-        }
-
-        // Search in brand (medium-high priority)
-        if (item.brand && typeof item.brand === "string") {
-          const brandValue = item.brand.toLowerCase();
-          if (brandValue.includes(query)) {
-            hasMatch = true;
-            relevanceScore += 80;
-          }
-        }
-
-        // Search in tags (medium priority)
-        if (item.tags && Array.isArray(item.tags)) {
-          item.tags.forEach((tag: string) => {
-            if (typeof tag === "string" && tag.toLowerCase().includes(query)) {
-              hasMatch = true;
-              relevanceScore += 60;
-            }
-          });
-        }
-
-        // Search in description (medium priority)
-        if (item.description && typeof item.description === "string") {
-          const descriptionValue = item.description.toLowerCase();
-          if (descriptionValue.includes(query)) {
-            hasMatch = true;
-            relevanceScore += 50;
-          }
-        }
-
-        // Search in other specified fields (lower priority)
-        searchFields.forEach((field) => {
-          const value = item[field];
-          if (typeof value === "string") {
-            const fieldValue = value.toLowerCase();
-            if (fieldValue.includes(query)) {
-              hasMatch = true;
-              relevanceScore += 25;
-            }
-          }
-          if (Array.isArray(value)) {
-            value.forEach((v: any) => {
-              if (typeof v === "string" && v.toLowerCase().includes(query)) {
-                hasMatch = true;
-                relevanceScore += 15;
-              }
-            });
-          }
-        });
-
-        return { item, relevanceScore, hasMatch };
+      if (item.category) matchText("category", item.category, 200);
+      if (item.subcategory) matchText("subcategory", item.subcategory, 180);
+      if (item.name) matchText("name", item.name, 150);
+      if (item.brand) matchText("brand", item.brand, 80);
+      if (item.tags)
+        item.tags.forEach(
+          (tag) => typeof tag === "string" && matchText("tags", tag, 60)
+        );
+      if (item.description) matchText("description", item.description, 50);
+      searchFields.forEach((field) => {
+        const val = item[field];
+        if (typeof val === "string") matchText(field, val, 25);
+        else if (Array.isArray(val))
+          val.forEach(
+            (v: any) => typeof v === "string" && matchText(field, v, 15)
+          );
       });
 
-      filtered = searchResults
-        .filter((result) => result.hasMatch)
-        .sort((a, b) => b.relevanceScore - a.relevanceScore)
-        .map((result) => result.item);
-    }
+      const onlyDesc =
+        descMatched &&
+        matchedFields.length === 1 &&
+        matchedFields[0] === "description";
+      return { item, score, onlyDesc };
+    });
 
-    return filtered;
-  }, [items, searchQuery, searchFields]);
+    // Separate
+    const main = results.filter((r) => !r.onlyDesc && r.score > 0);
+    const descOnly = results.filter((r) => r.onlyDesc && r.score > 0);
+
+    // Sort main by score desc
+    main.sort((a, b) => b.score - a.score);
+
+    // Optional within-group sorting
+    const sortWithin = (arr: R[]) => {
+      const [field, dir] = sortBy.split("-") as [string, string];
+      if (field === "name" || field === "description") {
+        arr.sort((a, b) => {
+          const va = (a.item[field as keyof T] as string) || "";
+          const vb = (b.item[field as keyof T] as string) || "";
+          return dir === "asc" ? va.localeCompare(vb) : vb.localeCompare(va);
+        });
+      }
+    };
+    sortWithin(main);
+    // We *do not* sort descOnly—they stay in original order
+
+    return [...main.map((r) => r.item), ...descOnly.map((r) => r.item)];
+  }, [items, searchQuery, searchFields, sortBy, descriptionField]);
 
   return {
     filteredItems: filteredAndSortedItems,

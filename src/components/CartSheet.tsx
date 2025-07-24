@@ -58,7 +58,7 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
               <span className="text-5xl">🛒</span>
               <div className="font-semibold text-lg">Your cart is empty</div>
               <Button asChild className="btn-primary-gradient w-full">
-                <Link href="/shop">Start Shopping</Link>
+                <Link href="/#products">Start Shopping</Link>
               </Button>
             </div>
           ) : (

@@ -1,4 +1,4 @@
-import { ArrowLeft, ChevronLeft, ChevronRight, Leaf } from "lucide-react";
+import { ArrowLeft, ChevronLeft } from "lucide-react";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -16,14 +16,29 @@ export default function BrandslList({
 }: {
   brandsList: SidebarItemTypes[];
 }) {
-  const { view, goBack, goForward, isLast } = useSidebarStore();
+  const {
+    view,
+    goBack,
+    goForward,
+    isLast,
+    nextIcon: NextIcon,
+  } = useSidebarStore();
   return (
     <SidebarGroup className="flex flex-col h-full !pt-0">
-      <div className="flex-shrink-0 mb-2">
+      <div className="flex-shrink-0 mb-2 px-2 py-1">
+        <Button
+          onClick={() => {
+            while (!useSidebarStore.getState().isFirst) {
+              goBack();
+            }
+          }}
+          variant="outline"
+          size={"sm"}
+          className="text-left flex items-center mb-4 justify-start"
+        >
+          <ChevronLeft /> Go Back
+        </Button>
         <div className="flex items-center">
-          <Button onClick={() => goBack()} variant="ghost" size={"icon"}>
-            <ChevronLeft />
-          </Button>
           <h1 className="w-full text-center text-xl capitalize">Brands</h1>
           <Button
             disabled={isLast}
@@ -31,23 +46,13 @@ export default function BrandslList({
             variant="ghost"
             size={"icon"}
           >
-            <ChevronRight />
+            <NextIcon />
           </Button>
         </div>
       </div>
 
       <SidebarGroupContent className="flex-1 overflow-y-auto">
         <SidebarMenu className="space-y-2">
-          <SidebarMenuItem>
-            <Button
-              onClick={() => goBack()}
-              variant="link"
-              className="w-full text-left flex items-center justify-start"
-            >
-              <ArrowLeft /> Go Back
-            </Button>
-          </SidebarMenuItem>
-
           {brandsList.map(
             (list) =>
               list.isSubItem &&

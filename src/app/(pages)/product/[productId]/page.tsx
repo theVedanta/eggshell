@@ -114,11 +114,12 @@ export default function ProductPage() {
                 src={
                   product.images[selectedImage] || "/placeholder-product.jpg"
                 }
+                fill
                 alt={product.name}
                 style={{
                   objectFit: "cover",
-                  width: "100",
-                  height: "100",
+                  width: "100%",
+                  height: "100%",
                 }}
               />
 
@@ -342,7 +343,7 @@ export default function ProductPage() {
                     />
                     <Label
                       htmlFor={`size-${size}`}
-                      className={`px-4 py-2 rounded-lg border cursor-pointer transition-colors min-w-[3rem] text-center ${
+                      className={`px-4 py-2 rounded-lg border cursor-pointer transition-colors min-w-[3rem] text-center flex items-center justify-center ${
                         selectedSize === size
                           ? "border-primary bg-primary text-primary-foreground"
                           : "border-border hover:border-primary/50"

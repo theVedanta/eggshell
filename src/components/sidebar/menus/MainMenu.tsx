@@ -3,7 +3,6 @@ import { Badge } from "@/components/ui/badge";
 import { SheetTrigger } from "@/components/ui/sheet";
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -17,7 +16,7 @@ import Link from "next/link";
 
 export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
   const { setView } = useSidebarStore();
-  const { open, setOpen, state } = useSidebar();
+  const { open, setOpen } = useSidebar();
   const { itemCount } = useCart();
 
   return (

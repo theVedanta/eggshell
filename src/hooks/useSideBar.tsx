@@ -1,5 +1,6 @@
 // stores/sidebarStore.ts
 import { SideBarNavItems } from "@/components/sidebar/demo_data";
+import { ChevronLeft, ChevronRight, LucideIcon } from "lucide-react";
 import { create } from "zustand";
 
 type SidebarView = "main" | string;
@@ -13,21 +14,54 @@ interface SidebarStore {
   reset: () => void;
   isFirst: boolean;
   isLast: boolean;
-  availableViews: string[];
+  availableViews: SidebarView[];
+  prevIcon: LucideIcon;
+  nextIcon: LucideIcon;
 }
 
-const allMultiMenuItems = SideBarNavItems.reduce((acc, item) => {
-  if (item.isSubItem && item.SubItemsList && item.subMenuViewName) {
-    acc.push(item.subMenuViewName);
-  }
-  return acc;
-}, [] as string[]);
+const allMultiMenuItems = SideBarNavItems.reduce(
+  (acc, item) => {
+    if (item.isSubItem && item.SubItemsList && item.subMenuViewName) {
+      acc.push({
+        viewName: item.subMenuViewName,
+        icon: item?.icon,
+      });
+    }
+    return acc;
+  },
+  [] as { viewName: string; icon: LucideIcon | undefined }[]
+);
 
-const availableViews = ["main", ...allMultiMenuItems];
+const availableViews: SidebarView[] = [
+  "main",
+  ...allMultiMenuItems.map((item) => item.viewName),
+];
+
+const getPrevIcon = (currentView: SidebarView): LucideIcon => {
+  const currentIndex = availableViews.indexOf(currentView);
+  if (currentIndex <= 0) return ChevronLeft;
+
+  const prevView = availableViews[currentIndex - 1];
+  if (prevView === "main") return ChevronLeft;
+
+  const prevItem = allMultiMenuItems.find((item) => item.viewName === prevView);
+  return prevItem?.icon || ChevronLeft;
+};
+
+const getNextIcon = (currentView: SidebarView): LucideIcon => {
+  const currentIndex = availableViews.indexOf(currentView);
+  if (currentIndex >= availableViews.length - 1) return ChevronRight;
+
+  const nextView = availableViews[currentIndex + 1];
+  const nextItem = allMultiMenuItems.find((item) => item.viewName === nextView);
+  return nextItem?.icon || ChevronRight;
+};
 
 export const useSidebarStore = create<SidebarStore>((set, get) => ({
   view: "main",
   direction: null,
+  prevIcon: ChevronLeft,
+  nextIcon: ChevronRight,
   setView: (view) => {
     const currentIndex = availableViews.indexOf(get().view);
     const newIndex = availableViews.indexOf(view);
@@ -36,6 +70,8 @@ export const useSidebarStore = create<SidebarStore>((set, get) => ({
     set(() => ({
       view,
       direction,
+      prevIcon: getPrevIcon(view),
+      nextIcon: getNextIcon(view),
       isFirst: view === "main",
       isLast: availableViews[availableViews.length - 1] === view,
     }));
@@ -47,6 +83,8 @@ export const useSidebarStore = create<SidebarStore>((set, get) => ({
       set({
         view: prevView,
         direction: "left",
+        prevIcon: getPrevIcon(prevView),
+        nextIcon: getNextIcon(prevView),
         isFirst: prevView === "main",
         isLast: prevView === availableViews[availableViews.length - 1],
       });
@@ -59,6 +97,8 @@ export const useSidebarStore = create<SidebarStore>((set, get) => ({
       set({
         view: nextView,
         direction: "right",
+        prevIcon: getPrevIcon(nextView),
+        nextIcon: getNextIcon(nextView),
         isFirst: nextView === "main",
         isLast: nextView === availableViews[availableViews.length - 1],
       });
