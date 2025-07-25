@@ -5,6 +5,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { useSidebarStore } from "@/hooks/useSideBar";
 import Link from "next/link";
@@ -24,6 +25,7 @@ export default function NormalList({
     prevIcon: PrevIcon,
     nextIcon: NextIcon,
   } = useSidebarStore();
+  const { setOpenMobile } = useSidebar();
   return (
     <SidebarGroup className="flex flex-col h-full">
       <div className="flex-shrink-0 mb-2 px-2 py-1">
@@ -43,7 +45,7 @@ export default function NormalList({
           <Button onClick={goBack} variant="ghost" size={"icon"}>
             <PrevIcon />
           </Button>
-          <h1 className="w-full text-center text-xl capitalize">{view}</h1>
+          <h1 className="w-full text-center uppercase font-bold">{view}</h1>
           <Button
             disabled={isLast}
             onClick={goForward}
@@ -63,7 +65,11 @@ export default function NormalList({
               list.subMenuViewName === view &&
               list.SubItemsList.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton className="p-4.5 bg-accent/40" asChild>
+                  <SidebarMenuButton
+                    onClick={() => setOpenMobile(false)}
+                    className="p-4.5 bg-accent/40"
+                    asChild
+                  >
                     <Link href={item.href}>
                       <span>{item.title}</span>
                     </Link>

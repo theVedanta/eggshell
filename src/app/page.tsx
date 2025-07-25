@@ -8,10 +8,12 @@ import StorePage from "@/components/store/store-page";
 import { useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export default function HomePage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { setOpenMobile } = useSidebar();
   // Scroll to store section on button click smoothly
   const storePg = useRef<HTMLDivElement | null>(null);
   const HandleClick = () => {
@@ -26,6 +28,7 @@ export default function HomePage() {
       const searchParam = searchParams.get("search");
       if (searchParam) {
         HandleClick();
+        setOpenMobile(false);
       }
     }
   }, [searchParams, pathname]);
@@ -54,7 +57,7 @@ export default function HomePage() {
         <div className="flex flex-wrap justify-center gap-2">
           {categories.map((category) => (
             <Link key={category.id} href={`/category/${category.id}`}>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="">
                 {category.name}
               </Button>
             </Link>

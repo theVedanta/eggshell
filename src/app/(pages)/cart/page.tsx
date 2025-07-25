@@ -62,7 +62,7 @@ export default function CartPage() {
               shopping to fill it up!
             </p>
             <Button size="lg" asChild className="btn-primary-gradient">
-              <Link href="/shop">
+              <Link href="/#products">
                 <ShoppingBag className="mr-2 h-5 w-5" />
                 Start Shopping
               </Link>

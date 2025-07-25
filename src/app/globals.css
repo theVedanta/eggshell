@@ -439,3 +439,12 @@
     -1px -1px 0px rgba(0, 0, 0, 0.2);
   z-index: -1;
 }
+
+.text-3d {
+  font-size: 1.3rem;
+  background: #1b1b1b;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  text-shadow: 2px 3px 3px rgba(165, 165, 165, 0.5);
+}

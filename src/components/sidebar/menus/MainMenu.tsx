@@ -13,12 +13,13 @@ import { useCart } from "@/state/useCart";
 import { SidebarItemTypes } from "@/types/sidebar.items.types";
 import { ChevronRight, ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
   const { setView } = useSidebarStore();
-  const { open, setOpen } = useSidebar();
+  const { open, setOpen, setOpenMobile } = useSidebar();
   const { itemCount } = useCart();
-
+  const currentPath = usePathname();
   return (
     <SidebarGroup className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto">
@@ -43,6 +44,8 @@ export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
                 </SidebarMenuButton>
               ) : (
                 <SidebarMenuButton
+                  isActive={currentPath === item.href}
+                  onClick={() => setOpenMobile(false)}
                   asChild
                   tooltip={item.title}
                   className="py-6 px-3"

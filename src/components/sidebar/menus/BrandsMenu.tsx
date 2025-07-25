@@ -5,6 +5,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { useSidebarStore } from "@/hooks/useSideBar";
 import Link from "next/link";
@@ -23,6 +24,7 @@ export default function BrandslList({
     isLast,
     nextIcon: NextIcon,
   } = useSidebarStore();
+  const { setOpenMobile } = useSidebar();
   return (
     <SidebarGroup className="flex flex-col h-full !pt-0">
       <div className="flex-shrink-0 mb-2 px-2 py-1">
@@ -39,7 +41,9 @@ export default function BrandslList({
           <ChevronLeft /> Go Back
         </Button>
         <div className="flex items-center">
-          <h1 className="w-full text-center text-xl capitalize">Brands</h1>
+          <h1 className="w-full text-center text-xl uppercase font-bold">
+            Brands
+          </h1>
           <Button
             disabled={isLast}
             onClick={() => goForward()}
@@ -67,6 +71,7 @@ export default function BrandslList({
                       backgroundPosition: "center",
                       backgroundRepeat: "no-repeat",
                     }}
+                    onClick={() => setOpenMobile(false)}
                     className="bg-accent/40 w-full p-6"
                     asChild
                   >

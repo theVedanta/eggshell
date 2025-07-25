@@ -8,6 +8,7 @@ import {
   SheetHeader,
   SheetFooter,
   SheetTitle,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import {
   Carousel,
@@ -19,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Check, ShoppingCart } from "lucide-react";
+import { useSidebar } from "./ui/sidebar";
 
 export function CartSheet({ children }: { children: React.ReactNode }) {
   const { items, total, itemCount } = useCart();
@@ -43,11 +45,14 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
       });
     }
   };
-
+  const { setOpenMobile } = useSidebar();
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       {children}
-      <SheetContent side="left" className="p-0 max-w-sm w-full flex flex-col">
+      <SheetContent
+        side="left"
+        className="p-0 max-w-sm max-sm:w-full w-full flex flex-col"
+      >
         <SheetHeader className="border-b p-4 flex flex-row items-center justify-between">
           <span className="font-semibold text-lg">Your Cart ({itemCount})</span>
           <SheetTitle className="hidden">{}</SheetTitle>
@@ -57,9 +62,11 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
             <div className="flex flex-col items-center justify-center h-full text-center gap-4">
               <span className="text-5xl">🛒</span>
               <div className="font-semibold text-lg">Your cart is empty</div>
-              <Button asChild className="btn-primary-gradient w-full">
-                <Link href="/#products">Start Shopping</Link>
-              </Button>
+              <SheetTrigger asChild className="btn-primary-gradient w-full">
+                <Button onClick={() => setOpenMobile(false)} asChild>
+                  <Link href="/#products">Start Shopping</Link>
+                </Button>
+              </SheetTrigger>
             </div>
           ) : (
             <>
