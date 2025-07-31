@@ -20,28 +20,23 @@ import Image from "next/image";
 import { useGetAllBrands } from "@/query-calls/brands-query";
 import { useGetProductsByBrand } from "@/query-calls/product-query";
 
-function BrandPage() {
+export default function BrandPage() {
   const params = useParams<{ brandId: string }>();
   const { brandId } = params;
   const { data } = useGetAllBrands();
   const brand = data?.find((brand) => brand.id === brandId);
-  console.log(brand, data);
-  const brandProducts = useGetProductsByBrand("Urban Edge").data || [];
+  const brandProducts = useGetProductsByBrand(brand?.name as string).data || [];
   const [sortBy, setSortBy] = useState<string>("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  console.log("whataa", brandProducts);
-  if (!brand) {
-    notFound();
-  }
 
-  // Get categories for this brand's products
+  // Get categories for this brand's products - moved before conditional returns
   const availableCategories = useMemo(() => {
     const categorySet = new Set(brandProducts.map((p) => p.category));
     return Array.from(categorySet);
   }, [brandProducts]);
 
-  // Filter and sort products
+  // Filter and sort products - moved before conditional returns
   const filteredProducts = useMemo(() => {
     let filtered = [...brandProducts];
 
@@ -89,6 +84,18 @@ function BrandPage() {
       ? brandProducts.reduce((sum, p) => sum + (p.rating || 0), 0) /
         brandProducts.length
       : 0;
+
+  console.log(brandProducts);
+
+  // If brand is not found, show 404
+  if (data && !brand) {
+    notFound();
+  }
+
+  // Don't render anything if we're still loading or brand is not found
+  if (!brand) {
+    return null;
+  }
 
   return (
     <div className="space-y-8">
@@ -315,10 +322,16 @@ function BrandPage() {
   );
 }
 
-export default function Page() {
-  return (
-    <div>
-      <h2>In progress...</h2>
-    </div>
-  );
-}
+// export default function Page() {
+//   const params = useParams<{ brandId: string }>();
+//   const { brandId } = params;
+//   const { data } = useGetAllBrands();
+//   const brand = data?.find((brand) => brand.id === brandId);
+//   const brandProducts = useGetProductsByBrand(brand?.name as string).data || [];
+//   console.log(brandProducts);
+//   return (
+//     <div>
+//     <code>{JSON.stringify(brandProducts)}</code>
+//     </div>
+//   );
+// }

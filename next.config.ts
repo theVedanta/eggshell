@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  reactStrictMode: false,
   images: {
     domains: [
       "images.unsplash.com",
@@ -8,6 +9,7 @@ const nextConfig: NextConfig = {
       "example.com",
       "s1.dswcdn.com",
       "www.tennisnuts.com",
+      "external-content.duckduckgo.com",
     ],
   },
 };
