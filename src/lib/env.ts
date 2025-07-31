@@ -1,2 +1,4 @@
 export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:3000/api" ||
+  "https://egshl.vercel.app/api/";
