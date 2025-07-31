@@ -1,18 +1,16 @@
+import { NextRequest } from "next/server";
 import { getSheetData } from "@/lib/gsheet";
-import { GSheetProduct } from "@/types/products.type";
 import {
   convertBooleanFields,
   get_color_image_map,
   getAllsizes,
   getAllTags,
-} from "./utils";
-import { NextRequest } from "next/server";
+} from "@/app/api/products/utils";
+import { GSheetProduct } from "@/types/products.type";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const limitParam = searchParams.get("limit");
-    const limit = limitParam ? parseInt(limitParam, 5) : undefined;
+    const limit = 4; // You can adjust this limit as needed
 
     const data = await getSheetData("Products");
     const transformedData: GSheetProduct[] = data.map((item: any) => {
@@ -54,11 +52,15 @@ export async function GET(req: NextRequest) {
       return product;
     });
 
-    const result = limit ? transformedData.slice(0, limit) : transformedData;
-    return Response.json({ data: result });
+    // Filter related products by category or brand, excluding the current product
+    const featuredProd = transformedData.filter((p) => p);
+
+    // Limit the number of related products returned
+    return Response.json({ data: featuredProd.slice(0, limit) });
   } catch (error) {
+    console.error("Error fetching related products:", error);
     return Response.json(
-      { error: "Failed to fetch products" },
+      { error: "Failed to fetch related products" },
       { status: 500 }
     );
   }

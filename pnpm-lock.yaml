@@ -64,6 +64,9 @@ importers:
       "@radix-ui/react-tooltip":
         specifier: ^1.2.7
         version: 1.2.7(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@tanstack/react-query":
+        specifier: ^4.40.1
+        version: 4.40.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -1512,6 +1515,27 @@ packages:
       {
         integrity: sha512-B+7r7ABZbkXJwpvt2VMnS6ujcDoR2OOcFaqrLIo1xbcdxje4Vf+VgJdBzNNbrAjBj/rLZ66/tlQ1knIGNLKOBQ==,
       }
+
+  "@tanstack/query-core@4.40.0":
+    resolution:
+      {
+        integrity: sha512-7MJTtZkCSuehMC7IxMOCGsLvHS3jHx4WjveSrGsG1Nc1UQLjaFwwkpLA2LmPfvOAxnH4mszMOBFD6LlZE+aB+Q==,
+      }
+
+  "@tanstack/react-query@4.40.1":
+    resolution:
+      {
+        integrity: sha512-mgD07S5N8e5v81CArKDWrHE4LM7HxZ9k/KLeD3+NUD9WimGZgKIqojUZf/rXkfAMYZU9p0Chzj2jOXm7xpgHHQ==,
+      }
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-native: "*"
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
 
   "@tybys/wasm-util@0.9.0":
     resolution:
@@ -5360,6 +5384,16 @@ snapshots:
       "@tailwindcss/oxide": 4.1.10
       postcss: 8.5.6
       tailwindcss: 4.1.10
+
+  "@tanstack/query-core@4.40.0": {}
+
+  "@tanstack/react-query@4.40.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@tanstack/query-core": 4.40.0
+      react: 19.1.0
+      use-sync-external-store: 1.5.0(react@19.1.0)
+    optionalDependencies:
+      react-dom: 19.1.0(react@19.1.0)
 
   "@tybys/wasm-util@0.9.0":
     dependencies:

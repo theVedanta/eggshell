@@ -36,18 +36,18 @@ export const useCart = create<CartStore>()(
     (set, get) => ({
       ...initialState,
       addToCart: (item) => {
-        const id = `${item.productId}-${item.color}-${item.size}`;
+        const id = `${item.productId}-${item.selectedColor}-${item.size}`;
         const existing = get().items.find(
           (i) =>
             i.productId === item.productId &&
-            i.color === item.color &&
+            i.selectedColor === item.selectedColor &&
             i.size === item.size
         );
         let items;
         if (existing) {
           items = get().items.map((i) =>
             i.productId === item.productId &&
-            i.color === item.color &&
+            i.selectedColor === item.selectedColor &&
             i.size === item.size
               ? {
                   ...i,

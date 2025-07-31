@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Poppins, Geist } from "next/font/google";
 import { Layout } from "@/components/layout";
+import { QueryProvider } from "@/query-calls/QueryProvider";
 
 const geist = Geist({
   variable: "--font-geist",
@@ -87,7 +88,9 @@ export default function RootLayout({
       >
         <ClerkProvider>
           <Suspense fallback={<div>Loading...</div>}>
-            <Layout>{children}</Layout>
+            <QueryProvider>
+              <Layout>{children}</Layout>
+            </QueryProvider>
           </Suspense>
           <Toaster />
         </ClerkProvider>

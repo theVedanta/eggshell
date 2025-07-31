@@ -1,13 +1,12 @@
 "use client";
 
 import { useState, useMemo, useEffect, useCallback } from "react";
-import { OldProduct, categories as allCategories } from "@/lib/db";
+import { categories as allCategories } from "@/lib/db";
 import { useSearch } from "./useSearch";
-import { products as allProductsData } from "@/lib/products";
+import { GSheetProduct } from "@/types/products.type";
 
 interface UseProductFiltersProps {
-  initialProducts?: OldProduct[];
-  productsData?: OldProduct[];
+  productsData?: GSheetProduct[];
   categoriesData?: { id: string; name: string }[];
   initialCategoryId?: string;
   productsPerPage?: number;
@@ -15,8 +14,7 @@ interface UseProductFiltersProps {
 }
 
 export const useProductFilters = ({
-  initialProducts,
-  productsData = allProductsData,
+  productsData = [],
   categoriesData = allCategories,
   initialCategoryId,
   productsPerPage: initialProductsPerPage = 12,
@@ -40,7 +38,7 @@ export const useProductFilters = ({
   const [displayedCount, setDisplayedCount] = useState(initialProductsPerPage);
   const [productsPerPage] = useState(initialProductsPerPage);
 
-  const productsToFilter = initialProducts || productsData;
+  const productsToFilter = productsData;
 
   // Use the search hook for filtering and sorting
   const { filteredItems: searchFilteredProducts } = useSearch({
@@ -63,7 +61,9 @@ export const useProductFilters = ({
   }, [productsToFilter]);
 
   const availableColors = useMemo(() => {
-    const colorSet = new Set(productsToFilter.flatMap((p) => p.colors));
+    const colorSet = new Set(
+      productsToFilter.flatMap((p) => p.colors.map((c) => c.productColor))
+    );
     return Array.from(colorSet).sort();
   }, [productsToFilter]);
 
@@ -99,7 +99,9 @@ export const useProductFilters = ({
       // Color filter
       if (
         selectedColors.length > 0 &&
-        !product.colors.some((color) => selectedColors.includes(color))
+        !product.colors.some((color) =>
+          selectedColors.includes(color.productColor)
+        )
       ) {
         return false;
       }

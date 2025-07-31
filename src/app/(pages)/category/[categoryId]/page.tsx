@@ -107,7 +107,6 @@ export default function CategoryPage() {
     clothingSizes,
     activeFiltersCount,
   } = useProductFilters({
-    initialProducts: allProducts,
     initialCategoryId: actualCategoryId,
     initialSearchQuery: urlSearchQuery,
   });

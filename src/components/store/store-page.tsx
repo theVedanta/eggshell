@@ -17,9 +17,10 @@ import FilterButton from "@/components/FilterButton";
 import { useProductFilters } from "@/hooks/use-product-filters";
 import InfiniteScrollTrigger from "@/components/InfiniteScrollTrigger";
 
-import { products } from "@/lib/products";
+import { useGetAllProducts } from "@/query-calls/product-query";
 
 export default function StorePage() {
+  const { data: products, error, isLoading: l } = useGetAllProducts();
   const searchParams = useSearchParams();
   const urlSearchQuery = searchParams.get("search") || "";
 
@@ -66,31 +67,33 @@ export default function StorePage() {
   }, [urlSearchQuery, searchQuery, setSearchQuery]);
 
   const availableBrands = useMemo(() => {
-    const brandSet = new Set(products.map((p) => p.brand));
+    const brandSet = new Set(products?.map((p) => p.brand));
     return Array.from(brandSet).sort();
-  }, []);
+  }, [products]);
 
   const availableColors = useMemo(() => {
-    const colorSet = new Set(products.flatMap((p) => p.colors || {}));
+    const colorSet = new Set(
+      products?.flatMap((p) => p.colors.map((c) => c.productColor) || [])
+    );
     return Array.from(colorSet).sort();
-  }, []);
+  }, [products]);
 
   const availableShoeSizes = useMemo(() => {
     const sizeSet = new Set(
-      products.flatMap(
+      products?.flatMap(
         (p) => p.sizes?.filter((s) => /^\d+(\.\d+)?$/.test(s)) || []
       )
     );
     return Array.from(sizeSet).sort((a, b) => parseFloat(a) - parseFloat(b));
-  }, []);
+  }, [products]);
   const availableClothingSizes = useMemo(() => {
     const sizeSet = new Set(
-      products.flatMap(
+      products?.flatMap(
         (p) => p.sizes?.filter((s) => !s.includes("US") && !/\d/.test(s)) || []
       )
     );
     return Array.from(sizeSet).sort();
-  }, []);
+  }, [products]);
   return (
     <div className="space-y-6 mb-7">
       {/* Controls */}
@@ -132,7 +135,7 @@ export default function StorePage() {
           />
 
           <div className="text-sm text-muted-foreground">
-            {filteredProducts.length} of {products.length} products
+            {filteredProducts.length} of {products?.length} products
             {searchQuery && <span> matching &quot;{searchQuery}&quot;</span>}
           </div>
         </div>

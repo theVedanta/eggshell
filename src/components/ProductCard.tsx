@@ -9,12 +9,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { OldProduct } from "@/lib/db";
 import { useCart } from "@/state/useCart";
 import { cn } from "@/lib/utils";
+import { GSheetProduct } from "@/types/products.type";
 
 interface ProductCardProps {
-  product: OldProduct;
+  product: GSheetProduct;
   className?: string;
   variant?: "default" | "compact" | "featured";
 }
@@ -36,8 +36,9 @@ export function ProductCard({
       productId: product.id,
       name: product.name,
       price: product.price,
-      image: product.images[0] || "/placeholder-product.jpg",
-      color: product.colors[0] || "Default",
+      selectedColor: product.colors[0]?.productColor || "Default",
+      selectedImage:
+        product.colors[0]?.productImages[0] || "/placeholder-product.jpg",
       size: product.sizes[0] || "Default",
     });
   };
@@ -85,7 +86,9 @@ export function ProductCard({
           >
             {/* Product Image */}
             <Image
-              src={product.images[0] || "/placeholder-product.jpg"}
+              src={
+                product.colors[0].productImages[0] || "/placeholder-product.jpg"
+              }
               alt={product.name}
               fill
               className="object-cover transition-transform duration-500 rounded-lg"
@@ -154,8 +157,10 @@ export function ProductCard({
                     productId: product.id,
                     name: product.name,
                     price: product.price,
-                    image: product.images[0] || "/placeholder-product.jpg",
-                    color: product.colors[0] || "Default",
+                    selectedColor: product.colors[0]?.productColor || "Default",
+                    selectedImage:
+                      product.colors[0]?.productImages[0] ||
+                      "/placeholder-product.jpg",
                     size: product.sizes[0] || "Default",
                   });
                   window.location.href = "/checkout";
@@ -227,13 +232,14 @@ export function ProductCard({
                           {displayedColors.map((color, index) => (
                             <div
                               key={index}
-                              className={`w-3 h-3 md:w-4 md:h-4 rounded-full ${color.toLowerCase() === "black" ? "border border-primary/60" : ""}`}
+                              className={`w-3 h-3 md:w-4 md:h-4 rounded-full ${color.productColor.toLowerCase() === "black" ? "border border-primary/60" : ""}`}
                               style={{
                                 backgroundColor:
-                                  tailwindColorMapping[color.toLowerCase()] ||
-                                  "#6b7280",
+                                  tailwindColorMapping[
+                                    color.productColor.toLowerCase()
+                                  ] || "#6b7280",
                               }}
-                              title={color}
+                              title={color.productColor}
                             />
                           ))}
                           {product.colors.length > maxColors && (

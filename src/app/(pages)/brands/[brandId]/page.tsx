@@ -16,22 +16,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ProductCard } from "@/components/ProductCard";
-import { brands, getProductsByBrand, categories } from "@/lib/db";
 import Image from "next/image";
+import { useGetAllBrands } from "@/query-calls/brands-query";
+import { useGetProductsByBrand } from "@/query-calls/product-query";
 
-export default function BrandPage() {
+function BrandPage() {
   const params = useParams<{ brandId: string }>();
   const { brandId } = params;
-  const brand = brands.find((b) => b.id === brandId);
-
-  const brandProducts = useMemo(() => {
-    return brand ? getProductsByBrand(brand.name) : [];
-  }, [brand]);
-
+  const { data } = useGetAllBrands();
+  const brand = data?.find((brand) => brand.id === brandId);
+  console.log(brand, data);
+  const brandProducts = useGetProductsByBrand("Urban Edge").data || [];
   const [sortBy, setSortBy] = useState<string>("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-
+  console.log("whataa", brandProducts);
   if (!brand) {
     notFound();
   }
@@ -62,7 +61,7 @@ export default function BrandPage() {
         filtered.sort((a, b) => b.price - a.price);
         break;
       case "rating":
-        filtered.sort((a, b) => b.rating - a.rating);
+        filtered.sort((a, b) => (b?.rating || 0) - (a?.rating || 0));
         break;
       case "newest":
         filtered.sort((a, b) => {
@@ -87,19 +86,9 @@ export default function BrandPage() {
   const featuredProducts = brandProducts.filter((p) => p.featured);
   const averageRating =
     brandProducts.length > 0
-      ? brandProducts.reduce((sum, p) => sum + p.rating, 0) /
+      ? brandProducts.reduce((sum, p) => sum + (p.rating || 0), 0) /
         brandProducts.length
       : 0;
-
-  const priceRange =
-    brandProducts.length > 0
-      ? {
-          min: Math.min(...brandProducts.map((p) => p.price)),
-          max: Math.max(
-            ...brandProducts.map((p) => p.originalPrice || p.price)
-          ),
-        }
-      : { min: 0, max: 0 };
 
   return (
     <div className="space-y-8">
@@ -191,14 +180,11 @@ export default function BrandPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                {availableCategories.map((categoryId) => {
-                  const category = categories.find((c) => c.id === categoryId);
-                  return (
-                    <SelectItem key={categoryId} value={categoryId}>
-                      {category?.name || categoryId}
-                    </SelectItem>
-                  );
-                })}
+                {availableCategories.map((categoryId) => (
+                  <SelectItem key={categoryId} value={categoryId}>
+                    {categoryId.charAt(0).toUpperCase() + categoryId.slice(1)}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 
@@ -281,12 +267,9 @@ export default function BrandPage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
             {availableCategories.map((categoryId) => {
-              const category = categories.find((c) => c.id === categoryId);
               const categoryProducts = brandProducts.filter(
                 (p) => p.category === categoryId
               );
-
-              if (!category) return null;
 
               return (
                 <Button
@@ -299,10 +282,18 @@ export default function BrandPage() {
                     {categoryId === "apparel" && "👕"}
                     {categoryId === "footwear" && "👟"}
                     {categoryId === "accessories" && "⌚"}
-                    {categoryId === "jewellery" && "💎"}
+                    {categoryId === "jewellery" && "�"}
+                    {![
+                      "apparel",
+                      "footwear",
+                      "accessories",
+                      "jewellery",
+                    ].includes(categoryId) && "📦"}
                   </div>
                   <div className="text-center">
-                    <div className="font-semibold">{category.name}</div>
+                    <div className="font-semibold">
+                      {categoryId.charAt(0).toUpperCase() + categoryId.slice(1)}
+                    </div>
                     <div className="text-sm text-muted-foreground">
                       {categoryProducts.length} products
                     </div>
@@ -320,6 +311,14 @@ export default function BrandPage() {
           <Link href="/brands">&larr; Back to All Brands</Link>
         </Button>
       </div>
+    </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <div>
+      <h2>In progress...</h2>
     </div>
   );
 }
