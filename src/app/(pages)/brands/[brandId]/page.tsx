@@ -157,7 +157,7 @@ export default function BrandPage() {
           <div className="products-grid">
             {brandProducts.slice(0, 4).map((product) => (
               <ProductCard
-                key={product.id}
+                key={product.id + product.subcategory}
                 product={product}
                 variant="featured"
               />
@@ -251,7 +251,7 @@ export default function BrandPage() {
           <div className={viewMode === "grid" ? "products-grid" : "space-y-4"}>
             {filteredProducts.map((product) => (
               <ProductCard
-                key={product.id}
+                key={product.id + product.subcategory}
                 product={product}
                 variant={viewMode === "list" ? "compact" : "default"}
               />

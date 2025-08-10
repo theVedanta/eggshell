@@ -1,4 +1,4 @@
-import { ArrowLeft, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -11,6 +11,7 @@ import { useSidebarStore } from "@/hooks/useSideBar";
 import Link from "next/link";
 import { SidebarItemTypes } from "@/types/sidebar.items.types";
 import { Button } from "@/components/ui/button";
+import { useGetAllBrands } from "@/query-calls/brands-query";
 
 export default function BrandslList({
   brandsList,
@@ -20,11 +21,13 @@ export default function BrandslList({
   const {
     view,
     goBack,
+    prevIcon: PrevIcon,
     goForward,
     isLast,
     nextIcon: NextIcon,
   } = useSidebarStore();
   const { setOpenMobile } = useSidebar();
+  const { data: allBrands } = useGetAllBrands();
   return (
     <SidebarGroup className="flex flex-col h-full !pt-0">
       <div className="flex-shrink-0 mb-2 px-2 py-1">
@@ -41,6 +44,9 @@ export default function BrandslList({
           <ChevronLeft /> Go Back
         </Button>
         <div className="flex items-center">
+          <Button onClick={goBack} variant="ghost" size={"icon"}>
+            <PrevIcon />
+          </Button>
           <h1 className="w-full text-center text-xl uppercase font-bold">
             Brands
           </h1>
@@ -60,13 +66,12 @@ export default function BrandslList({
           {brandsList.map(
             (list) =>
               list.isSubItem &&
-              list.SubItemsList &&
               list.subMenuViewName === view &&
-              list.SubItemsList.map((item) => (
-                <SidebarMenuItem key={item.title}>
+              allBrands?.map((item) => (
+                <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton
                     style={{
-                      backgroundImage: `url(${item.brandImage})`,
+                      backgroundImage: `url(${item.logo})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       backgroundRepeat: "no-repeat",
@@ -75,8 +80,10 @@ export default function BrandslList({
                     className="bg-accent/40 w-full p-6"
                     asChild
                   >
-                    <Link href={item.href}>
-                      {/* <span>{item.title}</span> */}
+                    <Link
+                      href={`/brands/${item.name.split(" ").join("-").toLowerCase()}`}
+                    >
+                      {/* <span>{item.name}</span> */}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

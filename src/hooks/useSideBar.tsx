@@ -21,7 +21,7 @@ interface SidebarStore {
 
 const allMultiMenuItems = SideBarNavItems.reduce(
   (acc, item) => {
-    if (item.isSubItem && item.SubItemsList && item.subMenuViewName) {
+    if (item.isSubItem && item.subMenuViewName) {
       acc.push({
         viewName: item.subMenuViewName,
         icon: item?.icon,

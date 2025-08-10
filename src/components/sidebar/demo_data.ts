@@ -1,16 +1,11 @@
-import {
-  SideBarAccountInfoItems,
-  SidebarItems,
-} from "@/types/sidebar.items.types";
+import { SidebarItems } from "@/types/sidebar.items.types";
 import {
   BriefcaseBusiness,
   Footprints,
   Home,
-  LayoutDashboard,
   PersonStanding,
   ScrollText,
   Shirt,
-  Store,
   User,
 } from "lucide-react";
 import BrandImage from "@/../public/assets/logo/nike.jpg";
@@ -31,43 +26,6 @@ export const SideBarNavItems: SidebarItems = [
     icon: BriefcaseBusiness,
     disabled: false,
     isSubItem: true,
-    SubItemsList: [
-      {
-        title: "Urban Edge",
-        href: "/brands/urban-edge",
-        icon: BriefcaseBusiness,
-        disabled: false,
-        brandImage: BrandImage.src,
-      },
-      {
-        title: "Minimal Co.",
-        href: "/brands/minimal-co",
-        icon: BriefcaseBusiness,
-        disabled: false,
-        brandImage: BrandImage.src,
-      },
-      {
-        title: "Luxe Craft",
-        href: "/brands/luxe-craft",
-        icon: BriefcaseBusiness,
-        disabled: false,
-        brandImage: BrandImage.src,
-      },
-      {
-        title: "Comfort Zone",
-        href: "/brands/comfort-zone",
-        icon: BriefcaseBusiness,
-        disabled: false,
-        brandImage: BrandImage.src,
-      },
-      {
-        title: "Classic Heritage",
-        href: "/brands/classic-heritage",
-        icon: BriefcaseBusiness,
-        disabled: false,
-        brandImage: BrandImage.src,
-      },
-    ],
   },
   {
     title: "Footwear",
@@ -76,14 +34,6 @@ export const SideBarNavItems: SidebarItems = [
     icon: Footprints,
     disabled: false,
     isSubItem: true,
-    SubItemsList: [
-      {
-        title: "Sneakers",
-        href: "/footwears/sneakers",
-        icon: BriefcaseBusiness,
-        disabled: false,
-      },
-    ],
   },
   {
     title: "Apparel",
@@ -92,14 +42,6 @@ export const SideBarNavItems: SidebarItems = [
     icon: Shirt,
     disabled: false,
     isSubItem: true,
-    SubItemsList: [
-      {
-        title: "T-Shirts",
-        href: "/apparel/t-shirts",
-        icon: BriefcaseBusiness,
-        disabled: false,
-      },
-    ],
   },
   {
     title: "Accessories",
@@ -108,20 +50,6 @@ export const SideBarNavItems: SidebarItems = [
     icon: PersonStanding,
     disabled: false,
     isSubItem: true,
-    SubItemsList: [
-      {
-        title: "Caps",
-        href: "/accessories/caps",
-        icon: BriefcaseBusiness,
-        disabled: false,
-      },
-      {
-        title: "Backpacks",
-        href: "/accessories/backpacks",
-        icon: BriefcaseBusiness,
-        disabled: false,
-      },
-    ],
   },
   {
     title: "Orders",
