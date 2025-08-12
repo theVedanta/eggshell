@@ -9,3 +9,7 @@
   Apparel
   Sneakers
   Accessories
+
+remove the top right chevron in accessories
+search bar active on opening
+product page scrolled up when returning

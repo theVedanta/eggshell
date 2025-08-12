@@ -1,4 +1,4 @@
-import { ArrowLeft, ChevronLeft } from "lucide-react";
+import { ArrowLeft, ChevronLeft, StepBack } from "lucide-react";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -41,6 +41,14 @@ export default function BrandslList({
           <ChevronLeft /> Go Back
         </Button>
         <div className="flex items-center">
+          <Button
+            disabled={isLast}
+            onClick={() => goBack()}
+            variant="ghost"
+            size={"icon"}
+          >
+            <StepBack />
+          </Button>
           <h1 className="w-full text-center text-xl uppercase font-bold">
             Brands
           </h1>

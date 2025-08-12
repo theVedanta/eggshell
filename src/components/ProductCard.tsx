@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Heart, Plus, ShoppingCart, Star } from "lucide-react";
 import tailwindColorMapping from "@/lib/tailwindColorMapping";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,8 +25,19 @@ export function ProductCard({
   variant = "default",
 }: ProductCardProps) {
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [imageError, setImageError] = useState(false);
+  const [maxColors, setMaxColors] = useState(2);
   const addToCart = useCart((s) => s.addToCart);
+
+  // Fix hydration issue: set maxColors on client after mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        setMaxColors(4);
+      } else {
+        setMaxColors(2);
+      }
+    }
+  }, []);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -89,7 +100,6 @@ export function ProductCard({
               alt={product.name}
               fill
               className="object-cover transition-transform duration-500 rounded-lg"
-              onError={() => setImageError(true)}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
             />
 
@@ -208,42 +218,27 @@ export function ProductCard({
                 <div className="flex items-center gap-1">
                   <div className="flex gap-1">
                     {/* Responsive color display: 2 on mobile, 4 on desktop */}
-                    {(() => {
-                      // Use a media query to determine screen size
-                      // This is a simple approach using window.matchMedia
-                      // For SSR, fallback to 2
-                      let maxColors = 2;
-                      if (typeof window !== "undefined") {
-                        if (window.matchMedia("(min-width: 768px)").matches) {
-                          maxColors = 4;
-                        }
-                      }
-                      const displayedColors = product.colors.slice(
-                        0,
-                        maxColors
-                      );
-                      return (
-                        <div className="flex items-center space-x-1 md:space-x-2">
-                          {displayedColors.map((color, index) => (
-                            <div
-                              key={index}
-                              className={`w-3 h-3 md:w-4 md:h-4 rounded-full ${color.toLowerCase() === "black" ? "border border-primary/60" : ""}`}
-                              style={{
-                                backgroundColor:
-                                  tailwindColorMapping[color.toLowerCase()] ||
-                                  "#6b7280",
-                              }}
-                              title={color}
-                            />
-                          ))}
-                          {product.colors.length > maxColors && (
-                            <span className="text-xs text-muted-foreground">
-                              +{product.colors.length - maxColors}
-                            </span>
-                          )}
-                        </div>
-                      );
-                    })()}
+                    <div className="flex items-center space-x-1 md:space-x-2">
+                      {product.colors
+                        .slice(0, maxColors)
+                        .map((color, index) => (
+                          <div
+                            key={index}
+                            className={`w-3 h-3 md:w-4 md:h-4 rounded-full ${color.toLowerCase() === "black" ? "border border-primary/60" : ""}`}
+                            style={{
+                              backgroundColor:
+                                tailwindColorMapping[color.toLowerCase()] ||
+                                "#6b7280",
+                            }}
+                            title={color}
+                          />
+                        ))}
+                      {product.colors.length > maxColors && (
+                        <span className="text-xs text-muted-foreground">
+                          +{product.colors.length - maxColors}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}

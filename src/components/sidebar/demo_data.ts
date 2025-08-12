@@ -5,13 +5,12 @@ import {
 import {
   BriefcaseBusiness,
   Footprints,
+  Gem,
   Home,
-  LayoutDashboard,
-  PersonStanding,
   ScrollText,
   Shirt,
-  Store,
   User,
+  Wheat,
 } from "lucide-react";
 import BrandImage from "@/../public/assets/logo/nike.jpg";
 
@@ -28,7 +27,7 @@ export const SideBarNavItems: SidebarItems = [
     title: "Brands",
     href: "/brands",
     subMenuViewName: "brands",
-    icon: BriefcaseBusiness,
+    icon: Wheat,
     disabled: false,
     isSubItem: true,
     SubItemsList: [
@@ -216,7 +215,7 @@ export const SideBarNavItems: SidebarItems = [
     title: "Accessories",
     href: "/accessories",
     subMenuViewName: "accessories",
-    icon: PersonStanding,
+    icon: Gem,
     disabled: false,
     isSubItem: true,
     SubItemsList: [

@@ -20,6 +20,7 @@ export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
   const { open, setOpen, setOpenMobile } = useSidebar();
   const { itemCount } = useCart();
   const currentPath = usePathname();
+
   return (
     <SidebarGroup className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto">
@@ -37,8 +38,8 @@ export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
                   onClick={() => setView(item.subMenuViewName as string)}
                 >
                   <p>
-                    {item.icon && <item.icon />}
-                    <span>{item.title}</span>
+                    {item.icon && <item.icon size={64} />}
+                    <span className="embossed-text-vedanta">{item.title}</span>
                     <ChevronRight className="ml-auto" />
                   </p>
                 </SidebarMenuButton>
@@ -51,7 +52,7 @@ export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
                   className="py-6 px-3"
                 >
                   <Link href={item.href ?? ""}>
-                    {item.icon && <item.icon />}
+                    {item.icon && <item.icon size={64} />}
                     <span>{item.title}</span>
                   </Link>
                 </SidebarMenuButton>
