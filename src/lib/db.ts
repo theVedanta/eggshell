@@ -1,3 +1,4 @@
+import { GSheetProduct } from "@/types/products.type";
 import { products } from "./products";
 
 export interface Product {

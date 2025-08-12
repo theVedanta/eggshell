@@ -25,7 +25,7 @@ import { useSidebar } from "./ui/sidebar";
 export function CartSheet({ children }: { children: React.ReactNode }) {
   const { items, total, itemCount } = useCart();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
+  const [, setCarouselApi] = useState<CarouselApi | null>(null);
   const [open, setOpen] = useState(false);
 
   // Order summary calculations (mimic cart page)
@@ -88,9 +88,10 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
                         opacity: idx === activeIndex ? 1 : 0.4,
                       }}
                     >
-                      <div className="relative w-48 h-48 rounded-lg overflow-hidden bg-muted">
+                      <div className="relative w-48 h-48 rounded-lg overflow-hidden bg-muted flex items-center justify-center">
+                        {/* Show the selected image for this cart item */}
                         <Image
-                          src={item.image || "/placeholder-product.jpg"}
+                          src={item.selectedImage || "/placeholder-product.jpg"}
                           alt={item.name}
                           fill
                           className="object-cover"
@@ -124,7 +125,7 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
                     {items[activeIndex].name}
                   </div>
                   <div className="flex justify-center gap-3 mt-1 text-muted-foreground">
-                    <span>Color: {items[activeIndex].color}</span>
+                    <span>Color: {items[activeIndex].selectedColor}</span>
                     <span>Size: {items[activeIndex].size}</span>
                   </div>
                 </div>

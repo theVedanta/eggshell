@@ -18,8 +18,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/state/useCart";
-import { getFeaturedProducts } from "@/lib/db";
 import { ProductCard } from "@/components/ProductCard";
+import { useGetFeaturedProducts } from "@/query-calls/product-query";
 
 export default function CartPage() {
   const { items, total, itemCount, updateQuantity, removeFromCart, clearCart } =
@@ -27,7 +27,7 @@ export default function CartPage() {
   const [promoCode, setPromoCode] = useState("");
   const [promoApplied, setPromoApplied] = useState(false);
 
-  const suggestedProducts = getFeaturedProducts().slice(0, 4);
+  const { data: suggestedProducts } = useGetFeaturedProducts();
 
   const subtotal = total;
   const shipping = subtotal > 50 ? 0 : 9.99;
@@ -71,7 +71,7 @@ export default function CartPage() {
         </Card>
 
         {/* Suggested Products */}
-        {suggestedProducts.length > 0 && (
+        {suggestedProducts && suggestedProducts?.length > 0 && (
           <section>
             <div className="mb-6">
               <h2 className="text-2xl font-bold mb-2">You Might Like</h2>
@@ -122,7 +122,7 @@ export default function CartPage() {
                     {/* Product Image */}
                     <div className="w-20 h-20 relative overflow-hidden rounded-lg bg-muted flex-shrink-0">
                       <Image
-                        src={item.image || "/placeholder-product.jpg"}
+                        src={item.selectedImage || "/placeholder-product.jpg"}
                         alt={item.name}
                         fill
                         className="object-cover"
@@ -140,7 +140,7 @@ export default function CartPage() {
                       </Link>
 
                       <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-                        <span>Color: {item.color}</span>
+                        <span>Color: {item.selectedColor}</span>
                         <span>Size: {item.size}</span>
                       </div>
 
@@ -344,7 +344,7 @@ export default function CartPage() {
       </div>
 
       {/* Recently Viewed or Recommended */}
-      {suggestedProducts.length > 0 && (
+      {suggestedProducts && suggestedProducts.length > 0 && (
         <section>
           <div className="mb-6">
             <h2 className="text-2xl font-bold mb-2">Complete Your Look</h2>

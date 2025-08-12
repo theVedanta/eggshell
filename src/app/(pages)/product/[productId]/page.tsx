@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { notFound, useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -25,16 +25,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { ProductCard } from "@/components/ProductCard";
-import { getProductById, getRelatedProducts, brands } from "@/lib/db";
+import { brands } from "@/lib/db";
 import { useCart } from "@/state/useCart";
 import { toast } from "sonner";
+import { useGetProductById } from "@/query-calls/product-query";
+import { useGetRelatedProducts } from "@/query-calls/product-query";
 
 export default function ProductPage() {
   const params = useParams<{ productId: string }>();
   const { productId } = params;
-  const product = getProductById(productId);
-  const relatedProducts = product ? getRelatedProducts(productId) : [];
-
+  const { data: product, error, isLoading } = useGetProductById(productId);
+  const { data: relatedProducts } = useGetRelatedProducts(productId);
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [quantity, setQuantity] = useState(1);
@@ -43,19 +44,29 @@ export default function ProductPage() {
 
   const { addToCart } = useCart();
 
-  if (!product) {
-    notFound();
-  }
-
-  // Set default selections
-  useState(() => {
-    if (product.colors.length > 0 && !selectedColor) {
-      setSelectedColor(product.colors[0]);
+  // Set default selections using useEffect (must be called before any early returns)
+  useEffect(() => {
+    if (product && product.colors.length > 0 && !selectedColor) {
+      setSelectedColor(product.colors[0].productColor);
     }
-    if (product.sizes.length > 0 && !selectedSize) {
+    if (product && product.sizes.length > 0 && !selectedSize) {
       setSelectedSize(product.sizes[0]);
     }
-  });
+  }, [product, selectedColor, selectedSize]);
+
+  // Reset selected image when color changes
+  useEffect(() => {
+    setSelectedImage(0);
+  }, [selectedColor]);
+
+  // Handle loading and error states AFTER all hooks are called
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error || !product) {
+    notFound();
+  }
 
   const discountPercentage = product.originalPrice
     ? Math.round(
@@ -75,12 +86,21 @@ export default function ProductPage() {
       return;
     }
 
+    // Get the selected color object
+    const selectedColorObj = product.colors.find(
+      (color) => color.productColor === selectedColor
+    );
+
+    // Use the first image (index 0) of the selected color
+    const selectedImageUrl =
+      selectedColorObj?.productImages[0] || "/placeholder-product.jpg";
+
     addToCart({
       productId: product.id,
       name: product.name,
       price: product.price,
-      image: product.images[0] || "/placeholder-product.jpg",
-      color: selectedColor || "Default",
+      selectedColor: selectedColor || "Default",
+      selectedImage: selectedImageUrl,
       size: selectedSize || "Default",
       quantity,
     });
@@ -112,7 +132,9 @@ export default function ProductPage() {
             <div className="aspect-square relative overflow-hidden rounded-xl bg-muted">
               <Image
                 src={
-                  product.images[selectedImage] || "/placeholder-product.jpg"
+                  product.colors.find(
+                    (img) => img.productColor === selectedColor
+                  )?.productImages[selectedImage] || "/placeholder-product.jpg"
                 }
                 fill
                 alt={product.name}
@@ -139,29 +161,36 @@ export default function ProductPage() {
             </div>
 
             {/* Thumbnail Images */}
-            {product.images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto">
-                {product.images.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                      selectedImage === index
-                        ? "border-primary"
-                        : "border-border"
-                    }`}
+            {product.colors.map((info) => {
+              if (info.productColor === selectedColor) {
+                return (
+                  <div
+                    key={info.productColor}
+                    className="flex gap-2 overflow-x-auto"
                   >
-                    <Image
-                      src={image || "/placeholder-product.jpg"}
-                      alt={`${product.name} ${index + 1}`}
-                      width={80}
-                      height={80}
-                      className="object-cover w-full h-full"
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
+                    {info.productImages.map((image, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedImage(index)}
+                        className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
+                          selectedImage === index
+                            ? "border-primary"
+                            : "border-border"
+                        }`}
+                      >
+                        <Image
+                          src={image || "/placeholder-product.jpg"}
+                          alt={`${product.name}`}
+                          width={80}
+                          height={80}
+                          className="object-cover w-full h-full"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                );
+              } else return null;
+            })}
           </div>
         </div>
 
@@ -208,7 +237,7 @@ export default function ProductPage() {
                 <Star
                   key={i}
                   className={`h-4 w-4 ${
-                    i < Math.floor(product.rating)
+                    i < Math.floor(product?.rating || 0)
                       ? "fill-yellow-400 text-yellow-400"
                       : "text-gray-300"
                   }`}
@@ -278,16 +307,19 @@ export default function ProductPage() {
                 className="flex flex-wrap gap-3"
               >
                 {product.colors.map((color) => (
-                  <div key={color} className="flex items-center space-x-2">
+                  <div
+                    key={color.productColor}
+                    className="flex items-center space-x-2"
+                  >
                     <RadioGroupItem
-                      value={color}
-                      id={`color-${color}`}
+                      value={color.productColor}
+                      id={`color-${color.productColor}`}
                       className="sr-only"
                     />
                     <Label
-                      htmlFor={`color-${color}`}
+                      htmlFor={`color-${color.productColor}`}
                       className={`flex items-center gap-2 px-4 py-2 rounded-lg border cursor-pointer transition-colors ${
-                        selectedColor === color
+                        selectedColor === color.productColor
                           ? "border-primary bg-primary/10 text-primary"
                           : "border-border hover:border-primary/50"
                       }`}
@@ -296,26 +328,30 @@ export default function ProductPage() {
                         className="w-4 h-4 rounded-full border border-border"
                         style={{
                           backgroundColor:
-                            color.toLowerCase() === "white"
+                            color.productColor.toLowerCase() === "white"
                               ? "#ffffff"
-                              : color.toLowerCase() === "black"
+                              : color.productColor.toLowerCase() === "black"
                                 ? "#000000"
-                                : color.toLowerCase() === "gray"
+                                : color.productColor.toLowerCase() === "gray"
                                   ? "#6b7280"
-                                  : color.toLowerCase() === "navy"
+                                  : color.productColor.toLowerCase() === "navy"
                                     ? "#1e3a8a"
-                                    : color.toLowerCase() === "brown"
+                                    : color.productColor.toLowerCase() ===
+                                        "brown"
                                       ? "#92400e"
-                                      : color.toLowerCase() === "green"
+                                      : color.productColor.toLowerCase() ===
+                                          "green"
                                         ? "#059669"
-                                        : color.toLowerCase() === "blue"
+                                        : color.productColor.toLowerCase() ===
+                                            "blue"
                                           ? "#2563eb"
-                                          : color.toLowerCase() === "red"
+                                          : color.productColor.toLowerCase() ===
+                                              "red"
                                             ? "#dc2626"
                                             : "#6b7280",
                         }}
                       />
-                      {color}
+                      {color.productColor}
                     </Label>
                   </div>
                 ))}
@@ -393,7 +429,7 @@ export default function ProductPage() {
                 disabled={!product.inStock}
               >
                 <ShoppingCart className="mr-2 h-5 w-5" />
-                Add to Cart - ${(product.price * quantity).toFixed(2)}
+                Add to Cart - ₹{(product.price * quantity).toFixed(2)}
               </Button>
               <Button variant="outline" size="lg" onClick={handleWishlist}>
                 <Heart
@@ -504,7 +540,9 @@ export default function ProductPage() {
                             Colors:
                           </dt>
                           <dd className="font-medium">
-                            {product.colors.join(", ")}
+                            {product.colors
+                              .map((c) => c.productColor)
+                              .join(", ")}
                           </dd>
                         </div>
                         <div>
@@ -550,7 +588,7 @@ export default function ProductPage() {
       </div>
 
       {/* Related Products */}
-      {relatedProducts.length > 0 && (
+      {Array.isArray(relatedProducts) && relatedProducts.length > 0 && (
         <section>
           <div className="mb-6">
             <h2 className="text-2xl font-bold mb-2">You Might Also Like</h2>

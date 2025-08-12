@@ -11,6 +11,7 @@ import { useSidebarStore } from "@/hooks/useSideBar";
 import Link from "next/link";
 import { SidebarItemTypes } from "@/types/sidebar.items.types";
 import { Button } from "@/components/ui/button";
+import { useGetSideBarSubcategoriesByCategory } from "@/query-calls/sidebar-opts";
 
 export default function NormalList({
   itemsList,
@@ -26,6 +27,7 @@ export default function NormalList({
     nextIcon: NextIcon,
   } = useSidebarStore();
   const { setOpenMobile } = useSidebar();
+  const { data: subcategories } = useGetSideBarSubcategoriesByCategory(view);
   return (
     <SidebarGroup className="flex flex-col h-full">
       <div className="flex-shrink-0 mb-2 px-2 py-1">
@@ -61,17 +63,16 @@ export default function NormalList({
           {itemsList.map(
             (list) =>
               list.isSubItem &&
-              list.SubItemsList &&
               list.subMenuViewName === view &&
-              list.SubItemsList.map((item) => (
-                <SidebarMenuItem key={item.title}>
+              subcategories?.map((item) => (
+                <SidebarMenuItem key={item}>
                   <SidebarMenuButton
                     onClick={() => setOpenMobile(false)}
                     className="p-4.5 bg-accent/40"
                     asChild
                   >
-                    <Link href={item.href}>
-                      <span>{item.title}</span>
+                    <Link href={`/${view}/${item}`}>
+                      <span>{item.split("_").join(" ")}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

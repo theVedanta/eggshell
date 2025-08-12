@@ -27,7 +27,7 @@ export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
         <SidebarMenu className="space-y-1 grid gap-1">
           {array.map((item) => (
             <SidebarMenuItem key={item.title}>
-              {item.isSubItem && item.SubItemsList ? (
+              {item.isSubItem ? (
                 <SidebarMenuButton
                   className="py-6 px-3 text-base"
                   onClickCapture={() => {

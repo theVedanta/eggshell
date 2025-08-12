@@ -1,5 +1,7 @@
 "use client";
 
+import type React from "react";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, Plus, ShoppingCart, Star } from "lucide-react";
@@ -9,12 +11,12 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { OldProduct } from "@/lib/db";
 import { useCart } from "@/state/useCart";
 import { cn } from "@/lib/utils";
+import type { GSheetProduct } from "@/types/products.type";
 
 interface ProductCardProps {
-  product: OldProduct;
+  product: GSheetProduct;
   className?: string;
   variant?: "default" | "compact" | "featured";
 }
@@ -47,8 +49,9 @@ export function ProductCard({
       productId: product.id,
       name: product.name,
       price: product.price,
-      image: product.images[0] || "/placeholder-product.jpg",
-      color: product.colors[0] || "Default",
+      selectedColor: product.colors[0]?.productColor || "Default",
+      selectedImage:
+        product.colors[0]?.productImages[0] || "/placeholder-product.jpg",
       size: product.sizes[0] || "Default",
     });
   };
@@ -78,25 +81,27 @@ export function ProductCard({
   };
 
   return (
-    <Link href={`/product/${product.id}`}>
+    <Link href={`/product/${product.id}`} className="grid">
       <Card
         className={cn(
-          "product-card ecommerce-card overflow-hidden transition-all duration-300 rounded-none bg-neutral-950 hover:shadow-xl py-0",
+          "product-card ecommerce-card overflow-hidden transition-all duration-300 rounded-none bg-neutral-950 hover:shadow-xl py-0 w-full max-w-full min-w-0",
           cardVariants[variant],
           className
         )}
       >
-        <CardContent className="p-0">
+        <CardContent className="p-0 w-full max-w-full min-w-0">
           {/* Image Container */}
           <div
             className={cn(
-              "product-image-container relative overflow-hidden rounded-none",
+              "product-image-container relative overflow-hidden rounded-none w-full max-w-full",
               imageVariants[variant]
             )}
           >
             {/* Product Image */}
             <Image
-              src={product.images[0] || "/placeholder-product.jpg"}
+              src={
+                product.colors[0].productImages[0] || "/placeholder-product.jpg"
+              }
               alt={product.name}
               fill
               className="object-cover transition-transform duration-500 rounded-lg"
@@ -124,121 +129,122 @@ export function ProductCard({
             </div>
 
             {/* Badges */}
-            <div className="absolute top-3 left-3 flex flex-wrap gap-1 w-[66%]">
-              {/* {product.featured && (
-                                <Badge className="bg-background/60 backdrop-blur-md text-black-700 border border-primary/40 font-semibold shadow-md">
-                                    <Crown className="h-3 w-3 fill-amber-500 text-amber-500 mr-1" />
-                                    Featured
-                                </Badge>
-                            )} */}
-              {/* {discountPercentage && (
-                                <Badge variant="destructive">
-                                    -{discountPercentage}%
-                                </Badge>
-                            )} */}
+            <div className="absolute top-3 left-3 flex flex-wrap gap-1 max-w-[66%]">
               {!product.inStock && (
-                <Badge variant="secondary" className="bg-gray-500 text-primary">
+                <Badge
+                  variant="secondary"
+                  className="bg-gray-500 text-primary text-xs"
+                >
                   Out of Stock
                 </Badge>
               )}
             </div>
 
-            {/* Quick view on hover for featured variant */}
-
+            {/* Quick view on hover */}
             <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 flex gap-2">
               <Button
-                className="w-1/2 flex items-center justify-center gap-2 rounded-xl bg-primary/80 backdrop-blur-md border border-primary/30 shadow-lg text-gray-900 hover:bg-primary/60 transition-all"
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary/80 backdrop-blur-md border border-primary/30 shadow-lg text-gray-900 hover:bg-primary/60 transition-all min-w-0"
                 onClick={handleAddToCart}
                 disabled={!product.inStock}
               >
-                <ShoppingCart className="h-4 w-4 opacity-80" />
-                <span className="text-xs font-semibold">Add</span>
+                <ShoppingCart className="h-4 w-4 opacity-80 flex-shrink-0" />
+                <span className="text-xs font-semibold truncate">Add</span>
               </Button>
               <Button
-                className="w-1/2 flex items-center justify-center gap-2 rounded-xl bg-primary/80 backdrop-blur-md border border-primary/30 shadow-lg text-gray-900 hover:bg-primary/60 transition-all"
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary/80 backdrop-blur-md border border-primary/30 shadow-lg text-gray-900 hover:bg-primary/60 transition-all min-w-0"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  // Add to cart first, then redirect to checkout
                   addToCart({
                     productId: product.id,
                     name: product.name,
                     price: product.price,
-                    image: product.images[0] || "/placeholder-product.jpg",
-                    color: product.colors[0] || "Default",
+                    selectedColor: product.colors[0]?.productColor || "Default",
+                    selectedImage:
+                      product.colors[0]?.productImages[0] ||
+                      "/placeholder-product.jpg",
                     size: product.sizes[0] || "Default",
                   });
                   window.location.href = "/checkout";
                 }}
                 disabled={!product.inStock}
               >
-                <Plus />
-                <span className="text-xs font-semibold">Buy</span>
+                <Plus className="flex-shrink-0" />
+                <span className="text-xs font-semibold truncate">Buy</span>
               </Button>
             </div>
           </div>
 
           {/* Product Details */}
-          <div className="py-2 space-y-1">
+          <div className="py-2 space-y-1 w-full max-w-full min-w-0 overflow-hidden">
             {/* Product Name */}
-            <h3 className="font-bebas text-base md:text-xl line-clamp-1 group-hover/card:text-primary">
+            <h3 className="font-bebas text-base md:text-xl line-clamp-1 group-hover/card:text-primary overflow-hidden text-ellipsis">
               {product.name}
             </h3>
 
-            {/* Brand */}
-            <div className="flex items-center justify-between">
-              <span className="text-xs md:text-sm text-muted-foreground font-semibold line-clamp-1">
+            {/* Brand and Rating */}
+            <div className="flex items-center justify-between w-full max-w-full min-w-0 gap-2">
+              <span className="text-xs md:text-sm text-muted-foreground font-semibold truncate flex-1 min-w-0">
                 {product.brand}
               </span>
 
               {/* Rating */}
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 flex-shrink-0">
                 <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs text-muted-foreground whitespace-nowrap">
                   {product.rating} ({product.reviewCount})
                 </span>
               </div>
             </div>
 
-            {/* Price */}
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <span className="price-display text-foreground text-sm md:text-base">
-                  ₹{product.price.toFixed(2)}
-                </span>
-                <br className="block md:hidden" />
-                {product.originalPrice && (
-                  <span className="price-original md:pl-2 text-sm md:text-base">
-                    ₹{product.originalPrice.toFixed(2)}
+            {/* Price and Colors */}
+            <div className="flex items-start justify-between gap-2 w-full max-w-full min-w-0">
+              <div className="flex-shrink-0 min-w-0">
+                <div className="flex flex-wrap items-center gap-1">
+                  <span className="price-display text-foreground text-sm md:text-base whitespace-nowrap">
+                    ₹{product.price.toFixed(2)}
                   </span>
-                )}
+                  {product.originalPrice && (
+                    <span className="price-original text-sm md:text-base line-through text-muted-foreground whitespace-nowrap">
+                      ₹{product.originalPrice.toFixed(2)}
+                    </span>
+                  )}
+                </div>
               </div>
 
               {variant !== "compact" && product.colors.length > 0 && (
-                <div className="flex items-center gap-1">
-                  <div className="flex gap-1">
-                    {/* Responsive color display: 2 on mobile, 4 on desktop */}
-                    <div className="flex items-center space-x-1 md:space-x-2">
-                      {product.colors
-                        .slice(0, maxColors)
-                        .map((color, index) => (
-                          <div
-                            key={index}
-                            className={`w-3 h-3 md:w-4 md:h-4 rounded-full ${color.toLowerCase() === "black" ? "border border-primary/60" : ""}`}
-                            style={{
-                              backgroundColor:
-                                tailwindColorMapping[color.toLowerCase()] ||
-                                "#6b7280",
-                            }}
-                            title={color}
-                          />
-                        ))}
-                      {product.colors.length > maxColors && (
-                        <span className="text-xs text-muted-foreground">
-                          +{product.colors.length - maxColors}
-                        </span>
-                      )}
-                    </div>
+                <div className="flex items-center gap-1 flex-shrink-0">
+                  <div className="flex gap-1 overflow-hidden">
+                    {/* Show 2 colors on mobile, 4 on desktop using CSS */}
+                    {product.colors.slice(0, 4).map((color, index) => (
+                      <div
+                        key={index}
+                        className={cn(
+                          "w-3 h-3 md:w-4 md:h-4 rounded-full flex-shrink-0",
+                          // Hide 3rd and 4th colors on mobile
+                          index >= 2 && "hidden md:block",
+                          color.productColor.toLowerCase() === "black" &&
+                            "border border-primary/60"
+                        )}
+                        style={{
+                          backgroundColor:
+                            tailwindColorMapping[
+                              color.productColor.toLowerCase()
+                            ] || "#6b7280",
+                        }}
+                        title={color.productColor}
+                      />
+                    ))}
+                    {product.colors.length > 4 && (
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        +{product.colors.length - 4}
+                      </span>
+                    )}
+                    {product.colors.length > 2 && (
+                      <span className="text-xs text-muted-foreground whitespace-nowrap md:hidden">
+                        +{product.colors.length - 2}
+                      </span>
+                    )}
                   </div>
                 </div>
               )}

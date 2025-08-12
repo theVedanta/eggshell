@@ -68,7 +68,7 @@ export default function HomePage() {
           <ChevronDown size={96} />
         </Button>
       </section>
-      <div ref={storePg} className="py-2" id="products">
+      <div ref={storePg} className="py-2 overflow-clip w-full" id="products">
         <StorePage />
       </div>
     </>

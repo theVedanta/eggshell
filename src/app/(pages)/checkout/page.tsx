@@ -614,7 +614,9 @@ export default function CheckoutPage() {
                       <div key={item.id} className="flex items-center gap-4">
                         <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-muted">
                           <Image
-                            src={item.image || "/placeholder-product.jpg"}
+                            src={
+                              item.selectedImage || "/placeholder-product.jpg"
+                            }
                             alt={item.name}
                             fill
                             className="object-cover"
@@ -624,7 +626,8 @@ export default function CheckoutPage() {
                         <div className="flex-1">
                           <div className="font-medium">{item.name}</div>
                           <div className="text-sm text-muted-foreground">
-                            {item.color} • {item.size} • Qty: {item.quantity}
+                            {item.selectedColor} • {item.size} • Qty:{" "}
+                            {item.quantity}
                           </div>
                         </div>
                         <div className="font-semibold">

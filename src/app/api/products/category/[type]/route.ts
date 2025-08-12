@@ -1,3 +1,4 @@
+import { NextRequest } from "next/server";
 import { getSheetData } from "@/lib/gsheet";
 import { GSheetProduct } from "@/types/products.type";
 import {
@@ -5,15 +6,18 @@ import {
   get_color_image_map,
   getAllsizes,
   getAllTags,
-} from "./utils";
-import { NextRequest } from "next/server";
+} from "../../utils";
 
-export async function GET(req: NextRequest) {
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ type: string }> }
+) {
   try {
-    const { searchParams } = new URL(req.url);
-    const limitParam = searchParams.get("limit");
-    const limit = limitParam ? parseInt(limitParam, 5) : undefined;
+    const { type: categoryType } = await params;
 
+    if (!categoryType) {
+      return Response.json({ error: "Missing id parameter" }, { status: 400 });
+    }
     const data = await getSheetData("Products");
     const transformedData: GSheetProduct[] = data.map((item: any) => {
       // Parse color_image_map into array of objects
@@ -54,12 +58,13 @@ export async function GET(req: NextRequest) {
       return product;
     });
 
-    const result = limit ? transformedData.slice(0, limit) : transformedData;
-    return Response.json({ data: result });
-  } catch (error) {
-    return Response.json(
-      { error: "Failed to fetch products" },
-      { status: 500 }
+    // Filter products by the requested brand
+    const allProducts = transformedData.filter(
+      (p) => p.subcategory === categoryType
     );
+
+    return Response.json({ data: allProducts });
+  } catch (error) {
+    return Response.json({ error: "Failed to fetch product" }, { status: 500 });
   }
 }

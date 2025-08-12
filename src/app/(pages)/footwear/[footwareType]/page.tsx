@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { notFound, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Star, Package, Grid, List } from "lucide-react";
 
@@ -16,31 +16,25 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ProductCard } from "@/components/ProductCard";
-import Image from "next/image";
-import { useGetAllBrands } from "@/query-calls/brands-query";
-import { useGetProductsByBrand } from "@/query-calls/product-query";
+import { useGetProductsByCategory } from "@/query-calls/product-query";
 
-export default function BrandPage() {
-  const params = useParams<{ brandId: string }>();
-  const { brandId } = params;
-  const { data } = useGetAllBrands();
-  const brand = data?.find((brand) => brand.id === brandId);
-  const { data: brandProducts = [] } = useGetProductsByBrand(
-    brand?.name as string
-  );
+export default function FootwearPage() {
+  const params = useParams<{ footwareType: string }>();
+  const { footwareType } = params;
+  const { data: allProducts = [] } = useGetProductsByCategory(footwareType);
   const [sortBy, setSortBy] = useState<string>("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
-  // Get categories for this brand's products - moved before conditional returns
+  // Get categories for this footwear type's products
   const availableCategories = useMemo(() => {
-    const categorySet = new Set(brandProducts.map((p) => p.category));
+    const categorySet = new Set(allProducts.map((p) => p.category));
     return Array.from(categorySet);
-  }, [brandProducts]);
+  }, [allProducts]);
 
-  // Filter and sort products - moved before conditional returns
+  // Filter and sort products
   const filteredProducts = useMemo(() => {
-    let filtered = [...brandProducts];
+    let filtered = [...allProducts];
 
     // Category filter
     if (selectedCategory !== "all") {
@@ -78,65 +72,43 @@ export default function BrandPage() {
     }
 
     return filtered;
-  }, [brandProducts, sortBy, selectedCategory]);
+  }, [allProducts, sortBy, selectedCategory]);
 
-  const featuredProducts = brandProducts.filter((p) => p.featured);
+  const featuredProducts = allProducts.filter((p) => p.featured);
   const averageRating =
-    brandProducts.length > 0
-      ? brandProducts.reduce((sum: number, p) => sum + (p.rating || 0), 0) /
-        brandProducts.length
+    allProducts.length > 0
+      ? allProducts.reduce((sum: number, p) => sum + (p.rating || 0), 0) /
+        allProducts.length
       : 0;
 
-  // If brand is not found, show 404
-  if (data && !brand) {
-    notFound();
-  }
-
-  // Don't render anything if we're still loading or brand is not found
-  if (!brand) {
-    return null;
-  }
+  const categoryTitle =
+    footwareType?.charAt(0).toUpperCase() + footwareType?.slice(1) ||
+    "Footwear";
 
   return (
     <div className="space-y-8">
-      {/* Brand Header */}
+      {/* Category Header */}
       <div className="text-center space-y-6">
         <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground text-3xl font-bold mb-4 overflow-hidden">
-          {brand.logo ? (
-            <Image
-              src={brand.logo}
-              alt={brand.name}
-              className="object-cover w-full h-full"
-              width={80}
-              height={80}
-              priority
-            />
-          ) : (
-            brand.name.charAt(0)
-          )}
+          👟
         </div>
 
         <div>
           <h1 className="text-4xl font-bold heading-gradient mb-4">
-            {brand.name}
+            {categoryTitle}
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
-            {brand.description}
+            Discover our collection of {categoryTitle.toLowerCase()} products
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 mb-6">
-            {brand.featured && (
-              <Badge className="bg-gradient-to-r from-indigo-800 to-purple-900 text-white border-0">
-                Featured Brand
-              </Badge>
-            )}
             <Badge variant="outline" className="flex items-center gap-1">
               <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
               {averageRating.toFixed(1)} Rating
             </Badge>
             <Badge variant="outline" className="flex items-center gap-1">
               <Package className="w-3 h-3" />
-              {brandProducts.length} Products
+              {allProducts.length} Products
             </Badge>
           </div>
         </div>
@@ -147,17 +119,17 @@ export default function BrandPage() {
         <section>
           <div className="mb-6">
             <h2 className="text-2xl font-bold mb-2">
-              Featured from {brand.name}
+              Featured {categoryTitle}
             </h2>
             <p className="text-muted-foreground">
-              Our top picks from this brand&apos;s collection
+              Our top picks from this category
             </p>
           </div>
 
           <div className="products-grid">
-            {brandProducts.slice(0, 4).map((product) => (
+            {featuredProducts.slice(0, 4).map((product) => (
               <ProductCard
-                key={product.id + product.subcategory}
+                key={product.id}
                 product={product}
                 variant="featured"
               />
@@ -172,7 +144,7 @@ export default function BrandPage() {
           <div>
             <h2 className="text-2xl font-bold mb-2">All Products</h2>
             <p className="text-muted-foreground">
-              {filteredProducts.length} of {brandProducts.length} products
+              {filteredProducts.length} of {allProducts.length} products
             </p>
           </div>
 
@@ -251,7 +223,7 @@ export default function BrandPage() {
           <div className={viewMode === "grid" ? "products-grid" : "space-y-4"}>
             {filteredProducts.map((product) => (
               <ProductCard
-                key={product.id + product.subcategory}
+                key={product.id}
                 product={product}
                 variant={viewMode === "list" ? "compact" : "default"}
               />
@@ -260,21 +232,22 @@ export default function BrandPage() {
         )}
       </section>
 
-      {/* Brand Categories */}
+      {/* Category Subcategories */}
       {availableCategories.length > 1 && (
         <section className="bg-muted/50 rounded-xl p-8">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold mb-2">
-              Shop {brand.name} by Category
+              Shop {categoryTitle} by Category
             </h2>
             <p className="text-muted-foreground">
-              Explore different product categories from this brand
+              Explore different subcategories within{" "}
+              {categoryTitle.toLowerCase()}
             </p>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
             {availableCategories.map((categoryId) => {
-              const categoryProducts = brandProducts.filter(
+              const categoryProducts = allProducts.filter(
                 (p) => p.category === categoryId
               );
 
@@ -312,10 +285,10 @@ export default function BrandPage() {
         </section>
       )}
 
-      {/* Back to all brands */}
+      {/* Back to categories */}
       <div className="text-center pt-8">
         <Button variant="outline" asChild>
-          <Link href="/brands">&larr; Back to All Brands</Link>
+          <Link href="/footwears">&larr; Back to All Footwear</Link>
         </Button>
       </div>
     </div>

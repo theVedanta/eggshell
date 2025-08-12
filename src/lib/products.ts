@@ -2,28 +2,28 @@ import { OldProduct } from "./db";
 
 export const products: OldProduct[] = [
   // T-Shirts
-  {
-    id: "tshirt-001",
-    name: "Essential",
-    description:
-      "Our signature crew neck tee crafted from premium organic cotton. Perfect for layering or wearing solo.",
-    price: 29.99,
-    originalPrice: 39.99,
-    category: "apparel",
-    subcategory: "t-shirts",
-    brand: "Minimal Co.",
-    images: [
-      "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/8f5a0b79-653c-4bee-bcb0-f611dd3c11e6/WMNS+NIKE+FIELD+GENERAL.png",
-      "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/8f5a0b79-653c-4bee-bcb0-f611dd3c11e6/WMNS+NIKE+FIELD+GENERAL.png",
-    ],
-    colors: ["Black", "White", "Gray", "Navy"],
-    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
-    inStock: true,
-    featured: true,
-    rating: 4.8,
-    reviewCount: 124,
-    tags: ["organic", "basic", "versatile"],
-  },
+  // {
+  //   id: "tshirt-001",
+  //   name: "Essential",
+  //   description:
+  //     "Our signature crew neck tee crafted from premium organic cotton. Perfect for layering or wearing solo.",
+  //   price: 29.99,
+  //   originalPrice: 39.99,
+  //   category: "apparel",
+  //   subcategory: "t-shirts",
+  //   brand: "Minimal Co.",
+  //   images: [
+  //     "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/8f5a0b79-653c-4bee-bcb0-f611dd3c11e6/WMNS+NIKE+FIELD+GENERAL.png",
+  //     "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/8f5a0b79-653c-4bee-bcb0-f611dd3c11e6/WMNS+NIKE+FIELD+GENERAL.png",
+  //   ],
+  //   colors: ["Black", "White", "Gray", "Navy"],
+  //   sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+  //   inStock: true,
+  //   featured: true,
+  //   rating: 4.8,
+  //   reviewCount: 124,
+  //   tags: ["organic", "basic", "versatile"],
+  // },
   {
     id: "tshirt-002",
     name: "Expression",
