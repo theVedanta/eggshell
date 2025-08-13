@@ -456,3 +456,7 @@
   /* The real magic: two shadows, one light and one dark */
   text-shadow: 0 0 2px #000 inset;
 }
+
+.checkout-page label {
+  @apply mb-2 ml-1;
+}

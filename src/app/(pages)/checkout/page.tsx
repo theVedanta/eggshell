@@ -34,8 +34,9 @@ import {
 } from "@/components/ui/select";
 import { useCart } from "@/state/useCart";
 import { toast } from "sonner";
+import { useCreateOrder } from "@/query-calls/order-query";
 
-interface CheckoutForm {
+export interface CheckoutForm {
   // Shipping Information
   email: string;
   firstName: string;
@@ -108,6 +109,8 @@ export default function CheckoutPage() {
   const [form, setForm] = useState<CheckoutForm>(initialForm);
   const [currentStep, setCurrentStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const createOrderMutation = useCreateOrder();
 
   // Redirect if cart is empty
   if (items.length === 0) {
@@ -186,9 +189,14 @@ export default function CheckoutPage() {
 
     setIsProcessing(true);
 
-    // Simulate payment processing
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Create the order via mutation
+      await createOrderMutation.mutateAsync({
+        ...form,
+        // Optionally, you may want to include cart items and totals in the order
+        items,
+        total,
+      });
 
       clearCart();
       toast.success("Order placed successfully!");
@@ -215,7 +223,7 @@ export default function CheckoutPage() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 checkout-page">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" asChild>
