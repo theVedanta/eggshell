@@ -35,8 +35,10 @@ import {
 import { useCart } from "@/state/useCart";
 import { toast } from "sonner";
 import { useCreateOrder } from "@/query-calls/order-query";
+import { useAuth } from "@clerk/nextjs";
 
 export interface CheckoutForm {
+  userId: string;
   // Shipping Information
   email: string;
   firstName: string;
@@ -74,6 +76,7 @@ export interface CheckoutForm {
 }
 
 const initialForm: CheckoutForm = {
+  userId: "",
   email: "",
   firstName: "",
   lastName: "",
@@ -104,6 +107,7 @@ const initialForm: CheckoutForm = {
 };
 
 export default function CheckoutPage() {
+  const user = useAuth();
   const { items, total: cartTotal, itemCount, clearCart } = useCart();
   const router = useRouter();
   const [form, setForm] = useState<CheckoutForm>(initialForm);
@@ -190,9 +194,12 @@ export default function CheckoutPage() {
     setIsProcessing(true);
 
     try {
+      if (!user || !user.userId)
+        return toast.error("You must be signed in to place an order.");
       // Create the order via mutation
       await createOrderMutation.mutateAsync({
         ...form,
+        userId: user.userId, // Assuming you have userId from Clerk
         // Optionally, you may want to include cart items and totals in the order
         items,
         total,

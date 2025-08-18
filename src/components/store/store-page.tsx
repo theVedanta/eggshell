@@ -150,8 +150,7 @@ export default function StorePage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* Sort */}
+        {/* <div className="flex items-center gap-2">
           <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-48">
               <SelectValue placeholder="Sort by" />
@@ -164,7 +163,7 @@ export default function StorePage() {
               <SelectItem value="rating">Highest Rated</SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
       </div>
 
       {/* Products Grid */}
@@ -187,7 +186,7 @@ export default function StorePage() {
             </CardContent>
           </Card>
         ) : (
-          <div className="w-full max-w-full overflow-hidden">
+          <div className="w-full max-w-full overflow-hidden pb-10">
             <Carousel
               opts={{
                 align: "start",
@@ -221,6 +220,10 @@ export default function StorePage() {
                   displayedCount={displayedProducts.length}
                 />
               </CarouselContent>
+              <div className="md:block hidden">
+                <CarouselPrevious className="absolute left-0 z-10 top-[100%] m-5 w-[100px] rounded-sm" />
+                <CarouselNext className="absolute right-0 z-10 top-[100%] m-5 w-[100px] rounded-sm" />
+              </div>
             </Carousel>
           </div>
         )}

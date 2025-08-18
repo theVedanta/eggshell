@@ -4,7 +4,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { Suspense } from "react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Poppins, Geist } from "next/font/google";
-import { Layout } from "@/components/layout";
 import { QueryProvider } from "@/query-calls/QueryProvider";
 
 const geist = Geist({
@@ -88,9 +87,7 @@ export default function RootLayout({
       >
         <ClerkProvider>
           <Suspense fallback={<div>Loading...</div>}>
-            <QueryProvider>
-              <Layout>{children}</Layout>
-            </QueryProvider>
+            <QueryProvider>{children}</QueryProvider>
           </Suspense>
           <Toaster />
         </ClerkProvider>

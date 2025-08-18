@@ -73,8 +73,19 @@ export const useProductFilters = ({
   }, [productsToFilter]);
 
   const maxPrice = useMemo(() => {
-    return Math.max(...productsToFilter.map((p) => p.originalPrice || p.price));
+    if (productsToFilter.length === 0) return 1000; // Default fallback
+    const prices = productsToFilter
+      .map((p) => p.price)
+      .filter((price) => !isNaN(price) && price > 0);
+    return prices.length > 0 ? Math.max(...prices) : 1000;
   }, [productsToFilter]);
+
+  // Initialize price range when maxPrice changes
+  useEffect(() => {
+    if (maxPrice > 0 && priceRange[1] === 1000) {
+      setPriceRange([0, maxPrice]);
+    }
+  }, [maxPrice, priceRange]);
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {
@@ -121,8 +132,15 @@ export const useProductFilters = ({
       }
 
       // Price filter
-      const productPrice = product.originalPrice || product.price;
-      if (productPrice < priceRange[0] || productPrice > priceRange[1]) {
+      const productPrice = Number(product.price);
+      const minPrice = Number(priceRange[0]);
+      const maxPrice = Number(priceRange[1]);
+
+      if (
+        isNaN(productPrice) ||
+        productPrice < minPrice ||
+        productPrice > maxPrice
+      ) {
         return false;
       }
 

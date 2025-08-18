@@ -6,21 +6,31 @@ import { CartItem } from "@/lib/types";
 // Type for the order, based on CheckoutForm
 export interface Order extends CheckoutForm {
   id?: string;
+  items?: CartItem[];
   createdAt?: string;
   updatedAt?: string;
 }
 
 // Fetch all orders
-export function useGetAllOrders() {
+export function useGetAllOrders(id?: string) {
   const { data, error, isLoading } = useQuery({
-    queryKey: ["all-orders"],
+    queryKey: ["all-orders", id],
     queryFn: async () => {
-      const response = await fetch(`${API_URL}/order`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch orders");
+      if (id) {
+        const response = await fetch(`${API_URL}/order?id=${id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch orders");
+        }
+        const result = await response.json();
+        return [result.data] as Order[]; // Wrap single order in array
+      } else {
+        const response = await fetch(`${API_URL}/order`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch orders");
+        }
+        const result = await response.json();
+        return result.data as Order[];
       }
-      const result = await response.json();
-      return result.data as Order[];
     },
   });
   return { data, error, isLoading };

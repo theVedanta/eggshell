@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/firebase";
 import {
   collection,
@@ -6,13 +6,26 @@ import {
   getDocs,
   query,
   orderBy,
+  getDoc,
+  doc,
 } from "firebase/firestore";
 
 const ORDERS_COLLECTION = "orders";
-
-// GET: Fetch all orders
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const orderId = req.nextUrl.searchParams.get("id");
+
+    // If orderId is provided, fetch specific order
+    if (orderId) {
+      const orderDoc = await getDoc(doc(db, ORDERS_COLLECTION, orderId));
+      if (!orderDoc.exists()) {
+        return NextResponse.json({ error: "Order not found" }, { status: 404 });
+      }
+      const order = { id: orderDoc.id, ...orderDoc.data() };
+      return NextResponse.json({ data: order }, { status: 200 });
+    }
+
+    // If no orderId, fetch all orders
     const ordersQuery = query(
       collection(db, ORDERS_COLLECTION),
       orderBy("createdAt", "desc")
@@ -41,6 +54,8 @@ export async function POST(req: Request) {
       createdAt: now,
       updatedAt: now,
     };
+
+    console.log("Creating order with data:", orderData);
     const docRef = await addDoc(collection(db, ORDERS_COLLECTION), orderData);
     const newOrder = { id: docRef.id, ...orderData };
     return NextResponse.json({ data: newOrder }, { status: 201 });

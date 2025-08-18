@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { notFound, useParams } from "next/navigation";
+import { notFound, useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -15,6 +15,7 @@ import {
   Shield,
   RefreshCw,
   ArrowLeft,
+  User,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -30,8 +31,11 @@ import { useCart } from "@/state/useCart";
 import { toast } from "sonner";
 import { useGetProductById } from "@/query-calls/product-query";
 import { useGetRelatedProducts } from "@/query-calls/product-query";
+import { useAuth } from "@clerk/nextjs";
+import { useCreateOrder } from "@/query-calls/order-query";
 
 export default function ProductPage() {
+  const router = useRouter();
   const params = useParams<{ productId: string }>();
   const { productId } = params;
   const { data: product, error, isLoading } = useGetProductById(productId);
@@ -41,7 +45,7 @@ export default function ProductPage() {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
-
+  const user = useAuth();
   const { addToCart } = useCart();
 
   // Set default selections using useEffect (must be called before any early returns)
@@ -95,6 +99,10 @@ export default function ProductPage() {
     const selectedImageUrl =
       selectedColorObj?.productImages[0] || "/placeholder-product.jpg";
 
+    if (!user.isSignedIn) {
+      alert("Please sign in to add items to your cart.");
+      return router.push("/sign-in");
+    }
     addToCart({
       productId: product.id,
       name: product.name,
@@ -104,6 +112,8 @@ export default function ProductPage() {
       size: selectedSize || "Default",
       quantity,
     });
+
+    toast.success("Added to cart successfully!");
   };
 
   const handleWishlist = () => {

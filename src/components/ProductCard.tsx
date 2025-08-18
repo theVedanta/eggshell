@@ -14,6 +14,9 @@ import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/state/useCart";
 import { cn } from "@/lib/utils";
 import type { GSheetProduct } from "@/types/products.type";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useStoreCartIInfo } from "@/query-calls/cartinfo-query";
 
 interface ProductCardProps {
   product: GSheetProduct;
@@ -26,10 +29,12 @@ export function ProductCard({
   className,
   variant = "default",
 }: ProductCardProps) {
+  const router = useRouter();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [maxColors, setMaxColors] = useState(2);
   const addToCart = useCart((s) => s.addToCart);
-
+  const { mutate: addToCartInDB } = useStoreCartIInfo();
+  const user = useAuth();
   // Fix hydration issue: set maxColors on client after mount
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -45,6 +50,22 @@ export function ProductCard({
     e.preventDefault();
     e.stopPropagation();
 
+    if (!user.isSignedIn) {
+      alert("Please sign in to add items to your cart.");
+      // Handle not signed in case
+      return router.push("/sign-in");
+    }
+    addToCartInDB({
+      id: crypto.randomUUID(),
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      selectedColor: product.colors[0]?.productColor || "Default",
+      selectedImage:
+        product.colors[0]?.productImages[0] || "/placeholder-product.jpg",
+      size: product.sizes[0] || "Default",
+    });
     addToCart({
       productId: product.id,
       name: product.name,
@@ -202,11 +223,17 @@ export function ProductCard({
               <div className="flex-shrink-0 min-w-0">
                 <div className="flex flex-wrap items-center gap-1">
                   <span className="price-display text-foreground text-sm md:text-base whitespace-nowrap">
-                    ₹{product.price.toFixed(2)}
+                    ₹
+                    {Number.isInteger(product.price)
+                      ? product.price.toFixed(0)
+                      : product.price.toFixed(2)}
                   </span>
                   {product.originalPrice && (
                     <span className="price-original text-sm md:text-base line-through text-muted-foreground whitespace-nowrap">
-                      ₹{product.originalPrice.toFixed(2)}
+                      ₹
+                      {Number.isInteger(product.originalPrice)
+                        ? product.originalPrice.toFixed(0)
+                        : product.originalPrice.toFixed(2)}
                     </span>
                   )}
                 </div>
