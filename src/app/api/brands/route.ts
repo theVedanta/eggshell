@@ -17,6 +17,7 @@ export async function GET() {
         name: brand.brandname,
         description: brand.description,
         logo: brand.logo,
+        banner: brand.banner,
         featured: brand.featured === "TRUE" ? true : false,
       };
     });

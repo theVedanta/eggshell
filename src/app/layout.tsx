@@ -86,12 +86,23 @@ export default function RootLayout({
         className={`${geist.variable} ${bebas_neue.variable} dark antialiased`}
       >
         <ClerkProvider>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loading />}>
             <QueryProvider>{children}</QueryProvider>
           </Suspense>
           <Toaster />
         </ClerkProvider>
       </body>
     </html>
+  );
+}
+
+async function Loading() {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-pulse flex flex-col items-center">
+        <div className="w-16 h-16 border-t-4 border-b-4 border-primary rounded-full animate-spin mb-4"></div>
+        <p className="text-gray-500 font-medium">Loading EggShell...</p>
+      </div>
+    </div>
   );
 }

@@ -451,10 +451,6 @@
 
 .embossed-text-vedanta {
   color: #f0f0f0 !important;
-  /* Pick a background similar to your site for best effect */
-  font-weight: bold !important;
-  /* The real magic: two shadows, one light and one dark */
-  text-shadow: 0 0 2px #000 inset;
 }
 
 .checkout-page label {

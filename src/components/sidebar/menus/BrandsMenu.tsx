@@ -76,7 +76,7 @@ export default function BrandslList({
                 <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton
                     style={{
-                      backgroundImage: `url(${item.logo})`,
+                      backgroundImage: `url(${item.banner})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       backgroundRepeat: "no-repeat",

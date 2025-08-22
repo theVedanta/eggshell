@@ -9,7 +9,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
 } from "@/components/ui/sidebar";
 
 import Image from "next/image";
@@ -21,6 +20,7 @@ import {
   SignedOut,
   SignInButton,
   SignOutButton,
+  UserButton,
 } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -57,16 +57,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </>
         <div className="flex-1 overflow-auto" id="NavSlider">
           <NavMain navItems={SideBarNavItems} />
-          <div className="w-full grid px-3 py-4">
+          <div className="w-full absolute bottom-0 grid px-3 py-4">
             <SignedOut>
               <Button asChild>
                 <SignInButton />
               </Button>
             </SignedOut>
             <SignedIn>
-              <Button asChild>
-                <SignOutButton />
-              </Button>
+              <div className="flex">
+                <UserButton />
+              </div>
             </SignedIn>
           </div>
         </div>

@@ -65,7 +65,16 @@ export default function ProductPage() {
 
   // Handle loading and error states AFTER all hooks are called
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-[50vh]">
+        <div className="animate-pulse flex flex-col items-center gap-4">
+          <div className="h-12 w-12 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
+          <p className="text-lg font-medium text-muted-foreground">
+            Loading product details...
+          </p>
+        </div>
+      </div>
+    );
   }
 
   if (error || !product) {
