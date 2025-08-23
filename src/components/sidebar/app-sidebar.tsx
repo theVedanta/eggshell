@@ -9,9 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
 } from "@/components/ui/sidebar";
-
 import Image from "next/image";
 import Link from "next/link";
 import { SideBarNavItems } from "./demo_data";
@@ -20,13 +18,16 @@ import {
   SignedIn,
   SignedOut,
   SignInButton,
-  SignOutButton,
+  useAuth,
+  UserButton,
+  useUser,
 } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import { usePrefetchAllBrands } from "@/query-calls/brands-query";
 import { useEffect } from "react";
 import { usePrefetchSideBarSubcategoriesByCategory } from "@/query-calls/sidebar-opts";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useUser();
   const { prefetchBrands } = usePrefetchAllBrands();
   const { prefetchSubcategories } = usePrefetchSideBarSubcategoriesByCategory();
   useEffect(() => {
@@ -69,16 +70,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </>
         <div className="flex-1 overflow-auto" id="NavSlider">
           <NavMain navItems={SideBarNavItems} />
-          <div className="w-full grid px-3 py-4">
+          <div className="w-full absolute bottom-0 grid px-3 py-4">
             <SignedOut>
               <Button asChild>
                 <SignInButton />
               </Button>
             </SignedOut>
             <SignedIn>
-              <Button asChild>
-                <SignOutButton />
-              </Button>
+              <div className="flex items-center">
+                <UserButton />{" "}
+                <div className="flex flex-col px-3">
+                  <span className="text-xs text-white/70 flex-initial">
+                    {user?.firstName} {user?.lastName}
+                  </span>
+                  <span className="text-xs text-white/70">
+                    {user?.emailAddresses[0]?.emailAddress}
+                  </span>
+                </div>
+              </div>
             </SignedIn>
           </div>
         </div>

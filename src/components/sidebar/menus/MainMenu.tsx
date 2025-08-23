@@ -39,7 +39,7 @@ export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
                 >
                   <p>
                     {item.icon && <item.icon size={64} />}
-                    <span className="embossed-text-vedanta">{item.title}</span>
+                    <span>{item.title}</span>
                     <ChevronRight className="ml-auto" />
                   </p>
                 </SidebarMenuButton>

@@ -66,13 +66,7 @@ export default function ProductPage() {
 
   // Handle loading and error states AFTER all hooks are called
   if (isLoading) {
-    return (
-      <div className="min-h-screen p-4 flex items-center justify-center">
-        <div className="text-white text-sm">
-          <ShimmerText text="Loading..." />
-        </div>
-      </div>
-    );
+    return <div>Loading...</div>;
   }
 
   if (error || !product) {

@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Poppins, Geist } from "next/font/google";
 import { QueryProvider } from "@/query-calls/QueryProvider";
+// import { dark } from "@clerk/themes";
 
 const geist = Geist({
   variable: "--font-geist",
@@ -22,7 +23,6 @@ export const metadata: Metadata = {
   description:
     "Your destination for modern fashion, footwear, accessories, and premium lifestyle products.",
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -85,13 +85,28 @@ export default function RootLayout({
       <body
         className={`${geist.variable} ${bebas_neue.variable} dark antialiased`}
       >
-        <ClerkProvider>
-          <Suspense fallback={<div>Loading...</div>}>
+        <ClerkProvider
+        // appearance={{
+        //   baseTheme: dark,
+        // }}
+        >
+          <Suspense fallback={<Loading />}>
             <QueryProvider>{children}</QueryProvider>
           </Suspense>
           <Toaster />
         </ClerkProvider>
       </body>
     </html>
+  );
+}
+
+async function Loading() {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-pulse flex flex-col items-center">
+        <div className="w-16 h-16 border-t-4 border-b-4 border-primary rounded-full animate-spin mb-4"></div>
+        <p className="text-gray-500 font-medium">Loading EggShell...</p>
+      </div>
+    </div>
   );
 }
