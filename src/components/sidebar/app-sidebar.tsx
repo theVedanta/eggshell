@@ -23,7 +23,19 @@ import {
   SignOutButton,
 } from "@clerk/nextjs";
 import { Button } from "../ui/button";
+import { usePrefetchAllBrands } from "@/query-calls/brands-query";
+import { useEffect } from "react";
+import { usePrefetchSideBarSubcategoriesByCategory } from "@/query-calls/sidebar-opts";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { prefetchBrands } = usePrefetchAllBrands();
+  const { prefetchSubcategories } = usePrefetchSideBarSubcategoriesByCategory();
+  useEffect(() => {
+    prefetchBrands();
+    prefetchSubcategories("footwear");
+    prefetchSubcategories("accessories");
+    prefetchSubcategories("apparel");
+  }, [prefetchBrands, prefetchSubcategories]);
+
   return (
     <Sidebar className={`h-screen z-40`} {...props}>
       <SidebarHeader className="mb-4 mt-3 p-2">

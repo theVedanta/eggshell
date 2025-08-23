@@ -83,11 +83,13 @@ export function useGetProductsByBrand(brand: string) {
   return { data, error, isLoading };
 }
 
-export function useGetProductsByCategory(category: string) {
+export function useGetProductsBySubCategory(category: string) {
   const { data, error, isLoading } = useQuery({
     queryKey: ["products-by-category", category],
     queryFn: async () => {
-      const response = await fetch(`${API_URL}/products/category/${category}`);
+      const response = await fetch(
+        `${API_URL}/products/subcategory/${category}`
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch products by category");
       }
@@ -96,4 +98,53 @@ export function useGetProductsByCategory(category: string) {
     },
   });
   return { data, error, isLoading };
+}
+
+export function useGetAllProductsByCategory() {
+  const { data: FootwearProducts, isLoading: isFootwearLoading } = useQuery({
+    queryKey: [`products-by-footwear`],
+    queryFn: async () => {
+      const response = await fetch(`${API_URL}/products/category/footwear`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch products by category");
+      }
+      const result = await response.json();
+      return result.data as GSheetProduct[];
+    },
+  });
+
+  const { data: ApparelProducts, isLoading: isApparelLoading } = useQuery({
+    queryKey: ["products-by-apparel"],
+    queryFn: async () => {
+      const response = await fetch(`${API_URL}/products/category/apparel`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch products by category");
+      }
+      const result = await response.json();
+      return result.data as GSheetProduct[];
+    },
+  });
+
+  const { data: AccessoriesProducts, isLoading: isAccessoriesLoading } =
+    useQuery({
+      queryKey: ["products-by-accessories"],
+      queryFn: async () => {
+        const response = await fetch(
+          `${API_URL}/products/category/accessories`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch products by category");
+        }
+        const result = await response.json();
+        return result.data as GSheetProduct[];
+      },
+    });
+  return {
+    FootwearProducts,
+    isFootwearLoading,
+    ApparelProducts,
+    isApparelLoading,
+    AccessoriesProducts,
+    isAccessoriesLoading,
+  };
 }

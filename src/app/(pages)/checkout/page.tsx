@@ -36,6 +36,8 @@ import { useCart } from "@/state/useCart";
 import { toast } from "sonner";
 import { useCreateOrder } from "@/query-calls/order-query";
 import { useAuth } from "@clerk/nextjs";
+import { allIndianStates } from "@/lib/all-indian-states";
+import { validatePhone } from "@/lib/utils";
 
 export interface CheckoutForm {
   userId: string;
@@ -174,10 +176,15 @@ export default function CheckoutPage() {
   };
 
   const nextStep = () => {
-    if (validateStep(currentStep)) {
+    const isValid = validatePhone(form.phone);
+    if (validateStep(currentStep) && isValid) {
       setCurrentStep((prev) => Math.min(prev + 1, 3));
     } else {
-      toast.error("Please fill in all required fields");
+      if (!isValid) {
+        toast.error("Phone number is invalid");
+      } else {
+        toast.error("Please fill in all required fields");
+      }
     }
   };
 
@@ -301,7 +308,7 @@ export default function CheckoutPage() {
                       type="email"
                       value={form.email}
                       onChange={(e) => updateForm("email", e.target.value)}
-                      placeholder="john@example.com"
+                      placeholder="user@example.com"
                       required
                     />
                   </div>
@@ -338,7 +345,7 @@ export default function CheckoutPage() {
                         onChange={(e) =>
                           updateForm("firstName", e.target.value)
                         }
-                        placeholder="John"
+                        placeholder="First Name"
                         required
                       />
                     </div>
@@ -348,7 +355,7 @@ export default function CheckoutPage() {
                         id="lastName"
                         value={form.lastName}
                         onChange={(e) => updateForm("lastName", e.target.value)}
-                        placeholder="Doe"
+                        placeholder="Last Name"
                         required
                       />
                     </div>
@@ -360,7 +367,7 @@ export default function CheckoutPage() {
                       id="address"
                       value={form.address}
                       onChange={(e) => updateForm("address", e.target.value)}
-                      placeholder="123 Main Street"
+                      placeholder="Address"
                       required
                     />
                   </div>
@@ -373,7 +380,7 @@ export default function CheckoutPage() {
                       id="address2"
                       value={form.address2}
                       onChange={(e) => updateForm("address2", e.target.value)}
-                      placeholder="Apt 4B"
+                      placeholder="Apartment, suite, etc."
                     />
                   </div>
 
@@ -384,7 +391,7 @@ export default function CheckoutPage() {
                         id="city"
                         value={form.city}
                         onChange={(e) => updateForm("city", e.target.value)}
-                        placeholder="New York"
+                        placeholder="City Name"
                         required
                       />
                     </div>
@@ -398,11 +405,11 @@ export default function CheckoutPage() {
                           <SelectValue placeholder="Select state" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="AL">Alabama</SelectItem>
-                          <SelectItem value="CA">California</SelectItem>
-                          <SelectItem value="FL">Florida</SelectItem>
-                          <SelectItem value="NY">New York</SelectItem>
-                          <SelectItem value="TX">Texas</SelectItem>
+                          {allIndianStates.map((state) => (
+                            <SelectItem key={state.code} value={state.code}>
+                              {state.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>
@@ -424,8 +431,10 @@ export default function CheckoutPage() {
                       id="phone"
                       type="tel"
                       value={form.phone}
-                      onChange={(e) => updateForm("phone", e.target.value)}
-                      placeholder="(555) 123-4567"
+                      onChange={(e) => {
+                        updateForm("phone", e.target.value);
+                      }}
+                      placeholder="Phone Number"
                       required
                     />
                   </div>

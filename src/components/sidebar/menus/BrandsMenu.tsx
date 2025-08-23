@@ -11,7 +11,12 @@ import { useSidebarStore } from "@/hooks/useSideBar";
 import Link from "next/link";
 import { SidebarItemTypes } from "@/types/sidebar.items.types";
 import { Button } from "@/components/ui/button";
-import { useGetAllBrands } from "@/query-calls/brands-query";
+import {
+  useGetAllBrands,
+  usePrefetchAllBrands,
+} from "@/query-calls/brands-query";
+import { useEffect } from "react";
+import { usePrefetchSideBarSubcategoriesByCategory } from "@/query-calls/sidebar-opts";
 
 export default function BrandslList({
   brandsList,
@@ -28,6 +33,7 @@ export default function BrandslList({
   } = useSidebarStore();
   const { setOpenMobile } = useSidebar();
   const { data: allBrands } = useGetAllBrands();
+
   return (
     <SidebarGroup className="flex flex-col h-full !pt-0">
       <div className="flex-shrink-0 mb-2 px-2 py-1">

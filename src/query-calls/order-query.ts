@@ -59,3 +59,19 @@ export function useCreateOrder() {
     },
   });
 }
+
+// Fetch all orders
+export function useGetAllOrdersByUserId(userId: string) {
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["all-orders", userId],
+    queryFn: async () => {
+      const response = await fetch(`${API_URL}/order/${userId}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch orders");
+      }
+      const result = await response.json();
+      return [result.data] as Order[]; // Wrap single order in array
+    },
+  });
+  return { data, error, isLoading };
+}

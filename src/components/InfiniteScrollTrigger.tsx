@@ -43,17 +43,6 @@ export default function InfiniteScrollTrigger({
           </span>
         </div>
       )}
-
-      {hasNextPage && !isLoading && (
-        <div className="text-center space-y-2">
-          <p className="text-sm text-muted-foreground">
-            Showing {displayedCount} of {filteredCount} products
-          </p>
-          {/* <Button variant="outline" onClick={loadMore} className="min-w-32">
-            Load More
-          </Button> */}
-        </div>
-      )}
     </div>
   );
 }

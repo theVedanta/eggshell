@@ -11,7 +11,7 @@ import {
   ArrowRight,
   Heart,
 } from "lucide-react";
-
+import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +20,13 @@ import { Input } from "@/components/ui/input";
 import { useCart } from "@/state/useCart";
 import { ProductCard } from "@/components/ProductCard";
 import { useGetFeaturedProducts } from "@/query-calls/product-query";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 export default function CartPage() {
   const { items, total, itemCount, updateQuantity, removeFromCart, clearCart } =
@@ -80,14 +87,50 @@ export default function CartPage() {
               </p>
             </div>
 
-            <div className="products-grid">
-              {suggestedProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  variant="featured"
-                />
-              ))}
+            <div className="w-full max-w-full overflow-hidden pb-10">
+              <Carousel
+                opts={{
+                  align: "start",
+                  loop: false,
+                  skipSnaps: true,
+                  dragFree: true,
+                  containScroll: "trimSnaps",
+                }}
+                plugins={[WheelGesturesPlugin({ forceWheelAxis: "x" })]}
+                className="w-full select-none"
+              >
+                <div className="flex relative items-center m-2 mb-5">
+                  <h2 className="font-bold text-xl text-white/90">
+                    Suggested Products
+                  </h2>
+                  <div className="md:flex hidden absolute right-5 top-1/2 -translate-y-1/2 gap-2">
+                    <CarouselPrevious className="z-10 w-[40px] rounded-sm static translate-y-0" />
+                    <CarouselNext className="z-10 w-[40px] rounded-sm static translate-y-0" />
+                  </div>
+                </div>
+                <CarouselContent>
+                  {suggestedProducts.map((product, index) => (
+                    <CarouselItem
+                      key={`${product.id}-${index}`}
+                      className="basis-[calc(50%-6px)] sm:basis-[calc(33.333%-8px)] md:basis-[calc(25%-9px)] lg:basis-[calc(25%-9px)] min-w-0 flex-shrink-0"
+                    >
+                      <div className="w-full h-full">
+                        <ProductCard
+                          product={product}
+                          className="w-full max-w-full"
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                  {/* <InfiniteScrollTrigger
+                    hasNextPage={hasNextPage}
+                    isLoading={isLoading}
+                    loadMore={loadMore}
+                    filteredCount={filteredProducts.length}
+                    displayedCount={displayedProducts.length}
+                  /> */}
+                </CarouselContent>
+              </Carousel>
             </div>
           </section>
         )}
@@ -353,10 +396,50 @@ export default function CartPage() {
             </p>
           </div>
 
-          <div className="products-grid">
-            {suggestedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+          <div className="w-full max-w-full overflow-hidden pb-10">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: false,
+                skipSnaps: true,
+                dragFree: true,
+                containScroll: "trimSnaps",
+              }}
+              plugins={[WheelGesturesPlugin({ forceWheelAxis: "x" })]}
+              className="w-full select-none"
+            >
+              <div className="flex relative items-center m-2 mb-5">
+                <h2 className="font-bold text-xl text-white/90">
+                  Suggested Products
+                </h2>
+                <div className="md:flex hidden absolute right-10 top-1/2 -translate-y-1/2 gap-2">
+                  <CarouselPrevious className="z-10 w-[40px] rounded-sm static translate-y-0" />
+                  <CarouselNext className="z-10 w-[40px] rounded-sm static translate-y-0" />
+                </div>
+              </div>
+              <CarouselContent>
+                {suggestedProducts.map((product, index) => (
+                  <CarouselItem
+                    key={`${product.id}-${index}`}
+                    className="basis-[calc(50%-6px)] sm:basis-[calc(33.333%-8px)] md:basis-[calc(25%-9px)] lg:basis-[calc(25%-9px)] min-w-0 flex-shrink-0"
+                  >
+                    <div className="w-full h-full">
+                      <ProductCard
+                        product={product}
+                        className="w-full max-w-full"
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
+                {/* <InfiniteScrollTrigger
+                  hasNextPage={hasNextPage}
+                  isLoading={isLoading}
+                  loadMore={loadMore}
+                  filteredCount={filteredProducts.length}
+                  displayedCount={displayedProducts.length}
+                /> */}
+              </CarouselContent>
+            </Carousel>
           </div>
         </section>
       )}

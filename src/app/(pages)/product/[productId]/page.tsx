@@ -33,6 +33,7 @@ import { useGetProductById } from "@/query-calls/product-query";
 import { useGetRelatedProducts } from "@/query-calls/product-query";
 import { useAuth } from "@clerk/nextjs";
 import { useCreateOrder } from "@/query-calls/order-query";
+import ShimmerText from "@/components/shimmer-text";
 
 export default function ProductPage() {
   const router = useRouter();
@@ -65,7 +66,13 @@ export default function ProductPage() {
 
   // Handle loading and error states AFTER all hooks are called
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen p-4 flex items-center justify-center">
+        <div className="text-white text-sm">
+          <ShimmerText text="Loading..." />
+        </div>
+      </div>
+    );
   }
 
   if (error || !product) {

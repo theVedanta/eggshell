@@ -79,11 +79,17 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
                 setApi={handleApi}
                 className="w-full"
               >
-                <CarouselContent className="ml-0">
+                <CarouselContent>
                   {items.map((item, idx) => (
                     <CarouselItem
                       key={item.id}
-                      className="flex justify-center items-center h-60 basis-3/5 transition-opacity duration-300"
+                      className={`flex justify-center items-center h-60 transition-opacity duration-300 ${
+                        items.length === 1
+                          ? "basis-full"
+                          : items.length === 2
+                            ? "basis-2/2"
+                            : "basis-3/5"
+                      }`}
                       style={{
                         opacity: idx === activeIndex ? 1 : 0.4,
                       }}

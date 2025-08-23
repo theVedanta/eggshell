@@ -16,12 +16,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ProductCard } from "@/components/ProductCard";
-import { useGetProductsByCategory } from "@/query-calls/product-query";
+import { useGetProductsBySubCategory } from "@/query-calls/product-query";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import WheelGesturesPlugin from "embla-carousel-wheel-gestures";
 
 export default function AccessoriesPage() {
   const params = useParams<{ accessorieType: string }>();
   const { accessorieType } = params;
-  const { data: allProducts = [] } = useGetProductsByCategory(accessorieType);
+  const { data: allProducts = [] } =
+    useGetProductsBySubCategory(accessorieType);
   const [sortBy, setSortBy] = useState<string>("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -126,14 +135,50 @@ export default function AccessoriesPage() {
             </p>
           </div>
 
-          <div className="products-grid">
-            {featuredProducts.slice(0, 4).map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                variant="featured"
-              />
-            ))}
+          <div className="w-full max-w-full overflow-hidden pb-10">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: false,
+                skipSnaps: true,
+                dragFree: true,
+                containScroll: "trimSnaps",
+              }}
+              plugins={[WheelGesturesPlugin({ forceWheelAxis: "x" })]}
+              className="w-full select-none"
+            >
+              <div className="flex relative items-center m-2 mb-5">
+                <h2 className="font-bold text-xl text-white/90">
+                  Featured Products
+                </h2>
+                <div className="md:flex hidden absolute right-5 top-1/2 -translate-y-1/2 gap-2">
+                  <CarouselPrevious className="z-10 w-[40px] rounded-sm static translate-y-0" />
+                  <CarouselNext className="z-10 w-[40px] rounded-sm static translate-y-0" />
+                </div>
+              </div>
+              <CarouselContent>
+                {featuredProducts.map((product, index) => (
+                  <CarouselItem
+                    key={`${product.id}-${index}`}
+                    className="basis-[calc(50%-6px)] sm:basis-[calc(33.333%-8px)] md:basis-[calc(25%-9px)] lg:basis-[calc(25%-9px)] min-w-0 flex-shrink-0"
+                  >
+                    <div className="w-full h-full">
+                      <ProductCard
+                        product={product}
+                        className="w-full max-w-full"
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
+                {/* <InfiniteScrollTrigger
+                    hasNextPage={hasNextPage}
+                    isLoading={isLoading}
+                    loadMore={loadMore}
+                    filteredCount={filteredProducts.length}
+                    displayedCount={displayedProducts.length}
+                  /> */}
+              </CarouselContent>
+            </Carousel>
           </div>
         </section>
       )}
@@ -220,14 +265,50 @@ export default function AccessoriesPage() {
             </CardContent>
           </Card>
         ) : (
-          <div className={viewMode === "grid" ? "products-grid" : "space-y-4"}>
-            {filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                variant={viewMode === "list" ? "compact" : "default"}
-              />
-            ))}
+          <div className="w-full max-w-full overflow-hidden pb-10">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: false,
+                skipSnaps: true,
+                dragFree: true,
+                containScroll: "trimSnaps",
+              }}
+              plugins={[WheelGesturesPlugin({ forceWheelAxis: "x" })]}
+              className="w-full select-none"
+            >
+              <div className="flex relative items-center m-2 mb-5">
+                <h2 className="font-bold text-xl text-white/90">
+                  Suggested Products
+                </h2>
+                <div className="md:flex hidden absolute right-5 top-1/2 -translate-y-1/2 gap-2">
+                  <CarouselPrevious className="z-10 w-[40px] rounded-sm static translate-y-0" />
+                  <CarouselNext className="z-10 w-[40px] rounded-sm static translate-y-0" />
+                </div>
+              </div>
+              <CarouselContent>
+                {filteredProducts.map((product, index) => (
+                  <CarouselItem
+                    key={`${product.id}-${index}`}
+                    className="basis-[calc(50%-6px)] sm:basis-[calc(33.333%-8px)] md:basis-[calc(25%-9px)] lg:basis-[calc(25%-9px)] min-w-0 flex-shrink-0"
+                  >
+                    <div className="w-full h-full">
+                      <ProductCard
+                        product={product}
+                        className="w-full max-w-full"
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
+                {/* <InfiniteScrollTrigger
+                              hasNextPage={hasNextPage}
+                              isLoading={isLoading}
+                              loadMore={loadMore}
+                              filteredCount={filteredProducts.length}
+                              displayedCount={displayedProducts.length}
+                            /> */}
+              </CarouselContent>
+            </Carousel>
           </div>
         )}
       </section>

@@ -60,7 +60,7 @@ export async function GET(
 
     // Filter products by the requested brand
     const allProducts = transformedData.filter(
-      (p) => p.category === categoryType
+      (p) => p.subcategory === categoryType
     );
 
     return Response.json({ data: allProducts });

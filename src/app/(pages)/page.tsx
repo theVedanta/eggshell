@@ -9,11 +9,21 @@ import { useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useSidebar } from "@/components/ui/sidebar";
+import { useGetAllProductsByCategory } from "@/query-calls/product-query";
+import StoreCardsView from "@/components/store/store-cards-view";
 
 export default function HomePage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { setOpenMobile } = useSidebar();
+  const {
+    FootwearProducts,
+    isFootwearLoading,
+    ApparelProducts,
+    isApparelLoading,
+    AccessoriesProducts,
+    isAccessoriesLoading,
+  } = useGetAllProductsByCategory();
   // Scroll to store section on button click smoothly
   const storePg = useRef<HTMLDivElement | null>(null);
   const HandleClick = () => {
@@ -69,7 +79,18 @@ export default function HomePage() {
         </Button>
       </section>
       <div ref={storePg} className="py-2 overflow-clip w-full" id="products">
-        <StorePage />
+        {!ApparelProducts || !FootwearProducts || !AccessoriesProducts ? (
+          <div>Loading...</div>
+        ) : (
+          <StoreCardsView
+            isFootwearLoading={isFootwearLoading}
+            isApparelLoading={isApparelLoading}
+            isAccessoriesLoading={isAccessoriesLoading}
+            FootwearProducts={FootwearProducts}
+            ApparelProducts={ApparelProducts}
+            AccessoriesProducts={AccessoriesProducts}
+          />
+        )}
       </div>
     </>
   );

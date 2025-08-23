@@ -38,6 +38,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
 
 interface Address {
   id: string;
@@ -54,6 +55,7 @@ interface Address {
 }
 
 export default function ProfilePage() {
+  const { user } = useUser();
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [form, setForm] = useState({
@@ -107,13 +109,17 @@ export default function ProfilePage() {
         <CardContent>
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16">
-              <AvatarImage src="/placeholder-avatar.jpg" />
-              <AvatarFallback className="text-lg">VS</AvatarFallback>
+              <AvatarImage src={user?.imageUrl} />
+              <AvatarFallback className="text-lg">
+                {user?.firstName?.charAt(0)}
+              </AvatarFallback>
             </Avatar>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold">My Account</h1>
+              <h1 className="text-2xl font-bold">
+                {user?.firstName} {user?.lastName}
+              </h1>
               <p className="text-muted-foreground">
-                Manage your profile, orders, and preferences
+                {user?.emailAddresses[0].emailAddress}
               </p>
             </div>
             <Button variant="outline" size="sm">

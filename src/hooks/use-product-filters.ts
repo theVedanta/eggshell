@@ -85,7 +85,8 @@ export const useProductFilters = ({
     if (maxPrice > 0 && priceRange[1] === 1000) {
       setPriceRange([0, maxPrice]);
     }
-  }, [maxPrice, priceRange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [maxPrice]); // Remove priceRange from dependencies
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {
