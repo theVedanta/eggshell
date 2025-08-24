@@ -65,6 +65,7 @@ export function ProductCard({
       selectedImage:
         product.colors[0]?.productImages[0] || "/placeholder-product.jpg",
       size: product.sizes[0] || "Default",
+      brand: product.brand,
     });
     addToCart({
       productId: product.id,
@@ -74,6 +75,7 @@ export function ProductCard({
       selectedImage:
         product.colors[0]?.productImages[0] || "/placeholder-product.jpg",
       size: product.sizes[0] || "Default",
+      brand: product.brand,
     });
   };
 
@@ -185,6 +187,7 @@ export function ProductCard({
                       product.colors[0]?.productImages[0] ||
                       "/placeholder-product.jpg",
                     size: product.sizes[0] || "Default",
+                    brand: product.brand,
                   });
                   window.location.href = "/checkout";
                 }}

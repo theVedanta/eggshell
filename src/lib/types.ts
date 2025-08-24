@@ -7,6 +7,7 @@ export interface CartItem {
   selectedImage: string;
   size: string;
   quantity: number;
+  brand: string; // BRAND ID
 }
 
 export interface CartState {

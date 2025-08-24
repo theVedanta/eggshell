@@ -112,6 +112,7 @@ export default function ProductPage() {
       selectedImage: selectedImageUrl,
       size: selectedSize || "Default",
       quantity,
+      brand: product.brand,
     });
 
     toast.success("Added to cart successfully!");
