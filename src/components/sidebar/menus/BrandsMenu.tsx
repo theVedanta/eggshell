@@ -90,7 +90,7 @@ export default function BrandslList({
                     asChild
                   >
                     <Link
-                      href={`/brands/${item.name.split(" ").join("-").toLowerCase().replace(/\.$/, '')}`}
+                      href={`/brands/${item.name.split(" ").join("-").toLowerCase().replace(/\.$/, "")}`}
                     >
                       {/* <span>{item.name}</span> */}
                     </Link>
