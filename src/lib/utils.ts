@@ -17,3 +17,10 @@ export function validatePhone(phone: string): boolean {
   const phoneRegex = /^\+?[1-9]\d{1,14}$/; // E.164 phone number format
   return phoneRegex.test(phone);
 }
+
+export function toTitleCase(str: string): string {
+  return str
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}

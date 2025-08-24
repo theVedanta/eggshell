@@ -135,6 +135,7 @@ export default function ProductPage() {
         price: product.price,
         selectedColor: selectedColor || "Default",
         selectedImage: selectedImageUrl,
+        brand: product.brand,
         size: selectedSize || "Default",
         quantity,
       });
