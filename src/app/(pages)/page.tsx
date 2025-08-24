@@ -80,7 +80,30 @@ export default function HomePage() {
       </section>
       <div ref={storePg} className="py-2 overflow-clip w-full" id="products">
         {!ApparelProducts || !FootwearProducts || !AccessoriesProducts ? (
-          <div>Loading...</div>
+          <div className="flex flex-col items-center justify-center py-20 px-4">
+            {/* Loading Text */}
+            <div className="mt-6 text-center">
+              <h3 className="text-xl font-semibold text-foreground mb-2">
+                Loading Products
+              </h3>
+              <p className="text-muted-foreground animate-pulse">
+                Fetching the latest collection for you...
+              </p>
+            </div>
+
+            {/* Loading Progress Dots */}
+            <div className="flex space-x-2 mt-4">
+              <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+              <div
+                className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                style={{ animationDelay: "0.1s" }}
+              ></div>
+              <div
+                className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                style={{ animationDelay: "0.2s" }}
+              ></div>
+            </div>
+          </div>
         ) : (
           <StoreCardsView
             isFootwearLoading={isFootwearLoading}

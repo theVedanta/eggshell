@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   CheckCircle,
   Package,
@@ -15,49 +16,63 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { useSearchParams } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
+import {
+  useGetAllOrders,
+  useGetAllOrdersByUserId,
+} from "@/query-calls/order-query";
+import type { Order as APIOrder } from "@/query-calls/order-query";
+import type { CartItem } from "@/lib/types";
 
 export default function OrderConfirmationPage() {
-  // Mock order data - in a real app, this would come from the order ID
-  const orderData = {
-    id: "ORD-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
-    date: new Date().toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }),
-    total: 299.97,
-    items: [
-      {
-        name: "Essential Crew Neck Tee",
-        price: 29.99,
-        quantity: 2,
-        color: "Black",
-        size: "M",
-      },
-      {
-        name: "Minimalist Low-Top Sneakers",
-        price: 149.99,
-        quantity: 1,
-        color: "White",
-        size: "10",
-      },
-      {
-        name: "Leather Messenger Bag",
-        price: 89.99,
-        quantity: 1,
-        color: "Brown",
-        size: "One Size",
-      },
-    ],
-    shipping: {
-      name: "John Doe",
-      address: "123 Main Street",
-      city: "New York",
-      state: "NY",
-      zipCode: "10001",
-    },
-    estimatedDelivery: "3-5 business days",
-  };
+  const searchParams = useSearchParams();
+  const idParam = searchParams?.get("id") || undefined;
+  const { userId } = useAuth();
+
+  // Client placeholders for when no order data is available immediately
+  const [orderId, setOrderId] = useState("ORD-XXXXXXX");
+  const [orderDate, setOrderDate] = useState("—");
+
+  // Try to fetch order by id (if provided) and also fetch user's orders as fallback
+  const { data: orderByIdArr, isLoading: loadingById } =
+    useGetAllOrders(idParam);
+  const { data: userOrders, isLoading: loadingUserOrders } =
+    useGetAllOrdersByUserId(userId || undefined);
+
+  // Local order model to handle API shape + additional fields
+  type OrderModel = APIOrder &
+    Partial<{
+      total: number;
+      items: CartItem[];
+      shipping: {
+        name?: string;
+        address?: string;
+        city?: string;
+        state?: string;
+        zipCode?: string;
+      };
+      shippingAddress?: any;
+      estimatedDelivery?: string;
+      createdAt?: string;
+    }>;
+
+  // Resolve single order object
+  let order: OrderModel | undefined;
+  if (Array.isArray(orderByIdArr) && orderByIdArr.length > 0) {
+    order = orderByIdArr[0] as OrderModel;
+  } else if (Array.isArray(userOrders) && userOrders.length > 0) {
+    // pick latest by createdAt if available
+    order = (userOrders as OrderModel[])
+      .slice()
+      .sort(
+        (a, b) =>
+          (b.createdAt ? Date.parse(b.createdAt) : 0) -
+          (a.createdAt ? Date.parse(a.createdAt) : 0)
+      )[0];
+  }
+
+  const isLoading = loadingById || loadingUserOrders;
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
@@ -80,7 +95,7 @@ export default function OrderConfirmationPage() {
               <div className="flex items-center gap-1">
                 <Package className="w-4 h-4 text-emerald-300" />
                 <span className="font-medium text-emerald-100">
-                  Order #{orderData.id}
+                  Order #{order?.id ?? orderId}
                 </span>
               </div>
               <Separator
@@ -89,7 +104,13 @@ export default function OrderConfirmationPage() {
               />
               <div className="flex items-center gap-1">
                 <Clock className="w-4 h-4 text-emerald-300" />
-                <span className="text-emerald-100">{orderData.date}</span>
+                <span className="text-emerald-100">
+                  {order
+                    ? new Date(
+                        order.createdAt || Date.now()
+                      ).toLocaleDateString()
+                    : orderDate}
+                </span>
               </div>
             </div>
           </div>
@@ -179,7 +200,8 @@ export default function OrderConfirmationPage() {
                   Delivered
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  Estimated delivery: {orderData.estimatedDelivery}
+                  Estimated delivery:{" "}
+                  {order?.estimatedDelivery ?? "3-5 business days"}
                 </div>
               </div>
               <Badge variant="outline">Pending</Badge>
@@ -197,7 +219,7 @@ export default function OrderConfirmationPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {orderData.items.map((item, index) => (
+                {order?.items?.map((item: CartItem, index: number) => (
                   <div
                     key={index}
                     className="flex items-center justify-between py-3 border-b border-border/50 last:border-b-0"
@@ -205,7 +227,8 @@ export default function OrderConfirmationPage() {
                     <div className="flex-1">
                       <div className="font-medium">{item.name}</div>
                       <div className="text-sm text-muted-foreground">
-                        {item.color} • {item.size} • Qty: {item.quantity}
+                        {item.selectedColor ?? "-"} • {item.size ?? "-"} • Qty:{" "}
+                        {item.quantity}
                       </div>
                     </div>
                     <div className="font-semibold">
@@ -213,7 +236,11 @@ export default function OrderConfirmationPage() {
                       {(item.price * item.quantity).toFixed(2)}
                     </div>
                   </div>
-                ))}
+                )) ?? (
+                  <div className="text-muted-foreground">
+                    No items found for this order.
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -226,11 +253,25 @@ export default function OrderConfirmationPage() {
             </CardHeader>
             <CardContent>
               <div className="text-sm space-y-1">
-                <div className="font-medium">{orderData.shipping.name}</div>
-                <div>{orderData.shipping.address}</div>
+                <div className="font-medium">
+                  {order?.shipping?.name ??
+                    order?.shippingAddress?.firstName ??
+                    "-"}
+                </div>
                 <div>
-                  {orderData.shipping.city}, {orderData.shipping.state}{" "}
-                  {orderData.shipping.zipCode}
+                  {order?.shipping?.address ??
+                    order?.shippingAddress?.address ??
+                    "-"}
+                </div>
+                <div>
+                  {order?.shipping?.city ?? order?.shippingAddress?.city ?? "-"}
+                  ,{" "}
+                  {order?.shipping?.state ??
+                    order?.shippingAddress?.state ??
+                    "-"}{" "}
+                  {order?.shipping?.zipCode ??
+                    order?.shippingAddress?.zipCode ??
+                    "-"}
                 </div>
               </div>
             </CardContent>
@@ -244,7 +285,9 @@ export default function OrderConfirmationPage() {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>₹{(orderData.total - 16).toFixed(2)}</span>
+                  <span>
+                    ₹{order ? ((order.total || 0) - 16).toFixed(2) : "-"}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
@@ -257,7 +300,9 @@ export default function OrderConfirmationPage() {
                 <Separator />
                 <div className="flex justify-between font-semibold text-base">
                   <span>Total</span>
-                  <span>₹{orderData.total.toFixed(2)}</span>
+                  <span>
+                    {order ? `₹${(order.total || 0).toFixed(2)}` : "-"}
+                  </span>
                 </div>
               </div>
             </CardContent>

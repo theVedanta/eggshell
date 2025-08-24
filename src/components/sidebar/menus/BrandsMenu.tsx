@@ -15,8 +15,6 @@ import {
   useGetAllBrands,
   usePrefetchAllBrands,
 } from "@/query-calls/brands-query";
-import { useEffect } from "react";
-import { usePrefetchSideBarSubcategoriesByCategory } from "@/query-calls/sidebar-opts";
 
 export default function BrandslList({
   brandsList,
@@ -92,7 +90,7 @@ export default function BrandslList({
                     asChild
                   >
                     <Link
-                      href={`/brands/${item.name.split(" ").join("-").toLowerCase()}`}
+                      href={`/brands/${item.name.split(" ").join("-").toLowerCase().replace(/\.$/, '')}`}
                     >
                       {/* <span>{item.name}</span> */}
                     </Link>

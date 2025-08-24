@@ -19,16 +19,18 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Check, ShoppingCart } from "lucide-react";
+import { Check, ShoppingCart, Loader2 } from "lucide-react";
 import { useSidebar } from "./ui/sidebar";
+import { useAuth } from "@clerk/nextjs";
 
 export function CartSheet({ children }: { children: React.ReactNode }) {
-  const { items, total, itemCount } = useCart();
+  const { userId } = useAuth();
+  const { items, itemCount, total, isLoading } = useCart(userId || undefined);
   const [activeIndex, setActiveIndex] = useState(0);
   const [, setCarouselApi] = useState<CarouselApi | null>(null);
   const [open, setOpen] = useState(false);
 
-  // Order summary calculations (mimic cart page)
+  // Calculate totals using the cart hook values
   const subtotal = total;
   const shipping = subtotal > 50 ? 0 : 9.99;
   const discount = 0; // No promo in sheet
@@ -54,11 +56,23 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
         className="p-0 max-w-sm max-sm:w-full w-full flex flex-col"
       >
         <SheetHeader className="border-b p-4 flex flex-row items-center justify-between">
-          <span className="font-semibold text-lg">Your Cart ({itemCount})</span>
+          <span className="font-semibold text-lg">
+            Your Cart ({itemCount})
+            {isLoading && (
+              <Loader2 className="ml-2 h-4 w-4 animate-spin inline" />
+            )}
+          </span>
           <SheetTitle className="hidden">{}</SheetTitle>
         </SheetHeader>
         <div className="flex-1 flex flex-col gap-4 p-4 overflow-y-auto">
-          {items.length === 0 ? (
+          {isLoading && items.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-center gap-4">
+              <Loader2 className="h-8 w-8 animate-spin" />
+              <div className="text-sm text-muted-foreground">
+                Loading cart...
+              </div>
+            </div>
+          ) : items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center gap-4">
               <span className="text-5xl">🛒</span>
               <div className="font-semibold text-lg">Your cart is empty</div>
@@ -177,7 +191,7 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
             variant="secondary"
             className="w-full"
             size="lg"
-            disabled={items.length === 0}
+            disabled={items.length === 0 || isLoading}
             onClick={() => setOpen(false)}
           >
             <Link href="/cart">
@@ -188,7 +202,7 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
             asChild
             className="w-full btn-primary-gradient"
             size="lg"
-            disabled={items.length === 0}
+            disabled={items.length === 0 || isLoading}
             onClick={() => setOpen(false)}
           >
             <Link href="/checkout">

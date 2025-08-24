@@ -16,7 +16,6 @@ import { cn } from "@/lib/utils";
 import type { GSheetProduct } from "@/types/products.type";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { useStoreCartIInfo } from "@/query-calls/cartinfo-query";
 
 interface ProductCardProps {
   product: GSheetProduct;
@@ -32,9 +31,10 @@ export function ProductCard({
   const router = useRouter();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [maxColors, setMaxColors] = useState(2);
-  const addToCart = useCart((s) => s.addToCart);
-  const { mutate: addToCartInDB } = useStoreCartIInfo();
   const user = useAuth();
+
+  // Use the integrated cart hook
+  const { addToCart, isLoading } = useCart(user.userId || undefined);
   // Fix hydration issue: set maxColors on client after mount
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -46,35 +46,29 @@ export function ProductCard({
     }
   }, []);
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (!user.isSignedIn) {
       alert("Please sign in to add items to your cart.");
-      // Handle not signed in case
       return router.push("/sign-in");
     }
-    addToCartInDB({
-      id: crypto.randomUUID(),
-      productId: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: 1,
-      selectedColor: product.colors[0]?.productColor || "Default",
-      selectedImage:
-        product.colors[0]?.productImages[0] || "/placeholder-product.jpg",
-      size: product.sizes[0] || "Default",
-    });
-    addToCart({
-      productId: product.id,
-      name: product.name,
-      price: product.price,
-      selectedColor: product.colors[0]?.productColor || "Default",
-      selectedImage:
-        product.colors[0]?.productImages[0] || "/placeholder-product.jpg",
-      size: product.sizes[0] || "Default",
-    });
+
+    try {
+      await addToCart({
+        productId: product.id,
+        name: product.name,
+        price: product.price,
+        selectedColor: product.colors[0]?.productColor || "Default",
+        selectedImage:
+          product.colors[0]?.productImages[0] || "/placeholder-product.jpg",
+        size: product.sizes[0] || "Default",
+        quantity: 1,
+      });
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
+    }
   };
 
   const handleWishlist = (e: React.MouseEvent) => {
@@ -166,32 +160,48 @@ export function ProductCard({
               <Button
                 className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary/80 backdrop-blur-md border border-primary/30 shadow-lg text-gray-900 hover:bg-primary/60 transition-all min-w-0"
                 onClick={handleAddToCart}
-                disabled={!product.inStock}
+                disabled={!product.inStock || isLoading}
               >
                 <ShoppingCart className="h-4 w-4 opacity-80 flex-shrink-0" />
-                <span className="text-xs font-semibold truncate">Add</span>
+                <span className="text-xs font-semibold truncate">
+                  {isLoading ? "Adding..." : "Add"}
+                </span>
               </Button>
               <Button
                 className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary/80 backdrop-blur-md border border-primary/30 shadow-lg text-gray-900 hover:bg-primary/60 transition-all min-w-0"
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  addToCart({
-                    productId: product.id,
-                    name: product.name,
-                    price: product.price,
-                    selectedColor: product.colors[0]?.productColor || "Default",
-                    selectedImage:
-                      product.colors[0]?.productImages[0] ||
-                      "/placeholder-product.jpg",
-                    size: product.sizes[0] || "Default",
-                  });
-                  window.location.href = "/checkout";
+
+                  if (!user.isSignedIn) {
+                    alert("Please sign in to add items to your cart.");
+                    return router.push("/sign-in");
+                  }
+
+                  try {
+                    await addToCart({
+                      productId: product.id,
+                      name: product.name,
+                      price: product.price,
+                      selectedColor:
+                        product.colors[0]?.productColor || "Default",
+                      selectedImage:
+                        product.colors[0]?.productImages[0] ||
+                        "/placeholder-product.jpg",
+                      size: product.sizes[0] || "Default",
+                      quantity: 1,
+                    });
+                    window.location.href = "/checkout";
+                  } catch (error) {
+                    console.error("Failed to add to cart:", error);
+                  }
                 }}
-                disabled={!product.inStock}
+                disabled={!product.inStock || isLoading}
               >
                 <Plus className="flex-shrink-0" />
-                <span className="text-xs font-semibold truncate">Buy</span>
+                <span className="text-xs font-semibold truncate">
+                  {isLoading ? "Adding..." : "Buy"}
+                </span>
               </Button>
             </div>
           </div>

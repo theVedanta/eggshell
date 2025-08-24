@@ -60,18 +60,22 @@ export function useCreateOrder() {
   });
 }
 
-// Fetch all orders
-export function useGetAllOrdersByUserId(userId: string) {
+// Fetch orders by user ID
+export function useGetAllOrdersByUserId(userId?: string) {
   const { data, error, isLoading } = useQuery({
-    queryKey: ["all-orders", userId],
+    queryKey: ["orders-by-user", userId],
     queryFn: async () => {
+      if (!userId) {
+        return [];
+      }
       const response = await fetch(`${API_URL}/order/${userId}`);
       if (!response.ok) {
-        throw new Error("Failed to fetch orders");
+        throw new Error("Failed to fetch user orders");
       }
       const result = await response.json();
-      return [result.data] as Order[]; // Wrap single order in array
+      return result.data as Order[]; // Return the array directly
     },
+    enabled: !!userId, // Only run query when userId is available
   });
   return { data, error, isLoading };
 }

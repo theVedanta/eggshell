@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { useCart } from "@/state/useCart";
 import { ProductCard } from "@/components/ProductCard";
 import { useGetFeaturedProducts } from "@/query-calls/product-query";
+import { useAuth } from "@clerk/nextjs";
 import {
   Carousel,
   CarouselContent,
@@ -29,8 +30,16 @@ import {
 } from "@/components/ui/carousel";
 
 export default function CartPage() {
-  const { items, total, itemCount, updateQuantity, removeFromCart, clearCart } =
-    useCart();
+  const { userId } = useAuth();
+  const {
+    items,
+    total,
+    itemCount,
+    updateQuantity,
+    removeFromCart,
+    clearCart,
+    isLoading,
+  } = useCart(userId || undefined);
   const [promoCode, setPromoCode] = useState("");
   const [promoApplied, setPromoApplied] = useState(false);
 
@@ -42,11 +51,11 @@ export default function CartPage() {
   const tax = (subtotal - discount + shipping) * 0.08;
   const grandTotal = subtotal - discount + shipping + tax;
 
-  const handleQuantityChange = (itemId: string, newQuantity: number) => {
+  const handleQuantityChange = async (itemId: string, newQuantity: number) => {
     if (newQuantity < 1) {
-      removeFromCart(itemId);
+      await removeFromCart(itemId);
     } else {
-      updateQuantity(itemId, newQuantity);
+      await updateQuantity(itemId, newQuantity);
     }
   };
 
@@ -148,16 +157,24 @@ export default function CartPage() {
             {itemCount} {itemCount === 1 ? "item" : "items"} in your cart
           </p>
         </div>
-        <Button variant="outline" onClick={clearCart}>
+        <Button variant="outline" onClick={clearCart} disabled={isLoading}>
           <Trash2 className="mr-2 h-4 w-4" />
-          Clear Cart
+          {isLoading ? "Clearing..." : "Clear Cart"}
         </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
-          <Card className="py-0">
+          <Card className="py-0 relative">
+            {isLoading && (
+              <div className="absolute inset-0 bg-background/50 backdrop-blur-sm z-10 flex items-center justify-center">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent"></div>
+                  <span className="text-sm">Updating cart...</span>
+                </div>
+              </div>
+            )}
             <CardContent className="p-0">
               <div className="divide-y">
                 {items.map((item) => (
@@ -197,6 +214,7 @@ export default function CartPage() {
                             onClick={() =>
                               handleQuantityChange(item.id, item.quantity - 1)
                             }
+                            disabled={isLoading}
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
@@ -210,6 +228,7 @@ export default function CartPage() {
                             onClick={() =>
                               handleQuantityChange(item.id, item.quantity + 1)
                             }
+                            disabled={isLoading}
                           >
                             <Plus className="h-3 w-3" />
                           </Button>
@@ -221,6 +240,7 @@ export default function CartPage() {
                             variant="ghost"
                             size="sm"
                             className="text-muted-foreground hover:text-foreground"
+                            disabled={isLoading}
                           >
                             <Heart className="h-4 w-4 mr-1" />
                             Save
@@ -230,9 +250,10 @@ export default function CartPage() {
                             size="sm"
                             className="text-destructive hover:text-destructive"
                             onClick={() => removeFromCart(item.id)}
+                            disabled={isLoading}
                           >
                             <Trash2 className="h-4 w-4 mr-1" />
-                            Remove
+                            {isLoading ? "Removing..." : "Remove"}
                           </Button>
                         </div>
                       </div>

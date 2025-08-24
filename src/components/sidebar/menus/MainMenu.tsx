@@ -9,7 +9,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useSidebarStore } from "@/hooks/useSideBar";
-import { useCart } from "@/state/useCart";
+import { useCartStore } from "@/state/useCart";
 import { SidebarItemTypes } from "@/types/sidebar.items.types";
 import { ChevronRight, ShoppingCart } from "lucide-react";
 import Link from "next/link";
@@ -18,7 +18,7 @@ import { usePathname } from "next/navigation";
 export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
   const { setView } = useSidebarStore();
   const { open, setOpen, setOpenMobile } = useSidebar();
-  const { itemCount } = useCart();
+  const itemCount = useCartStore((state) => state.itemCount);
   const currentPath = usePathname();
 
   return (
