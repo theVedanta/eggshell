@@ -4,7 +4,6 @@ import { categories } from "@/lib/db";
 import Link from "next/link";
 import SearchBar from "@/components/sidebar/search_bar";
 import { ChevronDown } from "lucide-react";
-import StorePage from "@/components/store/store-page";
 import { useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
