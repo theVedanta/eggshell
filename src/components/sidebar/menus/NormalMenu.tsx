@@ -12,6 +12,7 @@ import Link from "next/link";
 import { SidebarItemTypes } from "@/types/sidebar.items.types";
 import { Button } from "@/components/ui/button";
 import { useGetSideBarSubcategoriesByCategory } from "@/query-calls/sidebar-opts";
+import { toTitleCase } from "@/lib/utils";
 
 export default function NormalList({
   itemsList,
@@ -59,7 +60,7 @@ export default function NormalList({
         </div>
       </div>
       <SidebarGroupContent className="flex-1 overflow-y-auto">
-        <SidebarMenu className="space-y-2">
+        <SidebarMenu className="space-y-1">
           {itemsList.map(
             (list) =>
               list.isSubItem &&
@@ -68,11 +69,11 @@ export default function NormalList({
                 <SidebarMenuItem key={item}>
                   <SidebarMenuButton
                     onClick={() => setOpenMobile(false)}
-                    className="p-4.5 bg-accent/40"
+                    className="p-4.5 bg-accent/80"
                     asChild
                   >
                     <Link href={`/${view}/${item}`}>
-                      <span>{item.split("_").join(" ")}</span>
+                      <span>{toTitleCase(item.split("_").join(" "))}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

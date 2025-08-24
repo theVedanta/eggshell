@@ -9,6 +9,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useSidebarStore } from "@/hooks/useSideBar";
+import { toTitleCase } from "@/lib/utils";
 import { useCartStore } from "@/state/useCart";
 import { SidebarItemTypes } from "@/types/sidebar.items.types";
 import { ChevronRight, ShoppingCart } from "lucide-react";
@@ -39,7 +40,7 @@ export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
                 >
                   <p>
                     {item.icon && <item.icon size={64} />}
-                    <span>{item.title}</span>
+                    <span>{toTitleCase(item.title)}</span>
                     <ChevronRight className="ml-auto" />
                   </p>
                 </SidebarMenuButton>
@@ -53,7 +54,7 @@ export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
                 >
                   <Link href={item.href ?? ""}>
                     {item.icon && <item.icon size={64} />}
-                    <span>{item.title}</span>
+                    <span>{toTitleCase(item.title)}</span>
                   </Link>
                 </SidebarMenuButton>
               )}

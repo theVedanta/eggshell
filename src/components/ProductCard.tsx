@@ -64,6 +64,7 @@ export function ProductCard({
         selectedImage:
           product.colors[0]?.productImages[0] || "/placeholder-product.jpg",
         size: product.sizes[0] || "Default",
+        brand: product.brand,
         quantity: 1,
       });
     } catch (error) {
@@ -189,6 +190,7 @@ export function ProductCard({
                         product.colors[0]?.productImages[0] ||
                         "/placeholder-product.jpg",
                       size: product.sizes[0] || "Default",
+                      brand: product.brand,
                       quantity: 1,
                     });
                     window.location.href = "/checkout";

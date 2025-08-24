@@ -342,7 +342,7 @@ export default function BrandPage() {
 
       {/* Brand Categories */}
       {availableCategories.length > 1 && (
-        <section className="bg-muted/50 rounded-xl p-8">
+        <section className="rounded-xl p-8">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold mb-2">
               Shop {brand.name} by Category
@@ -362,7 +362,7 @@ export default function BrandPage() {
                 <Button
                   key={categoryId}
                   variant="outline"
-                  className="h-auto p-4 flex flex-col items-center gap-2"
+                  className="h-auto p-4 flex flex-col rounded-3xl !bg-muted/20 items-center gap-2"
                   onClick={() => setSelectedCategory(categoryId)}
                 >
                   <div className="text-2xl mb-2">

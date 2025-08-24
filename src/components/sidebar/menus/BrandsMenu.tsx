@@ -11,10 +11,7 @@ import { useSidebarStore } from "@/hooks/useSideBar";
 import Link from "next/link";
 import { SidebarItemTypes } from "@/types/sidebar.items.types";
 import { Button } from "@/components/ui/button";
-import {
-  useGetAllBrands,
-  usePrefetchAllBrands,
-} from "@/query-calls/brands-query";
+import { useGetAllBrands } from "@/query-calls/brands-query";
 
 export default function BrandslList({
   brandsList,
@@ -90,7 +87,7 @@ export default function BrandslList({
                     asChild
                   >
                     <Link
-                      href={`/brands/${item.name.split(" ").join("-").toLowerCase().replace(/\.$/, '')}`}
+                      href={`/brands/${item.name.split(" ").join("-").toLowerCase().replace(/\.$/, "")}`}
                     >
                       {/* <span>{item.name}</span> */}
                     </Link>

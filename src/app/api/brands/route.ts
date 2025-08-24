@@ -18,6 +18,7 @@ export async function GET() {
         description: brand.description,
         logo: brand.logo,
         banner: brand.banner,
+        email: brand.email,
         featured: brand.featured === "TRUE" ? true : false,
       };
     });

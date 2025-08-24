@@ -57,11 +57,17 @@ export default function ProductPage() {
   const { addToCart, isLoading: cartLoading } = useCart(userId || undefined);
 
   // Fetch user's orders for this product
-  const { data: userOrders, isLoading: ordersLoading, error: ordersError } = useGetAllOrdersByUserId(userId || undefined);
+  const {
+    data: userOrders,
+    isLoading: ordersLoading,
+    error: ordersError,
+  } = useGetAllOrdersByUserId(userId || undefined);
   // Filter orders for this product
   const productOrders = Array.isArray(userOrders)
-    ? userOrders.filter((order) =>
-        Array.isArray(order.items) && order.items.some((item) => item.productId === productId)
+    ? userOrders.filter(
+        (order) =>
+          Array.isArray(order.items) &&
+          order.items.some((item) => item.productId === productId)
       )
     : [];
 
@@ -272,6 +278,7 @@ export default function ProductPage() {
         price: product.price,
         selectedColor: selectedColor || "Default",
         selectedImage: selectedImageUrl,
+        brand: product.brand,
         size: selectedSize || "Default",
         quantity,
       });
@@ -781,7 +788,9 @@ export default function ProductPage() {
         ) : ordersError ? (
           <div className="text-red-500">Failed to load your orders.</div>
         ) : productOrders.length === 0 ? (
-          <div className="text-muted-foreground">You have not ordered this product yet.</div>
+          <div className="text-muted-foreground">
+            You have not ordered this product yet.
+          </div>
         ) : (
           <div className="space-y-4">
             {productOrders.map((order) => (
@@ -791,11 +800,16 @@ export default function ProductPage() {
                     <span className="font-semibold">Order ID:</span> {order.id}
                   </div>
                   <div>
-                    <span className="font-semibold">Date:</span> {order.createdAt ? new Date(order.createdAt).toLocaleString() : "-"}
+                    <span className="font-semibold">Date:</span>{" "}
+                    {order.createdAt
+                      ? new Date(order.createdAt).toLocaleString()
+                      : "-"}
                   </div>
                 </div>
                 <div className="mt-2">
-                  <span className="font-semibold">Quantity:</span> {order.items?.find((item) => item.productId === productId)?.quantity || 1}
+                  <span className="font-semibold">Quantity:</span>{" "}
+                  {order.items?.find((item) => item.productId === productId)
+                    ?.quantity || 1}
                 </div>
               </div>
             ))}

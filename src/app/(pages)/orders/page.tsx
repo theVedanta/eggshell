@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useGetAllOrdersByUserId } from "@/query-calls/order-query";
 import { useAuth } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function OrdersPage() {
   const { userId, isLoaded } = useAuth();
@@ -90,7 +91,7 @@ export default function OrdersPage() {
               You haven&apos;t placed any orders yet.
             </p>
             <Button asChild>
-              <a href="/#products">Start Shopping</a>
+              <Link href="/#products">Start Shopping</Link>
             </Button>
           </CardContent>
         </Card>

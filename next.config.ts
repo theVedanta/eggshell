@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
       "s1.dswcdn.com",
       "www.tennisnuts.com",
       "external-content.duckduckgo.com",
-      "fabrikbrands.com"
+      "fabrikbrands.com",
     ],
   },
 };
