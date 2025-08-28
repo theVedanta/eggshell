@@ -6,56 +6,58 @@ import {
   getAllsizes,
   getAllTags,
 } from "./utils";
-import { NextRequest } from "next/server";
+import { getOrSetRedisCache } from "@/lib/redis";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(req.url);
-    const limitParam = searchParams.get("limit");
-    const limit = limitParam ? parseInt(limitParam, 5) : undefined;
+    const redisCachedFinalData = await getOrSetRedisCache<GSheetProduct[]>(
+      "google-sheet-all-products",
+      async () => {
+        const rawdata = await getSheetData("Products");
+        const transformedData: GSheetProduct[] = rawdata.map((item: any) => {
+          // Parse color_image_map into array of objects
+          const colors = get_color_image_map(item);
 
-    const data = await getSheetData("Products");
-    const transformedData: GSheetProduct[] = data.map((item: any) => {
-      // Parse color_image_map into array of objects
-      const colors = get_color_image_map(item);
+          // Convert sizes to array
+          const sizesArray = getAllsizes(item);
 
-      // Convert sizes to array
-      const sizesArray = getAllsizes(item);
+          // Convert in_stock and featured to boolean
+          const { in_stock, featured } = convertBooleanFields(item);
 
-      // Convert in_stock and featured to boolean
-      const { in_stock, featured } = convertBooleanFields(item);
+          // Convert tags to array
+          const tagsArray = getAllTags(item);
 
-      // Convert tags to array
-      const tagsArray = getAllTags(item);
+          // Remove processed fields and create clean product object
+          const {
+            color_image_map,
+            sizes: _sizes,
+            in_stock: _in_stock,
+            featured: _featured,
+            tags: _tags,
+            ...rest
+          } = item;
 
-      // Remove processed fields and create clean product object
-      const {
-        color_image_map,
-        sizes: _sizes,
-        in_stock: _in_stock,
-        featured: _featured,
-        tags: _tags,
-        ...rest
-      } = item;
+          const product: GSheetProduct = {
+            ...rest,
+            colors,
+            sizes: sizesArray,
+            inStock: in_stock,
+            featured,
+            tags: tagsArray,
+            price: parseFloat(rest.price) || 0,
+            originalPrice: rest.original_price
+              ? parseFloat(rest.original_price)
+              : undefined,
+          };
 
-      const product: GSheetProduct = {
-        ...rest,
-        colors,
-        sizes: sizesArray,
-        inStock: in_stock,
-        featured,
-        tags: tagsArray,
-        price: parseFloat(rest.price) || 0,
-        originalPrice: rest.original_price
-          ? parseFloat(rest.original_price)
-          : undefined,
-      };
+          return product;
+        });
+        return transformedData;
+      },
+      200000 //
+    );
 
-      return product;
-    });
-
-    const result = limit ? transformedData.slice(0, limit) : transformedData;
-    return Response.json({ data: result });
+    return Response.json({ data: redisCachedFinalData });
   } catch (error) {
     return Response.json(
       { error: "Failed to fetch products" },

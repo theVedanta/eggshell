@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Poppins, Geist } from "next/font/google";
 import { QueryProvider } from "@/query-calls/QueryProvider";
+import ShimmerText from "@/components/shimmer-text";
 // import { dark } from "@clerk/themes";
 
 const geist = Geist({
@@ -102,10 +103,9 @@ export default function RootLayout({
 
 async function Loading() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-pulse flex flex-col items-center">
-        <div className="w-16 h-16 border-t-4 border-b-4 border-primary rounded-full animate-spin mb-4"></div>
-        <p className="text-gray-500 font-medium">Loading EggShell...</p>
+    <div className="min-h-screen p-4 flex items-center justify-center">
+      <div className="text-white text-lg">
+        <ShimmerText text="EGGSHELL" />
       </div>
     </div>
   );

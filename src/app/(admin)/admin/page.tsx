@@ -16,6 +16,9 @@ import Link from "next/link";
 import { useGetAllOrders } from "@/query-calls/order-query";
 import { useUser } from "@clerk/nextjs";
 import ShimmerText from "@/components/shimmer-text";
+import { API_URL } from "@/lib/env";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 // all admin email addresses
 const adminEmails = ["developersilent101@gmail.com", "vedanta1412@gmail.com"];
@@ -23,6 +26,7 @@ const adminEmails = ["developersilent101@gmail.com", "vedanta1412@gmail.com"];
 export default function AdminDashboard() {
   const { user, isLoaded, isSignedIn } = useUser();
   const { data: orders, isLoading } = useGetAllOrders();
+  const queryClient = useQueryClient();
 
   if (isLoading) {
     return (
@@ -33,6 +37,21 @@ export default function AdminDashboard() {
       </div>
     );
   }
+  const ReValidate = async () => {
+    await fetch(API_URL + "/products/revalidate", {
+      method: "GET",
+      cache: "reload",
+    });
+    toast.success("Revalidated Redis Cache");
+    // Invalidate all relevant queries from /src/query-calls/*
+    queryClient.invalidateQueries({ queryKey: ["orders"] });
+    queryClient.invalidateQueries({ queryKey: ["products"] });
+    queryClient.invalidateQueries({ queryKey: ["users"] });
+    queryClient.invalidateQueries({ queryKey: ["cart"] });
+    // ...add more keys as needed for your app
+    // Or, to invalidate everything (use with caution):
+    // queryClient.invalidateQueries();
+  };
 
   if (
     isLoaded &&
@@ -57,6 +76,15 @@ export default function AdminDashboard() {
             >
               <RefreshCcw className="text-white h-4 w-4 mr-2" />
               <span className="text-white text-sm">Refresh</span>
+            </Button>
+
+            <Button
+              onClick={() => ReValidate()}
+              size={"sm"}
+              className="bg-stone-800/60 border border-stone-700 rounded-lg hover:bg-stone-700/80 transition-colors"
+            >
+              <RefreshCcw className="text-white h-4 w-4 mr-2" />
+              <span className="text-white text-sm">ReValidate Redis Cache</span>
             </Button>
             <Avatar className="h-10 w-10 border border-stone-600">
               <AvatarImage src={user?.imageUrl} />

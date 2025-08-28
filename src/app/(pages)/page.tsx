@@ -1,15 +1,29 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { categories } from "@/lib/db";
 import Link from "next/link";
 import SearchBar from "@/components/sidebar/search_bar";
 import { ChevronDown } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useGetAllProductsByCategory } from "@/query-calls/product-query";
 import StoreCardsView from "@/components/store/store-cards-view";
+
+const categories = [
+  {
+    id: "footwear",
+    name: "Footwear",
+  },
+  {
+    id: "apparel",
+    name: "Apparel",
+  },
+  {
+    id: "accessories",
+    name: "Accessories",
+  },
+];
 
 export default function HomePage() {
   const pathname = usePathname();
@@ -41,6 +55,7 @@ export default function HomePage() {
       }
     }
   }, [searchParams, pathname]);
+
   return (
     <>
       <section className="w-full h-screen flex flex-col items-center justify-center">

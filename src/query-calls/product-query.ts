@@ -1,21 +1,6 @@
 import { API_URL } from "@/lib/env";
 import { GSheetProduct } from "@/types/products.type";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-
-export function useGetAllProducts() {
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["products"],
-    queryFn: async () => {
-      const response = await fetch(`${API_URL}/products`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const result = await response.json();
-      return result.data as GSheetProduct[];
-    },
-  });
-  return { data, error, isLoading };
-}
+import { useQuery } from "@tanstack/react-query";
 
 export function useGetProductById(id: string) {
   const { data, error, isLoading } = useQuery({

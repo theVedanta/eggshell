@@ -189,8 +189,9 @@ export function useCart(userId?: string) {
 
   // Set loading state
   useEffect(() => {
-    setLoading(dbLoading);
-  }, [dbLoading, setLoading]);
+    // Only set loading from DB if user is logged in, otherwise always false
+    setLoading(userId ? dbLoading : false);
+  }, [dbLoading, setLoading, userId]);
 
   const addToCart = async (
     item: Omit<CartItem, "id" | "quantity"> & { quantity?: number }
@@ -316,12 +317,13 @@ export function useCart(userId?: string) {
     items: cartStore.items,
     total: cartStore.total,
     itemCount: cartStore.itemCount,
-    isLoading:
-      cartStore.isLoading ||
-      storeCartMutation.isPending ||
-      updateCartMutation.isPending ||
-      deleteCartMutation.isPending ||
-      clearCartMutation.isPending,
+    isLoading: userId
+      ? cartStore.isLoading ||
+        storeCartMutation.isPending ||
+        updateCartMutation.isPending ||
+        deleteCartMutation.isPending ||
+        clearCartMutation.isPending
+      : false,
     addToCart,
     removeFromCart,
     updateQuantity,

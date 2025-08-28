@@ -7,10 +7,11 @@ export function useGetSideBarSubcategoriesByCategory(category: string) {
     queryFn: async () => {
       const response = await fetch(`${API_URL}/sidebar/${category}`);
       if (!response.ok) {
-        throw new Error("Failed to fetch products by category");
+        // Always return an array, even on error
+        return [];
       }
       const result = await response.json();
-      return result.data as string[];
+      return (result.data as string[]) || [];
     },
   });
   return { data, error, isLoading };
@@ -25,10 +26,11 @@ export function usePrefetchSideBarSubcategoriesByCategory() {
       queryFn: async () => {
         const response = await fetch(`${API_URL}/sidebar/${category}`);
         if (!response.ok) {
-          throw new Error("Failed to fetch products by category");
+          // Always return an array, even on error
+          return [];
         }
         const result = await response.json();
-        return result.data as string[];
+        return (result.data as string[]) || [];
       },
     });
   };

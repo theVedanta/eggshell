@@ -9,12 +9,40 @@ import {
 import { Home } from "lucide-react";
 import { AppSidebar } from "./sidebar/app-sidebar";
 import Footer from "./Footer";
+import { useQuery } from "@tanstack/react-query";
+import { API_URL } from "@/lib/env";
+import ShimmerText from "./shimmer-text";
+
+function usePrefetchProducts() {
+  return useQuery({
+    queryKey: ["products-redis"],
+    queryFn: async () => {
+      const res = await fetch(API_URL + "/products");
+      if (!res.ok) throw new Error("Failed to fetch products");
+      const data = await res.json();
+      return data.data; // <-- return the products array
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes, adjust as needed
+  });
+}
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 export function Layout({ children }: LayoutProps) {
+  const { isLoading } = usePrefetchProducts();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen p-4 flex items-center justify-center">
+        <div className="text-white text-lg">
+          <ShimmerText text="EGGSHELL" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <SidebarProvider defaultOpen={true}>
       <AppSidebar collapsible="offcanvas" />

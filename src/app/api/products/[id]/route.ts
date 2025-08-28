@@ -7,6 +7,7 @@ import {
   getAllsizes,
   getAllTags,
 } from "../utils";
+import { readRedisData } from "@/lib/redis";
 
 export async function GET(
   _req: NextRequest,
@@ -20,48 +21,20 @@ export async function GET(
     }
 
     // Get all products from the sheet
-    const data = await getSheetData("Products");
+    const transformedData = await readRedisData<GSheetProduct[]>(
+      "google-sheet-all-products"
+    );
 
     // Find the product with matching ID
-    const rawProduct = data.find((item) => item.id === id);
+    const rawProduct = transformedData.find((item) => item.id === id);
 
     if (!rawProduct) {
       return Response.json({ error: "Product not found" }, { status: 404 });
     }
 
-    // Google Sheet Formate for : color_image_map
-    const colors = get_color_image_map(rawProduct);
-
-    // Convert sizes to array
-    const sizesArray = getAllsizes(rawProduct);
-
-    // Convert tags to array
-    const tagsArray = getAllTags(rawProduct);
-
-    // Convert in_stock and featured to boolean
-    const { in_stock, featured } = convertBooleanFields(rawProduct);
-
     // Create the product object with explicit property mapping
     const product: GSheetProduct = {
-      id: rawProduct.id,
-      name: rawProduct.name,
-      description: rawProduct.description,
-      price: parseFloat(rawProduct.price) || 0,
-      originalPrice: rawProduct.original_price
-        ? parseFloat(rawProduct.original_price)
-        : undefined,
-      category: rawProduct.category,
-      subcategory: rawProduct.subcategory,
-      brand: rawProduct.brand,
-      colors,
-      sizes: sizesArray,
-      inStock: in_stock,
-      featured,
-      rating: rawProduct.rating ? parseFloat(rawProduct.rating) : undefined,
-      reviewCount: rawProduct.reviewCount
-        ? parseInt(rawProduct.reviewCount)
-        : undefined,
-      tags: tagsArray,
+      ...rawProduct,
     };
 
     return Response.json({ data: product });

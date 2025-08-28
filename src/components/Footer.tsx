@@ -207,9 +207,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   aria-label="YouTube"
                   className="rounded-full p-2 transition-colors"
-                >
-                  <Youtube className="w-6 h-6 text-gray-800" />
-                </Link>
+                ></Link>
               </div>
               {/* Contact Info */}
               <div className="flex flex-col gap-2 mt-4 text-gray-500 text-base">
