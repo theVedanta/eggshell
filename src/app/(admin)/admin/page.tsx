@@ -21,7 +21,11 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
 // all admin email addresses
-const adminEmails = ["developersilent101@gmail.com", "vedanta1412@gmail.com"];
+const adminEmails = [
+  "developersilent101@gmail.com",
+  "vedanta1412@gmail.com",
+  "anavgupta05@gmail.com",
+];
 
 export default function AdminDashboard() {
   const { user, isLoaded, isSignedIn } = useUser();
