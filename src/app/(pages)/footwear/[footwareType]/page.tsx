@@ -248,21 +248,30 @@ export default function FootwearPage() {
         </div>
 
         {filteredProducts.length === 0 ? (
-          <Card>
-            <CardContent className="p-12 text-center">
-              <div className="text-6xl mb-4">📦</div>
-              <h3 className="text-xl font-semibold mb-2">No products found</h3>
-              <p className="text-muted-foreground mb-4">
-                Try selecting a different category or check back later
+          <div className="flex flex-col items-center justify-center py-20 px-4">
+            {/* Loading Text */}
+            <div className="mt-6 text-center">
+              <h3 className="text-xl font-semibold text-foreground mb-2">
+                Loading Products
+              </h3>
+              <p className="text-muted-foreground animate-pulse">
+                Fetching the latest collection for you...
               </p>
-              <Button
-                variant="outline"
-                onClick={() => setSelectedCategory("all")}
-              >
-                Show All Products
-              </Button>
-            </CardContent>
-          </Card>
+            </div>
+
+            {/* Loading Progress Dots */}
+            <div className="flex space-x-2 mt-4">
+              <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+              <div
+                className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                style={{ animationDelay: "0.1s" }}
+              ></div>
+              <div
+                className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                style={{ animationDelay: "0.2s" }}
+              ></div>
+            </div>
+          </div>
         ) : (
           <div className="w-full max-w-full overflow-hidden pb-10">
             <Carousel

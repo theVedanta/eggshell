@@ -312,19 +312,6 @@ export default function CheckoutPage() {
                       required
                     />
                   </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="newsletter"
-                      checked={form.newsletter}
-                      onCheckedChange={(checked) =>
-                        updateForm("newsletter", checked as boolean)
-                      }
-                    />
-                    <Label htmlFor="newsletter" className="text-sm">
-                      Subscribe to our newsletter for deals and updates
-                    </Label>
-                  </div>
                 </CardContent>
               </Card>
 

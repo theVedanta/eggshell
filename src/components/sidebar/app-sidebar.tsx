@@ -70,26 +70,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </>
         <div className="flex-1 overflow-auto" id="NavSlider">
           <NavMain navItems={SideBarNavItems} />
-          <div className="w-full absolute bottom-0 grid px-3 py-4">
-            <SignedOut>
-              <Button asChild>
-                <SignInButton />
-              </Button>
-            </SignedOut>
-            <SignedIn>
-              <div className="flex items-center">
-                <UserButton />{" "}
-                <div className="flex flex-col px-3">
-                  <span className="text-xs text-white/70 flex-initial">
-                    {user?.firstName} {user?.lastName}
-                  </span>
-                  <span className="text-xs text-white/70">
-                    {user?.emailAddresses[0]?.emailAddress}
-                  </span>
-                </div>
+        </div>
+        <div className="w-full grid px-3 py-4 border-t">
+          <SignedOut>
+            <Button asChild>
+              <SignInButton />
+            </Button>
+          </SignedOut>
+          <SignedIn>
+            <div className="flex items-center">
+              <UserButton />{" "}
+              <div className="flex flex-col px-3">
+                <span className="text-xs text-white/70 flex-initial">
+                  {user?.firstName} {user?.lastName}
+                </span>
+                <span className="text-xs text-white/70">
+                  {user?.emailAddresses[0]?.emailAddress}
+                </span>
               </div>
-            </SignedIn>
-          </div>
+            </div>
+          </SignedIn>
         </div>
       </SidebarContent>
     </Sidebar>

@@ -6,7 +6,6 @@ import { useGetAllBrands } from "@/query-calls/brands-query";
 
 export default function BrandsPage() {
   const { data: brands } = useGetAllBrands();
-  console.log(brands);
   return (
     <div className="max-w-6xl mx-auto py-10 px-4">
       <div className="mb-10 text-center">

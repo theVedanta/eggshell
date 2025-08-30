@@ -89,151 +89,7 @@ export default function ProductPage() {
 
   // Handle loading and error states AFTER all hooks are called
   if (isLoading) {
-    return (
-      <div className="space-y-4 p-2">
-        {/* Back Button Skeleton */}
-        <div className="mb-4">
-          <div className="h-10 w-24 bg-gray-500 animate-pulse rounded-md"></div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Product Images Skeleton */}
-          <div>
-            <div className="space-y-4 sticky top-3">
-              {/* Main Image Skeleton */}
-              <div className="aspect-square relative overflow-hidden rounded-xl bg-gray-200/40 animate-pulse"></div>
-
-              {/* Thumbnail Images Skeleton */}
-              <div className="flex gap-2 overflow-x-auto">
-                {[...Array(4)].map((_, index) => (
-                  <div
-                    key={index}
-                    className="flex-shrink-0 w-20 h-20 rounded-lg bg-gray-200/40 animate-pulse"
-                  ></div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Product Details Skeleton */}
-          <div className="space-y-6">
-            {/* Brand & Title Skeleton */}
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="h-6 w-24 bg-gray-500 animate-pulse rounded mb-2"></div>
-                <div className="h-8 w-3/4 bg-gray-500 animate-pulse rounded"></div>
-              </div>
-              <div className="flex flex-col gap-2 ml-4">
-                <div className="h-10 w-10 bg-gray-500 animate-pulse rounded-full"></div>
-                <div className="h-10 w-10 bg-gray-500 animate-pulse rounded-full"></div>
-              </div>
-            </div>
-
-            {/* Rating Skeleton */}
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-4 w-4 bg-gray-500 animate-pulse rounded"
-                  ></div>
-                ))}
-                <div className="h-4 w-8 bg-gray-500 animate-pulse rounded ml-1"></div>
-              </div>
-              <div className="h-4 w-20 bg-gray-500 animate-pulse rounded"></div>
-            </div>
-
-            {/* Price Skeleton */}
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-24 bg-gray-500 animate-pulse rounded"></div>
-              <div className="h-6 w-20 bg-gray-500 animate-pulse rounded"></div>
-              <div className="h-6 w-16 bg-gray-500 animate-pulse rounded"></div>
-            </div>
-
-            {/* Stock Status Skeleton */}
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-gray-500 animate-pulse rounded-full"></div>
-              <div className="h-4 w-16 bg-gray-500 animate-pulse rounded"></div>
-            </div>
-
-            <div className="w-full h-px bg-gray-500"></div>
-
-            {/* Description Skeleton */}
-            <div className="space-y-2">
-              <div className="h-4 w-full bg-gray-500 animate-pulse rounded"></div>
-              <div className="h-4 w-5/6 bg-gray-500 animate-pulse rounded"></div>
-              <div className="h-4 w-4/5 bg-gray-500 animate-pulse rounded"></div>
-            </div>
-
-            {/* Color Selection Skeleton */}
-            <div>
-              <div className="h-5 w-20 bg-gray-500 animate-pulse rounded mb-3"></div>
-              <div className="flex gap-3">
-                {[...Array(3)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-10 w-20 bg-gray-500 animate-pulse rounded-lg"
-                  ></div>
-                ))}
-              </div>
-            </div>
-
-            {/* Size Selection Skeleton */}
-            <div>
-              <div className="h-5 w-16 bg-gray-500 animate-pulse rounded mb-3"></div>
-              <div className="flex gap-2">
-                {[...Array(4)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-10 w-12 bg-gray-500 animate-pulse rounded-lg"
-                  ></div>
-                ))}
-              </div>
-            </div>
-
-            {/* Quantity & Add to Cart Skeleton */}
-            <div className="space-y-4">
-              <div>
-                <div className="h-5 w-16 bg-gray-500 animate-pulse rounded mb-3"></div>
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 bg-gray-500 animate-pulse rounded"></div>
-                  <div className="h-6 w-8 bg-gray-500 animate-pulse rounded"></div>
-                  <div className="h-10 w-10 bg-gray-500 animate-pulse rounded"></div>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <div className="flex-1 h-12 bg-gray-500 animate-pulse rounded"></div>
-                <div className="h-12 w-12 bg-gray-500 animate-pulse rounded"></div>
-              </div>
-            </div>
-
-            {/* Features Skeleton */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <div className="h-4 w-4 bg-gray-500 animate-pulse rounded"></div>
-                  <div className="h-4 w-24 bg-gray-500 animate-pulse rounded"></div>
-                </div>
-              ))}
-            </div>
-
-            {/* Tags Skeleton */}
-            <div>
-              <div className="h-5 w-12 bg-gray-500 animate-pulse rounded mb-3"></div>
-              <div className="flex gap-2">
-                {[...Array(3)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-6 w-16 bg-gray-500 animate-pulse rounded"
-                  ></div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <ProductInfoLoader />;
   }
 
   if (error || !product) {
@@ -783,7 +639,7 @@ export default function ProductPage() {
 
       {/* User's Orders for this Product */}
       <section>
-        <h2 className="text-xl font-bold mb-2">Your Orders for this Product</h2>
+        {/* <h2 className="text-xl font-bold mb-2">Your Orders for this Product</h2>
         {ordersLoading ? (
           <div className="text-muted-foreground">Loading your orders...</div>
         ) : ordersError ? (
@@ -791,31 +647,30 @@ export default function ProductPage() {
         ) : productOrders.length === 0 ? (
           <div className="text-muted-foreground">
             You have not ordered this product yet.
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {productOrders.map((order) => (
-              <div key={order.id} className="border rounded-lg p-4 bg-muted/30">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                  <div>
-                    <span className="font-semibold">Order ID:</span> {order.id}
-                  </div>
-                  <div>
-                    <span className="font-semibold">Date:</span>{" "}
-                    {order.createdAt
-                      ? new Date(order.createdAt).toLocaleString()
-                      : "-"}
-                  </div>
+          </div> */}
+
+        <div className="space-y-4">
+          {productOrders.map((order) => (
+            <div key={order.id} className="border rounded-lg p-4 bg-muted/30">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                <div>
+                  <span className="font-semibold">Order ID:</span> {order.id}
                 </div>
-                <div className="mt-2">
-                  <span className="font-semibold">Quantity:</span>{" "}
-                  {order.items?.find((item) => item.productId === productId)
-                    ?.quantity || 1}
+                <div>
+                  <span className="font-semibold">Date:</span>{" "}
+                  {order.createdAt
+                    ? new Date(order.createdAt).toLocaleString()
+                    : "-"}
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+              <div className="mt-2">
+                <span className="font-semibold">Quantity:</span>{" "}
+                {order.items?.find((item) => item.productId === productId)
+                  ?.quantity || 1}
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* Related Products */}
