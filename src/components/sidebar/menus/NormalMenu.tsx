@@ -30,20 +30,20 @@ export default function NormalList({
   const { setOpenMobile } = useSidebar();
   const { data: subcategories } = useGetSideBarSubcategoriesByCategory(view);
   return (
-    <SidebarGroup className="flex flex-col h-full">
+    <SidebarGroup className="flex flex-col flex-shrink-0 h-full">
+      <Button
+        onClick={() => {
+          while (!useSidebarStore.getState().isFirst) {
+            goBack();
+          }
+        }}
+        variant="outline"
+        size={"sm"}
+        className="text-left flex items-center w-fit mb-2 justify-start"
+      >
+        <ChevronLeft /> Go Back
+      </Button>
       <div className="flex-shrink-0 mb-2 px-2 py-1">
-        <Button
-          onClick={() => {
-            while (!useSidebarStore.getState().isFirst) {
-              goBack();
-            }
-          }}
-          variant="outline"
-          size={"sm"}
-          className="text-left flex items-center mb-4 justify-start"
-        >
-          <ChevronLeft /> Go Back
-        </Button>
         <div className="flex items-center">
           <Button onClick={goBack} variant="ghost" size={"icon"}>
             <PrevIcon />

@@ -69,7 +69,7 @@ const SearchBar = forwardRef<HTMLInputElement, unknown>(
         <div className="relative">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-white" />
           <Input
-            placeholder="Search products..."
+            placeholder="Search products"
             className="pl-8 h-9 w-full border-[1.5px] border-border rounded-lg outline-none pr-8 focus-visible:ring-0"
             value={inputVal}
             onChange={(e) => {

@@ -18,6 +18,7 @@ import {
   SignedIn,
   SignedOut,
   SignInButton,
+  SignOutButton,
   useAuth,
   UserButton,
   useUser,
@@ -26,6 +27,7 @@ import { Button } from "../ui/button";
 import { usePrefetchAllBrands } from "@/query-calls/brands-query";
 import { useEffect } from "react";
 import { usePrefetchSideBarSubcategoriesByCategory } from "@/query-calls/sidebar-opts";
+import { DoorClosed, LogOut } from "lucide-react";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useUser();
   const { prefetchBrands } = usePrefetchAllBrands();
@@ -62,12 +64,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <SidebarContent className="flex flex-col overflow-hidden">
-        <>
-          <SidebarGroupLabel className="h-fit w-fit -mb-5 px-3">
-            Search
-          </SidebarGroupLabel>
-          <SearchBar />
-        </>
+        <SearchBar />
         <div className="flex-1 overflow-auto" id="NavSlider">
           <NavMain navItems={SideBarNavItems} />
         </div>
@@ -80,14 +77,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SignedIn>
             <div className="flex items-center">
               <UserButton />{" "}
-              <div className="flex flex-col px-3">
-                <span className="text-xs text-white/70 flex-initial">
-                  {user?.firstName} {user?.lastName}
-                </span>
-                <span className="text-xs text-white/70">
-                  {user?.emailAddresses[0]?.emailAddress}
-                </span>
-              </div>
+              <Link href="/profile">
+                <div className="flex flex-col px-3">
+                  <span className="text-xs text-white/70 flex-initial">
+                    {user?.firstName} {user?.lastName}
+                  </span>
+                  <span className="text-xs text-white/70">
+                    {user?.emailAddresses[0]?.emailAddress}
+                  </span>
+                </div>
+              </Link>
+              <SignOutButton>
+                <Button variant="secondary">
+                  <LogOut />
+                </Button>
+              </SignOutButton>
             </div>
           </SignedIn>
         </div>

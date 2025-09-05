@@ -38,7 +38,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { useUser } from "@clerk/nextjs";
+import { SignOutButton, useUser } from "@clerk/nextjs";
 
 interface Address {
   id: string;
@@ -103,7 +103,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 my-6">
       {/* Profile Header */}
       <Card className="border-0 shadow-none bg-gradient-to-r from-primary/5 to-secondary/5">
         <CardContent>
@@ -126,6 +126,9 @@ export default function ProfilePage() {
               <Edit className="h-4 w-4 mr-2" />
               Edit Profile
             </Button>
+            <SignOutButton>
+              <Button variant="destructive">Log out</Button>
+            </SignOutButton>
           </div>
         </CardContent>
       </Card>
