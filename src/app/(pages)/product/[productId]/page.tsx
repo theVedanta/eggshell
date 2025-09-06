@@ -649,28 +649,35 @@ export default function ProductPage() {
             You have not ordered this product yet.
           </div> */}
 
-        <div className="space-y-4">
-          {productOrders.map((order) => (
-            <div key={order.id} className="border rounded-lg p-4 bg-muted/30">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                <div>
-                  <span className="font-semibold">Order ID:</span> {order.id}
-                </div>
-                <div>
-                  <span className="font-semibold">Date:</span>{" "}
+        {/*<div className="mb-4">
+          <h3 className="text-sm font-medium text-muted-foreground mb-2">
+            Your Previous Orders
+          </h3>
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
+            {productOrders.slice(0, 3).map((order) => (
+              <div
+                key={order.id}
+                className="flex-shrink-0 border rounded-md p-2 bg-muted/20 min-w-[120px]"
+              >
+                <div className="text-xs text-muted-foreground mb-1">
                   {order.createdAt
-                    ? new Date(order.createdAt).toLocaleString()
+                    ? new Date(order.createdAt).toLocaleDateString()
                     : "-"}
                 </div>
+                <div className="text-xs">
+                  Qty:{" "}
+                  {order.items?.find((item) => item.productId === productId)
+                    ?.quantity || 1}
+                </div>
               </div>
-              <div className="mt-2">
-                <span className="font-semibold">Quantity:</span>{" "}
-                {order.items?.find((item) => item.productId === productId)
-                  ?.quantity || 1}
+            ))}
+            {productOrders.length > 3 && (
+              <div className="flex-shrink-0 flex items-center justify-center border rounded-md p-2 bg-muted/20 min-w-[60px] text-xs text-muted-foreground">
+                +{productOrders.length - 3}
               </div>
-            </div>
-          ))}
-        </div>
+            )}
+          </div>
+        </div>*/}
       </section>
 
       {/* Related Products */}
