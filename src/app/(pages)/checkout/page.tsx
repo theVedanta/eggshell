@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -12,9 +12,7 @@ import {
   Check,
   ChevronRight,
   MapPin,
-  User,
   Mail,
-  Phone,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -22,7 +20,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -38,6 +35,9 @@ import { useCreateOrder } from "@/query-calls/order-query";
 import { useAuth } from "@clerk/nextjs";
 import { allIndianStates } from "@/lib/all-indian-states";
 import { validatePhone } from "@/lib/utils";
+
+// Razorpay: use API route instead of direct import
+// import { createRazorpayOrder } from "@/lib/razorpay";
 
 export interface CheckoutForm {
   userId: string;
@@ -64,13 +64,6 @@ export interface CheckoutForm {
   billingZipCode: string;
   billingCountry: string;
 
-  // Payment Information
-  paymentMethod: "card" | "paypal" | "apple_pay";
-  cardNumber: string;
-  expiryDate: string;
-  cvv: string;
-  nameOnCard: string;
-
   // Preferences
   saveInfo: boolean;
   newsletter: boolean;
@@ -87,7 +80,7 @@ const initialForm: CheckoutForm = {
   city: "",
   state: "",
   zipCode: "",
-  country: "US",
+  country: "IN",
   phone: "",
   billingDifferent: false,
   billingFirstName: "",
@@ -97,16 +90,17 @@ const initialForm: CheckoutForm = {
   billingCity: "",
   billingState: "",
   billingZipCode: "",
-  billingCountry: "US",
-  paymentMethod: "card",
-  cardNumber: "",
-  expiryDate: "",
-  cvv: "",
-  nameOnCard: "",
+  billingCountry: "IN",
   saveInfo: false,
   newsletter: false,
   smsUpdates: false,
 };
+
+declare global {
+  interface Window {
+    Razorpay?: any;
+  }
+}
 
 export default function CheckoutPage() {
   const user = useAuth();
@@ -115,6 +109,8 @@ export default function CheckoutPage() {
   const [form, setForm] = useState<CheckoutForm>(initialForm);
   const [currentStep, setCurrentStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [razorpayLoading, setRazorpayLoading] = useState(false);
+  const razorpayOrderIdRef = useRef<string | null>(null);
 
   const createOrderMutation = useCreateOrder();
 
@@ -160,15 +156,7 @@ export default function CheckoutPage() {
           form.zipCode &&
           form.phone
         );
-      case 2: // Payment
-        if (form.paymentMethod === "card") {
-          return !!(
-            form.cardNumber &&
-            form.expiryDate &&
-            form.cvv &&
-            form.nameOnCard
-          );
-        }
+      case 2: // Payment (no payment info needed, just proceed)
         return true;
       default:
         return true;
@@ -192,33 +180,132 @@ export default function CheckoutPage() {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
 
-  const handleSubmit = async () => {
-    if (!validateStep(2)) {
-      toast.error("Please complete all required fields");
-      return;
-    }
-
+  // Razorpay Checkout Handler using API route
+  const handleRazorpayPayment = async () => {
     setIsProcessing(true);
+    setRazorpayLoading(true);
 
     try {
       if (!user || !user.userId)
         return toast.error("You must be signed in to place an order.");
-      // Create the order via mutation
-      await createOrderMutation.mutateAsync({
-        ...form,
-        userId: user.userId, // Assuming you have userId from Clerk
-        // Optionally, you may want to include cart items and totals in the order
-        items,
-        total,
+
+      // 1. Create Razorpay order via API route
+      const orderRes = await fetch("/api/razorpay/order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amountInRupees: Math.round(total),
+          receiptId: `receipt_${Date.now()}`,
+          notes: {
+            email: form.email,
+            name: `${form.firstName} ${form.lastName}`,
+            userId: user.userId,
+          },
+        }),
       });
 
-      clearCart();
-      toast.success("Order placed successfully!");
-      router.push("/order-confirmation");
+      if (!orderRes.ok) {
+        setIsProcessing(false);
+        setRazorpayLoading(false);
+        const err = await orderRes.json();
+        toast.error(err.error || "Failed to create payment order.");
+        return;
+      }
+
+      const order = await orderRes.json();
+      razorpayOrderIdRef.current = order.id;
+
+      // 2. Load Razorpay script if not already loaded
+      if (!window.Razorpay) {
+        await new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "https://checkout.razorpay.com/v1/checkout.js";
+          script.onload = resolve;
+          script.onerror = reject;
+          document.body.appendChild(script);
+        });
+      }
+
+      // 3. Open Razorpay Checkout
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: order.amount, // in paise
+        currency: order.currency,
+        name: "Your Store",
+        description: "Order Payment",
+        image: "/logo.png",
+        order_id: order.id,
+        handler: async function (response: any) {
+          // 4. Verify payment signature via API route
+          try {
+            const verifyRes = await fetch("/api/razorpay/verify", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                orderId: response.razorpay_order_id,
+                paymentId: response.razorpay_payment_id,
+                signature: response.razorpay_signature,
+              }),
+            });
+            const verifyJson = await verifyRes.json();
+            if (!verifyRes.ok || !verifyJson.valid) {
+              toast.error(
+                "Payment verification failed. Please contact support."
+              );
+              setIsProcessing(false);
+              setRazorpayLoading(false);
+              return;
+            }
+
+            // 5. On payment success and verification, create order in your DB
+            await createOrderMutation.mutateAsync({
+              ...form,
+              userId: user.userId,
+              items,
+              total,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+            clearCart();
+            toast.success("Order placed successfully!");
+            router.push("/order-confirmation");
+          } catch (error) {
+            toast.error("Order creation failed. Please contact support.");
+            setIsProcessing(false);
+            setRazorpayLoading(false);
+          }
+        },
+        prefill: {
+          name: `${form.firstName} ${form.lastName}`,
+          email: form.email,
+          contact: form.phone,
+        },
+        notes: {
+          address: form.address,
+        },
+        theme: {
+          color: "#6366f1",
+        },
+        modal: {
+          ondismiss: () => {
+            setIsProcessing(false);
+            setRazorpayLoading(false);
+            toast.info("Payment cancelled.");
+          },
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (error) {
       toast.error("Payment failed. Please try again.");
-    } finally {
       setIsProcessing(false);
+      setRazorpayLoading(false);
     }
   };
 
@@ -231,7 +318,7 @@ export default function CheckoutPage() {
     {
       number: 2,
       title: "Payment",
-      description: "Payment method and billing",
+      description: "Pay securely with Razorpay",
     },
     { number: 3, title: "Review", description: "Review and confirm order" },
   ];
@@ -430,184 +517,45 @@ export default function CheckoutPage() {
             </>
           )}
 
-          {/* Step 2: Payment */}
+          {/* Step 2: Payment (Razorpay only) */}
           {currentStep === 2 && (
-            <>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <CreditCard className="h-5 w-5" />
-                    Payment Method
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <RadioGroup
-                    value={form.paymentMethod}
-                    onValueChange={(value) =>
-                      updateForm("paymentMethod", value)
-                    }
-                    className="space-y-0"
-                  >
-                    <div className="flex items-center space-x-3 p-4 border rounded-lg">
-                      <RadioGroupItem value="card" id="card" />
-                      <Label htmlFor="card" className="flex-1 cursor-pointer">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <CreditCard className="h-4 w-4" />
-                            <span>Credit or Debit Card</span>
-                          </div>
-                        </div>
-                      </Label>
-                    </div>
-
-                    <div className="flex items-center space-x-3 p-4 border rounded-lg">
-                      <RadioGroupItem value="paypal" id="paypal" disabled />
-                      <Label htmlFor="paypal" className="flex-1 cursor-pointer">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 bg-blue-500 rounded-full" />
-                            <span>PayPal</span>
-                          </div>
-                          <Badge className="ml-3" variant="secondary">
-                            Coming Soon
-                          </Badge>
-                        </div>
-                      </Label>
-                    </div>
-
-                    <div className="flex items-center space-x-3 p-4 border rounded-lg">
-                      <RadioGroupItem
-                        value="apple_pay"
-                        id="apple_pay"
-                        disabled
-                      />
-                      <Label
-                        htmlFor="apple_pay"
-                        className="flex-1 cursor-pointer"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 bg-black rounded" />
-                            <span>Apple Pay</span>
-                          </div>
-                          <Badge className="ml-3" variant="secondary">
-                            Coming Soon
-                          </Badge>
-                        </div>
-                      </Label>
-                    </div>
-                  </RadioGroup>
-
-                  {form.paymentMethod === "card" && (
-                    <div className="mt-6 space-y-4">
-                      <div>
-                        <Label htmlFor="cardNumber">Card Number *</Label>
-                        <Input
-                          id="cardNumber"
-                          value={form.cardNumber}
-                          onChange={(e) =>
-                            updateForm("cardNumber", e.target.value)
-                          }
-                          placeholder="1234 5678 9012 3456"
-                          required
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="nameOnCard">Name on Card *</Label>
-                        <Input
-                          id="nameOnCard"
-                          value={form.nameOnCard}
-                          onChange={(e) =>
-                            updateForm("nameOnCard", e.target.value)
-                          }
-                          placeholder="John Doe"
-                          required
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="expiryDate">Expiry Date *</Label>
-                          <Input
-                            id="expiryDate"
-                            value={form.expiryDate}
-                            onChange={(e) =>
-                              updateForm("expiryDate", e.target.value)
-                            }
-                            placeholder="MM/YY"
-                            required
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="cvv">CVV *</Label>
-                          <Input
-                            id="cvv"
-                            value={form.cvv}
-                            onChange={(e) => updateForm("cvv", e.target.value)}
-                            placeholder="123"
-                            required
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MapPin className="h-5 w-5" />
-                    Billing Address
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center space-x-2 mb-4">
-                    <Checkbox
-                      id="billingDifferent"
-                      checked={form.billingDifferent}
-                      onCheckedChange={(checked) =>
-                        updateForm("billingDifferent", checked as boolean)
-                      }
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="h-5 w-5" />
+                  Payment
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="mb-4">
+                  <div className="flex items-center gap-2">
+                    <img
+                      src="https://razorpay.com/favicon.ico"
+                      alt="Razorpay"
+                      className="w-6 h-6"
                     />
-                    <Label htmlFor="billingDifferent">
-                      Billing address is different from shipping address
-                    </Label>
+                    <span className="font-medium">
+                      Pay securely with Razorpay
+                    </span>
                   </div>
-
-                  {form.billingDifferent && (
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="billingFirstName">First Name</Label>
-                          <Input
-                            id="billingFirstName"
-                            value={form.billingFirstName}
-                            onChange={(e) =>
-                              updateForm("billingFirstName", e.target.value)
-                            }
-                            placeholder="John"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="billingLastName">Last Name</Label>
-                          <Input
-                            id="billingLastName"
-                            value={form.billingLastName}
-                            onChange={(e) =>
-                              updateForm("billingLastName", e.target.value)
-                            }
-                            placeholder="Doe"
-                          />
-                        </div>
-                      </div>
-                      {/* Add more billing fields as needed */}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    All major cards, UPI, wallets, and netbanking supported.
+                  </div>
+                </div>
+                <Button
+                  className="btn-primary-gradient w-full mt-4"
+                  onClick={handleRazorpayPayment}
+                  disabled={isProcessing || razorpayLoading}
+                >
+                  {isProcessing || razorpayLoading
+                    ? "Redirecting to Razorpay..."
+                    : `Pay ₹${total.toFixed(2)} with Razorpay`}
+                </Button>
+                <div className="text-xs text-muted-foreground mt-2 text-center">
+                  You will be redirected to Razorpay to complete your payment.
+                </div>
+              </CardContent>
+            </Card>
           )}
 
           {/* Step 3: Review */}
@@ -666,22 +614,6 @@ export default function CheckoutPage() {
                     <div>{form.phone}</div>
                   </div>
                 </div>
-
-                <Separator />
-
-                {/* Payment Method */}
-                <div>
-                  <h3 className="font-semibold mb-2">Payment Method:</h3>
-                  <div className="text-sm text-muted-foreground">
-                    {form.paymentMethod === "card" ? (
-                      <div>
-                        Credit/Debit Card ending in {form.cardNumber.slice(-4)}
-                      </div>
-                    ) : (
-                      <div className="capitalize">{form.paymentMethod}</div>
-                    )}
-                  </div>
-                </div>
               </CardContent>
             </Card>
           )}
@@ -691,24 +623,28 @@ export default function CheckoutPage() {
             <Button
               variant="outline"
               onClick={prevStep}
-              disabled={currentStep === 1}
+              disabled={currentStep === 1 || isProcessing}
             >
               Previous
             </Button>
 
             {currentStep < 3 ? (
-              <Button onClick={nextStep} className="btn-primary-gradient">
+              <Button
+                onClick={nextStep}
+                className="btn-primary-gradient"
+                disabled={isProcessing}
+              >
                 Continue
               </Button>
             ) : (
               <Button
-                onClick={handleSubmit}
-                disabled={isProcessing}
+                onClick={handleRazorpayPayment}
+                disabled={isProcessing || razorpayLoading}
                 className="btn-primary-gradient"
               >
-                {isProcessing
-                  ? "Processing..."
-                  : `Complete Order - $${total.toFixed(2)}`}
+                {isProcessing || razorpayLoading
+                  ? "Redirecting to Razorpay..."
+                  : `Pay ₹${total.toFixed(2)} with Razorpay`}
               </Button>
             )}
           </div>
@@ -724,7 +660,7 @@ export default function CheckoutPage() {
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span>Subtotal ({itemCount} items)</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>₹{subtotal.toFixed(2)}</span>
                 </div>
 
                 <div className="flex justify-between">
@@ -738,21 +674,21 @@ export default function CheckoutPage() {
                         Free
                       </Badge>
                     ) : (
-                      `$${shipping.toFixed(2)}`
+                      `₹${shipping.toFixed(2)}`
                     )}
                   </span>
                 </div>
 
                 <div className="flex justify-between">
                   <span>Tax</span>
-                  <span>${tax.toFixed(2)}</span>
+                  <span>₹{tax.toFixed(2)}</span>
                 </div>
 
                 <Separator />
 
                 <div className="flex justify-between text-lg font-semibold">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>₹{total.toFixed(2)}</span>
                 </div>
               </div>
 
