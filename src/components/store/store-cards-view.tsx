@@ -7,6 +7,17 @@ import { useEffect, useMemo } from "react";
 import FilterButton from "../FilterButton";
 import { categories } from "@/lib/db";
 import StorePage from "./store-page";
+import { useGetAllProductsByLiking } from "@/query-calls/suggestion-query";
+import { ProductCard } from "../ProductCard";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "../ui/carousel";
+import WheelGesturesPlugin from "embla-carousel-wheel-gestures";
+import { Marquee, MarqueeContent, MarqueeItem } from "../marquee";
 
 interface StoreCardsViewProps {
   FootwearProducts?: GSheetProduct[];
@@ -16,6 +27,13 @@ interface StoreCardsViewProps {
   isApparelLoading: boolean;
   isAccessoriesLoading: boolean;
 }
+
+const productsQuotes = [
+  "50% off on all sneakers",
+  "Buy 1 Get 1 Free on select apparel",
+  "Exclusive accessories for summer",
+  "New arrivals in footwear",
+];
 
 export default function StoreCardsView({
   FootwearProducts,
@@ -33,6 +51,11 @@ export default function StoreCardsView({
       return [];
     return [...AccessoriesProducts, ...ApparelProducts, ...FootwearProducts];
   }, [AccessoriesProducts, ApparelProducts, FootwearProducts]);
+  const {
+    data: userLikingData,
+    isLoading: isUserLikingLoading,
+    error: userLikingError,
+  } = useGetAllProductsByLiking();
 
   const {
     searchQuery,
@@ -130,7 +153,48 @@ export default function StoreCardsView({
   }
 
   return (
-    <div className="gflex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+    <div className="flex sm:block flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+      {userLikingData
+        ? userLikingData.filteredProducts.length > 0 && (
+            <Carousel
+              opts={{
+                align: "start",
+                loop: false,
+                skipSnaps: true,
+                dragFree: true,
+                containScroll: "trimSnaps",
+              }}
+              plugins={[WheelGesturesPlugin({ forceWheelAxis: "x" })]}
+              className="w-full select-none mb-10"
+            >
+              <div className="flex relative items-center m-2 mb-5">
+                <h2 className="font-bold text-xl text-white/90">
+                  Recommendations
+                </h2>
+                <div className="md:flex hidden absolute right-5 top-1/2 -translate-y-1/2 gap-2">
+                  <CarouselPrevious className="z-10 w-[40px] rounded-sm static translate-y-0" />
+                  <CarouselNext className="z-10 w-[40px] rounded-sm static translate-y-0" />
+                </div>
+              </div>
+              <CarouselContent>
+                {userLikingData.filteredProducts.map((product, index) => (
+                  <CarouselItem
+                    key={`${product.id}-${index}`}
+                    className="basis-[calc(50%-6px)] sm:basis-[calc(33.333%-8px)] md:basis-[calc(25%-9px)] lg:basis-[calc(25%-9px)] min-w-0 flex-shrink-0"
+                  >
+                    <div className="w-full h-full">
+                      <ProductCard
+                        product={product}
+                        className="w-full max-w-full"
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+          )
+        : isUserLikingLoading && <div>Looking for recommendations...</div>}
+
       <div className="flex items-center gap-4">
         <FilterButton
           showSearch={true}
@@ -175,17 +239,30 @@ export default function StoreCardsView({
 
       <>
         {filteredFootwearProducts.length > 0 && (
-          <StorePage
-            activeFiltersCount={activeFiltersCount}
-            clearFilters={clearFilters}
-            displayedProducts={filteredFootwearProducts}
-            filteredProducts={filteredFootwearProducts}
-            loadMore={loadMore}
-            searchQuery={searchQuery}
-            hasNextPage={hasNextPage}
-            prodType="Footwear"
-            isLoading={isFootwearLoading}
-          />
+          <>
+            <Marquee className="mt-7 bg-white p-3">
+              <MarqueeContent>
+                {productsQuotes.map((quote, index) => (
+                  <MarqueeItem key={index}>
+                    <p className="text-lg font-bold text-black/95 font-bungee">
+                      {quote}
+                    </p>
+                  </MarqueeItem>
+                ))}
+              </MarqueeContent>
+            </Marquee>
+            <StorePage
+              activeFiltersCount={activeFiltersCount}
+              clearFilters={clearFilters}
+              displayedProducts={filteredFootwearProducts}
+              filteredProducts={filteredFootwearProducts}
+              loadMore={loadMore}
+              searchQuery={searchQuery}
+              hasNextPage={hasNextPage}
+              prodType="Footwear"
+              isLoading={isFootwearLoading}
+            />
+          </>
         )}
         {filteredApparelProducts.length > 0 && (
           <StorePage

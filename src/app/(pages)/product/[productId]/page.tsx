@@ -32,7 +32,7 @@ import { toast } from "sonner";
 import { useGetProductById } from "@/query-calls/product-query";
 import { useGetRelatedProducts } from "@/query-calls/product-query";
 import { useGetAllOrdersByUserId } from "@/query-calls/order-query";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import {
   Carousel,
   CarouselContent,
@@ -42,7 +42,7 @@ import {
 } from "@/components/ui/carousel";
 import WheelGesturesPlugin from "embla-carousel-wheel-gestures";
 import { ProductInfoLoader } from "@/components/product-info-loader";
-
+import { useSetProdQue } from "@/query-calls/suggestion-query";
 export default function ProductPage() {
   const router = useRouter();
   const params = useParams<{ productId: string }>();
@@ -56,7 +56,7 @@ export default function ProductPage() {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const { userId, isSignedIn } = useAuth();
   const { addToCart, isLoading: cartLoading } = useCart(userId || undefined);
-
+  const { mutate } = useSetProdQue();
   // Fetch user's orders for this product
   const {
     data: userOrders,
@@ -87,7 +87,21 @@ export default function ProductPage() {
     setSelectedImage(0);
   }, [selectedColor]);
 
-  // Handle loading and error states AFTER all hooks are called
+  // Track user interaction with product for suggestions
+  useEffect(() => {
+    if (isSignedIn && product) {
+      const timer = setTimeout(() => {
+        mutate({
+          category: product.category,
+          subCategory: product.subcategory,
+        });
+      }, 10000);
+
+      // cleanup: if user leaves before 10s, cancel the mutation
+      return () => clearTimeout(timer);
+    }
+  }, [isSignedIn, product, mutate]);
+
   if (isLoading) {
     return <ProductInfoLoader />;
   }

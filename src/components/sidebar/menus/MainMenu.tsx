@@ -12,11 +12,14 @@ import { useSidebarStore } from "@/hooks/useSideBar";
 import { toTitleCase } from "@/lib/utils";
 import { useCartStore } from "@/state/useCart";
 import { SidebarItemTypes } from "@/types/sidebar.items.types";
+import { useUser } from "@clerk/nextjs";
+import { auth } from "google-auth-library";
 import { ChevronRight, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
+  const { isSignedIn } = useUser();
   const { setView } = useSidebarStore();
   const { open, setOpen, setOpenMobile } = useSidebar();
   const itemCount = useCartStore((state) => state.itemCount);
@@ -44,7 +47,7 @@ export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
                     <ChevronRight className="ml-auto" />
                   </p>
                 </SidebarMenuButton>
-              ) : (
+              ) : !isSignedIn && item.href === "/profile" ? null : (
                 <SidebarMenuButton
                   isActive={currentPath === item.href}
                   onClick={() => setOpenMobile(false)}
@@ -63,7 +66,7 @@ export default function MainMenu({ array }: { array: SidebarItemTypes[] }) {
           <SidebarMenuButton
             tooltip={"Cart"}
             isActive={itemCount > 0}
-            className="cursor-pointer py-6 px-3"
+            className={`cursor-pointer px-3 ${isSignedIn ? "py-6" : "py-0"}`}
           >
             <CartSheet>
               <SheetTrigger asChild>

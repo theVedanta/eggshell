@@ -9,6 +9,7 @@ export interface Order extends CheckoutForm {
   items?: CartItem[];
   createdAt?: string;
   updatedAt?: string;
+  paymentMethod?: string;
 }
 
 // Fetch all orders

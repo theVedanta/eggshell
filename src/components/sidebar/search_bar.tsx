@@ -38,6 +38,7 @@ const SearchBar = forwardRef<HTMLInputElement, unknown>(
       } else {
         // Clear input when no search param on / page
         setInputVal("");
+        inputRef.current!.tabIndex = -1;
         setIsLoading(false);
       }
     }, [searchParams, pathname]); // Run when pathname or searchParams change

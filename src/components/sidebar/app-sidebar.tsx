@@ -68,27 +68,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <div className="flex-1 overflow-auto" id="NavSlider">
           <NavMain navItems={SideBarNavItems} />
         </div>
-        <div className="w-full grid px-3 py-4 border-t">
+        <div className="w-full grid px-2 py-4 border-t">
           <SignedOut>
             <Button asChild>
               <SignInButton />
             </Button>
           </SignedOut>
           <SignedIn>
-            <div className="flex items-center">
+            <div className="flex items-center justify-center">
               <UserButton />{" "}
               <Link href="/profile">
-                <div className="flex flex-col px-3">
+                <div className="flex flex-col px-2 pr-2 sm:pr-0 w-[70%]">
                   <span className="text-xs text-white/70 flex-initial">
                     {user?.firstName} {user?.lastName}
                   </span>
-                  <span className="text-xs text-white/70">
+                  <span className="text-xs sm:text-[10px] text-white/70 p-0 m-0">
                     {user?.emailAddresses[0]?.emailAddress}
                   </span>
                 </div>
               </Link>
               <SignOutButton>
-                <Button variant="secondary">
+                <Button variant="secondary" className="mx-3">
                   <LogOut />
                 </Button>
               </SignOutButton>

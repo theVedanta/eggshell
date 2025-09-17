@@ -213,7 +213,7 @@ export default function UserPage() {
                       </div>
                     </div>
 
-                    {order.paymentMethod && (
+                    {order.paymentMethod ? (
                       <div>
                         <div className="flex items-center gap-3 mb-3">
                           <CreditCard className="h-5 w-5 text-yellow-400" />
@@ -228,7 +228,7 @@ export default function UserPage() {
                           </span>
                         </div>
                       </div>
-                    )}
+                    ) : null}
                   </aside>
                 </div>
               </div>

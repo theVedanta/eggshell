@@ -3,10 +3,10 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { Suspense } from "react";
 import { ClerkProvider } from "@clerk/nextjs";
-import { Poppins, Geist } from "next/font/google";
+import { Poppins, Geist, Bungee } from "next/font/google";
 import { QueryProvider } from "@/query-calls/QueryProvider";
 import ShimmerText from "@/components/shimmer-text";
-// import { dark } from "@clerk/themes";
+import { shadcn } from "@clerk/themes";
 
 const geist = Geist({
   variable: "--font-geist",
@@ -17,6 +17,12 @@ const bebas_neue = Poppins({
   variable: "--font-bebas-neue",
   subsets: ["latin"],
   weight: ["500"],
+});
+
+const bungee = Bungee({
+  variable: "--font-bungee",
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -84,12 +90,12 @@ export default function RootLayout({
         <link rel="canonical" href="https://www.eggshellstore.com" />
       </head>
       <body
-        className={`${geist.variable} ${bebas_neue.variable} dark antialiased`}
+        className={`${geist.variable} ${bebas_neue.variable} ${bungee.variable} dark antialiased`}
       >
         <ClerkProvider
-        // appearance={{
-        //   baseTheme: dark,
-        // }}
+          appearance={{
+            baseTheme: [shadcn as any],
+          }}
         >
           <Suspense fallback={<Loading />}>
             <QueryProvider>{children}</QueryProvider>

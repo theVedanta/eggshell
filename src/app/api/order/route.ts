@@ -55,7 +55,6 @@ export async function POST(req: Request) {
       updatedAt: now,
     };
 
-    console.log("Creating order with data:", orderData);
     const docRef = await addDoc(collection(db, ORDERS_COLLECTION), orderData);
     const newOrder = { id: docRef.id, ...orderData };
     return NextResponse.json({ data: newOrder }, { status: 201 });

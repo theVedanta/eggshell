@@ -12,6 +12,7 @@ import Footer from "./Footer";
 import { useQuery } from "@tanstack/react-query";
 import { API_URL } from "@/lib/env";
 import ShimmerText from "./shimmer-text";
+import CategorySelector from "./GetUserLiking";
 
 function usePrefetchProducts() {
   return useQuery({

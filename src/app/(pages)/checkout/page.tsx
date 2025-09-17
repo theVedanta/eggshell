@@ -102,6 +102,13 @@ declare global {
   }
 }
 
+// Add proper TypeScript interface for Razorpay response
+interface RazorpayResponse {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+}
+
 export default function CheckoutPage() {
   const user = useAuth();
   const { items, total: cartTotal, itemCount, clearCart } = useCart();
@@ -237,9 +244,21 @@ export default function CheckoutPage() {
         description: "Order Payment",
         image: "/logo.png",
         order_id: order.id,
-        handler: async function (response: any) {
+        handler: async function (response: RazorpayResponse) {
           // 4. Verify payment signature via API route
           try {
+            // Validate response has required fields
+            if (
+              !response.razorpay_payment_id ||
+              !response.razorpay_order_id ||
+              !response.razorpay_signature
+            ) {
+              toast.error("Invalid payment response. Please try again.");
+              setIsProcessing(false);
+              setRazorpayLoading(false);
+              return;
+            }
+
             const verifyRes = await fetch("/api/razorpay/verify", {
               method: "POST",
               headers: {
@@ -262,19 +281,22 @@ export default function CheckoutPage() {
             }
 
             // 5. On payment success and verification, create order in your DB
-            await createOrderMutation.mutateAsync({
+            const orderData = {
               ...form,
-              userId: user.userId,
+              userId: user.userId!,
               items,
               total,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,
               razorpay_signature: response.razorpay_signature,
-            });
+            };
+
+            await createOrderMutation.mutateAsync(orderData);
             clearCart();
             toast.success("Order placed successfully!");
             router.push("/order-confirmation");
           } catch (error) {
+            console.error("Order creation error:", error);
             toast.error("Order creation failed. Please contact support.");
             setIsProcessing(false);
             setRazorpayLoading(false);
