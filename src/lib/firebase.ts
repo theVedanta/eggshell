@@ -19,13 +19,13 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCcQHan0hMP9bfWJWi4y8eAjJhkDoomO9w",
-  authDomain: "eggshldb.firebaseapp.com",
-  projectId: "eggshldb",
-  storageBucket: "eggshldb.firebasestorage.app",
-  messagingSenderId: "1029682782959",
-  appId: "1:1029682782959:web:b448d0ea9a25c6433bb11a",
-  measurementId: "G-JBJ08TM725",
+  apiKey: "AIzaSyAQziPQoJ_Pf-Ytm7voHTM8mLbUuTtQrJQ",
+  authDomain: "test-db-ee403.firebaseapp.com",
+  projectId: "test-db-ee403",
+  storageBucket: "test-db-ee403.firebasestorage.app",
+  messagingSenderId: "254384561741",
+  appId: "1:254384561741:web:13fb86158f6bca25dd8604",
+  measurementId: "G-D9VMPJYBS5"
 };
 
 // Initialize Firebase
