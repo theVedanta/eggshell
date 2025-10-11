@@ -50,7 +50,7 @@ export function useGetAllProductsByLiking() {
     }> => {
       const res = await fetch(API_URL + "/suggestion/prods");
       if (!res.ok) {
-        throw Error("Something went wrong !!");
+        return null as any;
       }
       return res.json() as Promise<{
         highestPriority: any;

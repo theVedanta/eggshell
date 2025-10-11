@@ -133,3 +133,22 @@ export function useGetAllProductsByCategory() {
     isAccessoriesLoading,
   };
 }
+
+export function useGetAllProductsBySingleCategory(category: string) {
+  const { data, isLoading } = useQuery({
+    queryKey: [`products-by-footwear`],
+    queryFn: async () => {
+      const response = await fetch(`${API_URL}/products/category/${category}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch products by category");
+      }
+      const result = await response.json();
+      return result.data as GSheetProduct[];
+    },
+  });
+
+  return {
+    data,
+    isLoading,
+  };
+}

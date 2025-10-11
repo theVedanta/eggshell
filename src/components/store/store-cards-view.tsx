@@ -193,7 +193,7 @@ export default function StoreCardsView({
               </CarouselContent>
             </Carousel>
           )
-        : isUserLikingLoading && <div>Looking for recommendations...</div>}
+        : isUserLikingLoading && null}
 
       <div className="flex items-center gap-4">
         <FilterButton

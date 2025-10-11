@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import SearchBar from "@/components/sidebar/search_bar";
 import { ChevronDown } from "lucide-react";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useSidebar } from "@/components/ui/sidebar";
