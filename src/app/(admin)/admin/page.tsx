@@ -194,15 +194,13 @@ export default function AdminDashboard() {
                         </div>
                       </TableCell>
                       <TableCell className="text-center">
-                        <Link href={`/admin/${user.id}`}>
-                          <Button
-                            size={"sm"}
-                            className="bg-stone-700/60 border border-stone-600 rounded-lg hover:bg-stone-600/80 transition-colors"
-                          >
-                            <span className="text-white text-xs">View</span>
-                            <ArrowUpRight className="text-white h-3 w-3 ml-1" />
-                          </Button>
-                        </Link>
+                        <Button
+                          size={"sm"}
+                          className="bg-stone-700/60 border border-stone-600 rounded-lg hover:bg-stone-600/80 transition-colors"
+                        >
+                          <span className="text-white text-xs">View</span>
+                          <ArrowUpRight className="text-white h-3 w-3 ml-1" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
