@@ -252,7 +252,7 @@ export function ProductCard({
                 </div>
               </div>
 
-              {variant !== "compact" && product.colors.length > 0 && (
+              {variant !== "compact" && product.colors.length > 1 && (
                 <div className="flex items-center gap-1 flex-shrink-0">
                   <div className="flex gap-1 overflow-hidden">
                     {/* Show 2 colors on mobile, 4 on desktop using CSS */}

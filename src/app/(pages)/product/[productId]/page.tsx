@@ -348,7 +348,7 @@ export default function ProductPage() {
           </div>
 
           {/* Color Selection */}
-          {product.colors.length > 0 && (
+          {product.colors.length > 1 && (
             <div>
               <Label className="text-base font-medium mb-3 block">
                 Color: {selectedColor}
