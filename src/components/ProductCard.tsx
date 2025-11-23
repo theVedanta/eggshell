@@ -80,8 +80,8 @@ export function ProductCard({
 
   const discountPercentage = product.originalPrice
     ? Math.round(
-      ((product.originalPrice - product.price) / product.originalPrice) * 100
-    )
+        ((product.originalPrice - product.price) / product.originalPrice) * 100
+      )
     : null;
 
   const cardVariants = {
@@ -116,7 +116,8 @@ export function ProductCard({
             {/* Product Image */}
             <Image
               src={
-                product.colors?.[0]?.productImages?.[0] || "/placeholder-product.jpg"
+                product.colors?.[0]?.productImages?.[0] ||
+                "/placeholder-product.jpg"
               }
               alt={product.name}
               fill
@@ -263,12 +264,12 @@ export function ProductCard({
                           // Hide 3rd and 4th colors on mobile
                           index >= 2 && "hidden md:block",
                           color.productColor.toLowerCase() === "black" &&
-                          "border border-primary/60"
+                            "border border-primary/60"
                         )}
                         style={{
                           backgroundColor:
                             tailwindColorMapping[
-                            color.productColor.toLowerCase()
+                              color.productColor.toLowerCase()
                             ] || "#6b7280",
                         }}
                         title={color.productColor}

@@ -88,7 +88,7 @@ export default function AdminDashboard() {
               className="bg-stone-800/60 border border-stone-700 rounded-lg hover:bg-stone-700/80 transition-colors"
             >
               <RefreshCcw className="text-white h-4 w-4 mr-2" />
-              <span className="text-white text-sm">ReValidate Redis Cache</span>
+              <span className="text-white text-sm">Reload Sheet Data</span>
             </Button>
             <Avatar className="h-10 w-10 border border-stone-600">
               <AvatarImage src={user?.imageUrl} />

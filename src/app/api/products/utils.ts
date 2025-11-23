@@ -1,20 +1,41 @@
 import { Colors } from "@/types/products.type";
 
 export function get_color_image_map(rawProduct: any): Colors {
-  // Google Sheet Formate for : color_image_map
-  // Color | img1 ~ img2 ~ img3... ,  Color | img1 ~ ...
+  // Google Sheet Format for : color_image_map
+  // Color | img1, img2, img3... ; Color | img1, img2...
+  // Also support entries that have no color and are just a list of images
+  // e.g. "https://... , https://..." -> should be treated as Default color
   const colors: Colors = [];
   if (rawProduct.color_image_map) {
     rawProduct.color_image_map.split(";").forEach((entry: string) => {
-      const [color, images] = entry.split("|").map((str: string) => str.trim());
-      if (color && images) {
-        colors.push({
-          productColor: color,
-          productImages: images
-            .split("~") // Use ~ as delimiter instead of comma
-            .map((img: string) => img.trim())
-            .filter(Boolean),
-        });
+      if (!entry || !entry.trim()) return;
+      const parts = entry.split("|").map((str: string) => str.trim());
+      let color: string;
+      let imagesStr: string;
+
+      if (parts.length > 1) {
+        // If there's a color part present
+        color = parts[0] || "Default";
+        // In case there are additional '|' characters, join the rest back as images string
+        imagesStr = parts.slice(1).join("|").trim();
+      } else {
+        // No color provided, treat the whole entry as images and use "Default" color
+        color = "Default";
+        imagesStr = parts[0];
+      }
+
+      if (imagesStr) {
+        const productImages = imagesStr
+          .split(",") // use comma as delimiter
+          .map((img: string) => img.trim())
+          .filter(Boolean);
+
+        if (productImages.length > 0) {
+          colors.push({
+            productColor: color,
+            productImages,
+          });
+        }
       }
     });
   }
