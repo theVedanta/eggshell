@@ -66,10 +66,10 @@ export default function ProductPage() {
   // Filter orders for this product
   const productOrders = Array.isArray(userOrders)
     ? userOrders.filter(
-      (order) =>
-        Array.isArray(order.items) &&
-        order.items.some((item) => item.productId === productId)
-    )
+        (order) =>
+          Array.isArray(order.items) &&
+          order.items.some((item) => item.productId === productId)
+      )
     : [];
 
   // Set default selections using useEffect (must be called before any early returns)
@@ -112,8 +112,8 @@ export default function ProductPage() {
 
   const discountPercentage = product.originalPrice
     ? Math.round(
-      ((product.originalPrice - product.price) / product.originalPrice) * 100
-    )
+        ((product.originalPrice - product.price) / product.originalPrice) * 100
+      )
     : null;
 
   const brand = brands.find((b) => b.name === product.brand);
@@ -172,11 +172,16 @@ export default function ProductPage() {
   return (
     <div className="space-y-4 p-2">
       {/* Back Button */}
-      <Button variant="ghost" asChild className="mb-4">
-        <Link href="/">
+      <Button
+        variant="ghost"
+        asChild
+        className="mb-4"
+        onClick={() => router.back()}
+      >
+        <div>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Go Back
-        </Link>
+        </div>
       </Button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -184,20 +189,19 @@ export default function ProductPage() {
         <div>
           {/* Main Image */}
           <div className="space-y-4 sticky top-3">
-            <div className="aspect-square relative overflow-hidden rounded-xl bg-muted">
+            <div className="relative rounded-xl bg-muted flex items-center justify-center w-full">
               <Image
                 src={
                   product.colors.find(
                     (img) => img.productColor === selectedColor
-                  )?.productImages?.[selectedImage] || "/placeholder-product.jpg"
+                  )?.productImages?.[selectedImage] ||
+                  "/placeholder-product.jpg"
                 }
-                fill
                 alt={product.name}
-                style={{
-                  objectFit: "cover",
-                  width: "100%",
-                  height: "100%",
-                }}
+                width={600}
+                height={600}
+                className="w-full h-auto object-contain rounded-lg"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
 
               {/* Image Badges */}
@@ -227,10 +231,11 @@ export default function ProductPage() {
                       <button
                         key={index}
                         onClick={() => setSelectedImage(index)}
-                        className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${selectedImage === index
+                        className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
+                          selectedImage === index
                             ? "border-primary"
                             : "border-border"
-                          }`}
+                        }`}
                       >
                         <Image
                           src={image || "/placeholder-product.jpg"}
@@ -269,8 +274,9 @@ export default function ProductPage() {
                 onClick={handleWishlist}
               >
                 <Heart
-                  className={`h-5 w-5 transition-colors ${isWishlisted ? "fill-red-500 text-red-500" : "text-gray-600"
-                    }`}
+                  className={`h-5 w-5 transition-colors ${
+                    isWishlisted ? "fill-red-500 text-red-500" : "text-gray-600"
+                  }`}
                 />
               </Button>
               <Button
@@ -289,10 +295,11 @@ export default function ProductPage() {
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className={`h-4 w-4 ${i < Math.floor(product?.rating || 0)
+                  className={`h-4 w-4 ${
+                    i < Math.floor(product?.rating || 0)
                       ? "fill-yellow-400 text-yellow-400"
                       : "text-gray-300"
-                    }`}
+                  }`}
                 />
               ))}
               <span className="text-sm font-medium ml-1">{product.rating}</span>
@@ -370,10 +377,11 @@ export default function ProductPage() {
                     />
                     <Label
                       htmlFor={`color-${color.productColor}`}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg border cursor-pointer transition-colors ${selectedColor === color.productColor
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg border cursor-pointer transition-colors ${
+                        selectedColor === color.productColor
                           ? "border-primary bg-primary/10 text-primary"
                           : "border-border hover:border-primary/50"
-                        }`}
+                      }`}
                     >
                       <div
                         className="w-4 h-4 rounded-full border border-border"
@@ -388,16 +396,16 @@ export default function ProductPage() {
                                   : color.productColor.toLowerCase() === "navy"
                                     ? "#1e3a8a"
                                     : color.productColor.toLowerCase() ===
-                                      "brown"
+                                        "brown"
                                       ? "#92400e"
                                       : color.productColor.toLowerCase() ===
-                                        "green"
+                                          "green"
                                         ? "#059669"
                                         : color.productColor.toLowerCase() ===
-                                          "blue"
+                                            "blue"
                                           ? "#2563eb"
                                           : color.productColor.toLowerCase() ===
-                                            "red"
+                                              "red"
                                             ? "#dc2626"
                                             : "#6b7280",
                         }}
@@ -430,10 +438,11 @@ export default function ProductPage() {
                     />
                     <Label
                       htmlFor={`size-${size}`}
-                      className={`px-4 py-2 rounded-lg border cursor-pointer transition-colors min-w-[3rem] text-center flex items-center justify-center ${selectedSize === size
+                      className={`px-4 py-2 rounded-lg border cursor-pointer transition-colors min-w-[3rem] text-center flex items-center justify-center ${
+                        selectedSize === size
                           ? "border-primary bg-primary text-primary-foreground"
                           : "border-border hover:border-primary/50"
-                        }`}
+                      }`}
                     >
                       {size}
                     </Label>

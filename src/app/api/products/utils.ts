@@ -26,7 +26,7 @@ export function get_color_image_map(rawProduct: any): Colors {
 
       if (imagesStr) {
         const productImages = imagesStr
-          .split(",") // use comma as delimiter
+          .split(", ") // use comma as delimiter
           .map((img: string) => img.trim())
           .filter(Boolean);
 
